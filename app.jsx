@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+const { useState, useEffect } = React;
 
 // ============================================
 // GDC KARAOKE NIGHT 2026 - TICKETING SITE
@@ -1282,7 +1282,7 @@ const styles = `
 const MOCK_BOOKINGS = [];
 
 // Main App Component
-export default function GDCKaraokeApp() {
+function GDCKaraokeApp() {
   const [view, setView] = useState('home'); // home, room, admin
   const [activeTab, setActiveTab] = useState('private'); // 'main' or 'private'
   const [selectedRoom, setSelectedRoom] = useState(null);
