@@ -199,7 +199,12 @@ const styles = `
     0%, 100% { transform: translateY(0); }
     50% { transform: translateY(5px); }
   }
-  
+
+  @keyframes gentleRotate {
+    0%, 100% { transform: rotate(-5deg); }
+    50% { transform: rotate(5deg); }
+  }
+
   /* Mascot placeholders */
   .mascot-placeholder {
     width: 100px;
@@ -213,6 +218,10 @@ const styles = `
     justify-content: center;
     gap: 5px;
     flex-shrink: 0;
+  }
+
+  .mascot-rotate {
+    animation: gentleRotate 4s ease-in-out infinite;
   }
   
   .mascot-placeholder .icon {
@@ -1492,11 +1501,11 @@ function GDCKaraokeApp() {
               </h1>
               
               <div className="date-row">
-                <img src="/images/jigglypuff.png" alt="Jigglypuff" style={{ width: 100, height: 'auto' }} />
-                
+                <img src="/images/jigglypuff.png" alt="Jigglypuff" className="mascot-rotate" style={{ width: 100, height: 'auto' }} />
+
                 <div className="date-text">WEDNESDAY, MARCH 11TH</div>
-                
-                <img src="/images/caitsith.png" alt="Cait Sith" style={{ width: 100, height: 'auto' }} />
+
+                <img src="/images/caitsith.png" alt="Cait Sith" className="mascot-rotate" style={{ width: 100, height: 'auto' }} />
               </div>
               
               <p className="subtitle">
