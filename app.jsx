@@ -1482,18 +1482,10 @@ function GDCKaraokeApp() {
           {/* Hero Slides - Deck images */}
           <div className="hero-slides">
             <div className="hero-slide">
-              {/* Slide 2: It's been a rough year */}
-              <div className="placeholder" style={{ background: 'linear-gradient(135deg, #00FF94 0%, #1a1a1a 50%)', width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: 40 }}>
-                <span style={{ fontSize: 'clamp(1.2rem, 4vw, 2rem)', fontFamily: 'Outfit, sans-serif', fontWeight: 600, color: 'black', marginBottom: 20 }}>It's been a rough year for the industry.</span>
-                <span style={{ fontSize: 'clamp(0.9rem, 2.5vw, 1.2rem)', fontFamily: 'Outfit, sans-serif', color: '#333', maxWidth: 500 }}>We want to host an unforgettable evening to let game developers forget all their troubles, forget all their cares and sing downtown...</span>
-              </div>
+              <img src="/images/slide1.png" alt="It's been a rough year for the industry" />
             </div>
             <div className="hero-slide">
-              {/* Slide 3: Pandora Karaoke */}
-              <div className="placeholder" style={{ background: 'linear-gradient(180deg, #00FF94 0%, #0a0a0a 40%)', width: '100%', height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', padding: 40 }}>
-                <span style={{ fontSize: 'clamp(0.8rem, 2vw, 1rem)', fontFamily: 'Outfit, sans-serif', color: '#00FF94', marginBottom: 10 }}>Main stage upstairs. Private rooms downstairs. Full Venue Takeover.</span>
-                <span style={{ fontSize: 'clamp(2rem, 6vw, 4rem)', fontFamily: 'Outfit, sans-serif', fontWeight: 800, color: 'white', letterSpacing: '-2px' }}>PANDORA KARAOKE</span>
-              </div>
+              <img src="/images/slide2.png" alt="Pandora Karaoke" />
             </div>
           </div>
           
