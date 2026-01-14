@@ -172,13 +172,22 @@ const styles = `
   }
   
   .header .date-text {
-    font-family: 'Space Mono', monospace;
-    font-size: clamp(1rem, 3vw, 1.4rem);
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(1.2rem, 3.5vw, 1.6rem);
     font-weight: 700;
-    color: var(--neon-pink);
+    color: white;
     background: rgba(255, 107, 157, 0.15);
     padding: 12px 25px;
     letter-spacing: 1px;
+    text-align: center;
+  }
+
+  .header .date-time {
+    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+    font-weight: 600;
+    margin-top: 8px;
+    color: white;
+    opacity: 0.9;
   }
   
   .header .subtitle {
@@ -221,9 +230,13 @@ const styles = `
   }
 
   .mascot-rotate {
-    animation: gentleRotate 4s ease-in-out infinite;
+    animation: gentleRotate 2s ease-in-out infinite;
   }
-  
+
+  .mascot-rotate-reverse {
+    animation: gentleRotate 2s ease-in-out infinite reverse;
+  }
+
   .mascot-placeholder .icon {
     font-size: 2.5rem;
   }
@@ -1493,7 +1506,7 @@ function GDCKaraokeApp() {
           {/* Header */}
           <header className="header">
             <div className="header-content">
-              <p className="top-tagline">Sing your troubles away</p>
+              <p className="top-tagline">Sing your troubles away at</p>
               
               <h1>
                 <span className="white">KARAOKE NIGHT</span><br/>
@@ -1503,9 +1516,12 @@ function GDCKaraokeApp() {
               <div className="date-row">
                 <img src="/images/jigglypuff.png" alt="Jigglypuff" className="mascot-rotate" style={{ width: 100, height: 'auto' }} />
 
-                <div className="date-text">WEDNESDAY, MARCH 11TH</div>
+                <div className="date-text">
+                  <div>WEDNESDAY, MARCH 11TH</div>
+                  <div className="date-time">9:00 PM - 12:00 AM</div>
+                </div>
 
-                <img src="/images/caitsith.png" alt="Cait Sith" className="mascot-rotate" style={{ width: 100, height: 'auto' }} />
+                <img src="/images/caitsith.png" alt="Cait Sith" className="mascot-rotate-reverse" style={{ width: 100, height: 'auto' }} />
               </div>
               
               <p className="subtitle">
