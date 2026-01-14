@@ -1469,10 +1469,7 @@ function GDCKaraokeApp() {
                 
                 <div className="date-text">WEDNESDAY, MARCH 11TH</div>
                 
-                <div className="mascot-placeholder">
-                  <span className="icon">🐱</span>
-                  <span className="label">Cait Sith</span>
-                </div>
+                <img src="/images/caitsith.png" alt="Cait Sith" style={{ width: 100, height: 'auto' }} />
               </div>
               
               <p className="subtitle">
