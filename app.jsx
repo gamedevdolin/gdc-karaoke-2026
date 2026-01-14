@@ -1464,6 +1464,7 @@ function GDCKaraokeApp() {
                 <span className="green">@GDC 2026</span>
               </h1>
               
+              <div className="date-row">
                 <img src="/images/jigglypuff.png" alt="Jigglypuff" style={{ width: 100, height: 'auto' }} />
                 
                 <div className="date-text">WEDNESDAY, MARCH 11TH</div>
