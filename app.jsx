@@ -1577,7 +1577,7 @@ function GDCKaraokeApp() {
             <>
               {/* Early Bird Banner */}
               <div className="early-bird-banner">
-                🐣 EARLY CHOCOBO GETS THE MOOGLE 🐣
+                🐣 EARLY CHOCOBO PRICES 🐣
               </div>
               
               {/* Description Box */}
