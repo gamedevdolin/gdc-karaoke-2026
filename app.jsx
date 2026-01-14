@@ -1543,7 +1543,7 @@ function GDCKaraokeApp() {
           </div>
           
           {/* Book Tickets Label */}
-          <h2 className="section-label">RESERVE YOUR SPOT TODAY</h2>
+          <h2 className="section-label">RESERVE YOUR SPOT</h2>
           
           {/* Tab Navigation - Main Room on left, Private Rooms on right (but Private is default) */}
           {view === 'home' && (
@@ -1566,14 +1566,9 @@ function GDCKaraokeApp() {
           {/* Home View - Room Selection */}
           {view === 'home' && activeTab === 'main' && (
             <>
-              {/* Description Box */}
-              <div className="description-box">
-                Due to the laws of time and the length of the average karaoke song, we can only accommodate a limited number of singers on the main stage. Sign up for the list to be the first to know when tickets drop—subscribers will receive more information in late February.
-              </div>
-              
               <div className="room-grid">
                 {/* Main Stage */}
-                <div 
+                <div
                   className="room-card featured"
                   onClick={() => selectRoom('mainStage')}
                 >
@@ -1596,9 +1591,16 @@ function GDCKaraokeApp() {
                     </span>
                   </div>
                 </div>
-                
+              </div>
+
+              {/* Description Box */}
+              <div className="description-box">
+                Due to the length of the average karaoke song and the laws of time, we can only accommodate a limited number of singers on the main stage. Sign up to be the first to know when tickets drop—Main Stage singers will receive more information in late February.
+              </div>
+
+              <div className="room-grid">
                 {/* Main Stage + Song */}
-                <div 
+                <div
                   className="room-card featured"
                   onClick={() => selectRoom('mainStageSong')}
                 >
@@ -1629,9 +1631,9 @@ function GDCKaraokeApp() {
           {view === 'home' && activeTab === 'private' && (
             <>
               {/* Early Bird Banner */}
-              <div className="early-bird-banner">
+              {/* <div className="early-bird-banner">
                 🐣 EARLY CHOCOBO PRICES 🐣
-              </div>
+              </div> */}
               
               {/* Description Box */}
               <div className="description-box">
@@ -1887,16 +1889,18 @@ function GDCKaraokeApp() {
                           onChange={(e) => setSignupForm({ ...signupForm, company: e.target.value })}
                         />
                       </div>
-                      <div className="form-group checkbox-group">
-                        <label className="checkbox-label">
-                          <input
-                            type="checkbox"
-                            checked={signupForm.reserveEntireRoom}
-                            onChange={(e) => setSignupForm({ ...signupForm, reserveEntireRoom: e.target.checked })}
-                          />
-                          <span>I'm interested in reserving the entire room</span>
-                        </label>
-                      </div>
+                      {selectedRoom !== 'mainStage' && selectedRoom !== 'mainStageSong' && (
+                        <div className="form-group checkbox-group">
+                          <label className="checkbox-label">
+                            <input
+                              type="checkbox"
+                              checked={signupForm.reserveEntireRoom}
+                              onChange={(e) => setSignupForm({ ...signupForm, reserveEntireRoom: e.target.checked })}
+                            />
+                            <span>I'm interested in reserving the entire room</span>
+                          </label>
+                        </div>
+                      )}
                       <button type="submit" className="signup-btn">
                         Notify Me →
                       </button>
