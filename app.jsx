@@ -861,7 +861,33 @@ const styles = `
   .signup-form input::placeholder {
     color: #555;
   }
-  
+
+  .signup-form .checkbox-group {
+    margin-top: 16px;
+    margin-bottom: 16px;
+  }
+
+  .signup-form .checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+  }
+
+  .signup-form .checkbox-label input[type="checkbox"] {
+    width: auto;
+    height: 18px;
+    width: 18px;
+    cursor: pointer;
+    accent-color: var(--neon-green);
+  }
+
+  .signup-form .checkbox-label span {
+    user-select: none;
+  }
+
   .signup-btn {
     background: var(--neon-green);
     color: black;
@@ -1299,7 +1325,7 @@ function GDCKaraokeApp() {
   
   // Email signup state
   const [signups, setSignups] = useState([]);
-  const [signupForm, setSignupForm] = useState({ name: '', email: '', company: '' });
+  const [signupForm, setSignupForm] = useState({ name: '', email: '', company: '', reserveEntireRoom: false });
   const [signupSuccess, setSignupSuccess] = useState(false);
   
   // Admin password protection
@@ -1324,18 +1350,19 @@ function GDCKaraokeApp() {
     };
     setSignups([...signups, newSignup]);
     setSignupSuccess(true);
-    setSignupForm({ name: '', email: '', company: '' });
+    setSignupForm({ name: '', email: '', company: '', reserveEntireRoom: false });
     setTimeout(() => setSignupSuccess(false), 3000);
   };
   
   // Export signups as CSV
   const exportSignups = () => {
-    const headers = ['Name', 'Email', 'Company', 'Interested Room', 'Signup Date'];
+    const headers = ['Name', 'Email', 'Company', 'Interested Room', 'Reserve Entire Room', 'Signup Date'];
     const rows = signups.map(s => [
       s.name,
       s.email,
       s.company,
       s.roomName,
+      s.reserveEntireRoom ? 'Yes' : 'No',
       s.date,
     ]);
     
@@ -1827,12 +1854,22 @@ function GDCKaraokeApp() {
                         />
                       </div>
                       <div className="form-group">
-                        <input 
-                          type="text" 
+                        <input
+                          type="text"
                           placeholder="Company (optional)"
                           value={signupForm.company}
                           onChange={(e) => setSignupForm({ ...signupForm, company: e.target.value })}
                         />
+                      </div>
+                      <div className="form-group checkbox-group">
+                        <label className="checkbox-label">
+                          <input
+                            type="checkbox"
+                            checked={signupForm.reserveEntireRoom}
+                            onChange={(e) => setSignupForm({ ...signupForm, reserveEntireRoom: e.target.checked })}
+                          />
+                          <span>I'm interested in reserving the entire room</span>
+                        </label>
                       </div>
                       <button type="submit" className="signup-btn">
                         Notify Me →
@@ -1915,6 +1952,7 @@ function GDCKaraokeApp() {
                           <th>Email</th>
                           <th>Company</th>
                           <th>Interested In</th>
+                          <th>Entire Room</th>
                           <th>Date</th>
                         </tr>
                       </thead>
@@ -1925,6 +1963,7 @@ function GDCKaraokeApp() {
                             <td>{signup.email}</td>
                             <td>{signup.company || '—'}</td>
                             <td>{signup.roomName}</td>
+                            <td>{signup.reserveEntireRoom ? '✓ Yes' : '—'}</td>
                             <td>{signup.date}</td>
                           </tr>
                         ))}
