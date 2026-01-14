@@ -175,7 +175,7 @@ const styles = `
     font-family: 'Outfit', sans-serif;
     font-size: clamp(1.2rem, 3.5vw, 1.6rem);
     font-weight: 700;
-    color: white;
+    color: var(--neon-green);
     background: rgba(255, 107, 157, 0.15);
     padding: 12px 25px;
     letter-spacing: 1px;
@@ -234,7 +234,8 @@ const styles = `
   }
 
   .mascot-rotate-reverse {
-    animation: gentleRotate 2s ease-in-out infinite reverse;
+    animation: gentleRotate 2s ease-in-out infinite;
+    animation-delay: -1s;
   }
 
   .mascot-placeholder .icon {
@@ -1525,7 +1526,7 @@ function GDCKaraokeApp() {
               </div>
               
               <p className="subtitle">
-                Want to attend the largest karaoke party in GDC history?
+                Want to attend the greatest karaoke party in GDC history?
               </p>
               <p className="scroll-hint">↓ Keep scrolling ↓</p>
             </div>
@@ -1542,7 +1543,7 @@ function GDCKaraokeApp() {
           </div>
           
           {/* Book Tickets Label */}
-          <h2 className="section-label">BOOK TICKETS</h2>
+          <h2 className="section-label">RESERVE YOUR SPOT TODAY</h2>
           
           {/* Tab Navigation - Main Room on left, Private Rooms on right (but Private is default) */}
           {view === 'home' && (
