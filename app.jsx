@@ -18,41 +18,42 @@ const CONFIG = {
 const INITIAL_ROOMS = {
   mainStage: {
     id: 'mainStage',
-    name: 'Main Stage',
+    name: 'General Admission',
     description: 'Big stage. Big energy. The heart of the party.',
     capacity: 120,
-    price: 30,
+    price: 35,
     tier: 'main',
     features: ['includes 2 drink tickets'],
   },
   mainStageSong: {
     id: 'mainStageSong',
-    name: 'Main Stage + Song',
+    name: 'A Song on the Main Stage',
     description: 'An extra drink ticket + a guaranteed song on the big stage.',
     capacity: 20,
     price: 60,
-    tier: 'main-song',
+    tier: 'main',
     features: ['includes 3 drink tickets', '1 song on the stage'],
   },
   small1: { id: 'small1', name: 'Bulleit Bourbon', capacity: 8, price: 45, roomPrice: 300, tier: 'small', backgroundImage: '/images/bulliet.jpg', features: ['Includes 3 Drink Tickets']},
   small2: { id: 'small2', name: 'Doodle', capacity: 8, price: 45, roomPrice: 300, tier: 'small', backgroundImage: '/images/doodle.jpg', features: ['Includes 3 Drink Tickets']},
   small3: { id: 'small3', name: 'Superhero', capacity: 8, price: 45, roomPrice: 300, tier: 'small', backgroundImage: '/images/superhero.jpg', features: ['Includes 3 Drink Tickets']},
-  medium1: { id: 'medium1', name: 'Patron', capacity: 15, price: 50, tier: 'medium', backgroundImage: '/images/patron.jpg', features: ['Includes 3 Drink Tickets']},
-  medium2: { id: 'medium2', name: 'Warriors', capacity: 15, price: 50, tier: 'medium', backgroundImage: '/images/dubs.jpg', features: ['Includes 3 Drink Tickets']},
-  medium3: { id: 'medium3', name: 'Jameson', capacity: 15, price: 50, tier: 'medium', backgroundImage: '/images/jamie.jpg', features: ['Includes 3 Drink Tickets']},
-  medium4: { id: 'medium4', name: 'Johnnie Walker', capacity: 15, price: 50, tier: 'medium', backgroundImage: '/images/johnny.jpg', features: ['Includes 3 Drink Tickets']},
-  medium5: { id: 'medium5', name: 'Ciroc', capacity: 15, price: 50, tier: 'medium', backgroundImage: '/images/ciroc.jpg', features: ['Includes 3 Drink Tickets']},
-  medium6: { id: 'medium6', name: 'Grey Goose', capacity: 15, price: 50, tier: 'medium', backgroundImage: '/images/greygoose.jpg', features: ['Includes 3 Drink Tickets']},
-  large1: { id: 'large1', name: 'Hennessy', capacity: 25, price: 55, tier: 'large', backgroundImage: '/images/henny.jpg', features: ['Includes 3 Drink Tickets']},
-  large2: { id: 'large2', name: 'Crown Royal', capacity: 25, price: 55, tier: 'large', backgroundImage: '/images/crown.jpg', features: ['Includes 3 Drink Tickets']},
-  large3: { id: 'large3', name: 'Absolut', capacity: 25, price: 55, tier: 'large', backgroundImage: '/images/absolut.jpg', features: ['Includes 3 Drink Tickets']},
-  large4: { id: 'large4', name: 'Cazadores', capacity: 25, price: 55, tier: 'large', backgroundImage: '/images/cazadores.jpg', features: ['Includes 3 Drink Tickets']},
-  large5: { id: 'large5', name: "D'Ussé", capacity: 25, price: 55, tier: 'large', backgroundImage: '/images/dusse.jpg', features: ['Includes 3 Drink Tickets']},
+  medium1: { id: 'medium1', name: 'Patron', capacity: 15, price: 50, roomPrice: 700, tier: 'medium', backgroundImage: '/images/patron.jpg', features: ['Includes 3 Drink Tickets']},
+  medium2: { id: 'medium2', name: 'Warriors', capacity: 15, price: 50, roomPrice: 700, tier: 'medium', backgroundImage: '/images/dubs.jpg', features: ['Includes 3 Drink Tickets']},
+  medium3: { id: 'medium3', name: 'Jameson', capacity: 15, price: 50, roomPrice: 700, tier: 'medium', backgroundImage: '/images/jamie.jpg', features: ['Includes 3 Drink Tickets']},
+  medium4: { id: 'medium4', name: 'Johnnie Walker', capacity: 15, price: 50, roomPrice: 700, tier: 'medium', backgroundImage: '/images/johnny.jpg', features: ['Includes 3 Drink Tickets']},
+  medium5: { id: 'medium5', name: 'Ciroc', capacity: 15, price: 50, roomPrice: 700, tier: 'medium', backgroundImage: '/images/ciroc.jpg', features: ['Includes 3 Drink Tickets']},
+  medium6: { id: 'medium6', name: 'Grey Goose', capacity: 15, price: 50, roomPrice: 700, tier: 'medium', backgroundImage: '/images/greygoose.jpg', features: ['Includes 3 Drink Tickets']},
+  large1: { id: 'large1', name: 'Hennessy', capacity: 25, price: 55, roomPrice: 1200, tier: 'large', backgroundImage: '/images/henny.jpg', features: ['Includes 3 Drink Tickets']},
+  large2: { id: 'large2', name: 'Crown Royal', capacity: 25, price: 55, roomPrice: 1200, tier: 'large', backgroundImage: '/images/crown.jpg', features: ['Includes 3 Drink Tickets']},
+  large3: { id: 'large3', name: 'Absolut', capacity: 25, price: 55, roomPrice: 1200, tier: 'large', backgroundImage: '/images/absolut.jpg', features: ['Includes 3 Drink Tickets']},
+  large4: { id: 'large4', name: 'Cazadores', capacity: 25, price: 55, roomPrice: 1200, tier: 'large', backgroundImage: '/images/cazadores.jpg', features: ['Includes 3 Drink Tickets']},
+  large5: { id: 'large5', name: "D'Ussé", capacity: 25, price: 55, roomPrice: 1200, tier: 'large', backgroundImage: '/images/dusse.jpg', features: ['Includes 3 Drink Tickets']},
   vip1: {
     id: 'vip1',
     name: 'The BIG Room',
     capacity: 30,
     price: 75,
+    roomPrice: 2000,
     tier: 'vip',
     features: ['Includes 3 Drink Tickets'],
     backgroundImage: '/images/BIGroom.jpg',
@@ -769,6 +770,7 @@ const styles = `
     color: var(--text-primary);
     flex: 1;
     text-align: center;
+    margin-right: 20px;
   }
 
   .room-group-header .group-meta {
@@ -808,6 +810,7 @@ const styles = `
   .room-group-content .room-card {
     margin: 0;
     position: relative;
+    max-width: 900px;
   }
 
   .room-group-content .room-card.has-bg {
@@ -870,9 +873,12 @@ const styles = `
   /* Room Grid */
   .room-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    grid-template-columns: 1fr;
     gap: 20px;
     margin-top: 30px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
   }
   
   .room-card {
@@ -1328,7 +1334,25 @@ const styles = `
   .signup-btn:hover {
     background: white;
   }
-  
+
+  .privacy-notice {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-top: 15px;
+    opacity: 0.9;
+  }
+
+  .privacy-notice .mobile-break {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .privacy-notice .mobile-break {
+      display: block;
+    }
+  }
+
   .signup-success {
     background: rgba(0, 255, 148, 0.1);
     border: 1px solid var(--neon-green);
@@ -2328,7 +2352,7 @@ function GDCKaraokeApp() {
                   </div>
                 ) : (
                   <>
-                    <p>Sign up now to be notified when tickets go on sale in mid-February</p>
+                    <p>Sign up now to be notified when tickets go on sale in February</p>
                     <form className="signup-form" onSubmit={(e) => handleSignup(e, selectedRoom)}>
                       <div className="form-group">
                         <input 
@@ -2371,6 +2395,7 @@ function GDCKaraokeApp() {
                       <button type="submit" className="signup-btn">
                         Notify Me →
                       </button>
+                      <p className="privacy-notice">We'll only use this info to notify you about tickets and event updates. <span className="mobile-break"></span>No spam.</p>
                     </form>
                   </>
                 )}
