@@ -1,4 +1,4 @@
-const { useState, useEffect } = React;
+const { useState, useEffect, useRef } = React;
 
 // ============================================
 // GDC KARAOKE NIGHT 2026 - TICKETING SITE
@@ -1700,7 +1700,10 @@ function GDCKaraokeApp() {
     large: false,
     vip: false,
   });
-  
+
+  // Ref for room detail section
+  const roomDetailRef = useRef(null);
+
   // Email signup state
   const [signups, setSignups] = useState([]);
   const [signupForm, setSignupForm] = useState({ name: '', email: '', company: '', reserveEntireRoom: false });
@@ -1786,6 +1789,9 @@ function GDCKaraokeApp() {
     setSelectedRoom(roomId);
     setFormData({ ...formData, quantity: 1 });
     setView('room');
+    setTimeout(() => {
+      roomDetailRef.current?.scrollIntoView({ behavior: 'instant', block: 'start' });
+    }, 0);
   };
   
   // Handle booking
@@ -2209,7 +2215,7 @@ function GDCKaraokeApp() {
           
           {/* Room Detail View */}
           {view === 'room' && selectedRoom && (
-            <div className="room-detail">
+            <div className="room-detail" ref={roomDetailRef}>
               <button className="back-btn" onClick={() => setView('home')}>
                 ← Back to all rooms
               </button>
