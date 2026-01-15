@@ -1031,9 +1031,29 @@ const styles = `
   }
 
   @media (max-width: 768px) {
-    .pricing-options {
+    .room-detail-header {
       flex-direction: column;
-      gap: 10px;
+      align-items: flex-start;
+      gap: 20px;
+    }
+
+    .pricing-options {
+      flex-direction: row;
+      gap: 12px;
+      width: 100%;
+    }
+
+    .pricing-options .price-tag {
+      padding: 12px 16px;
+      font-size: 1.2rem;
+      flex: 1;
+      text-align: center;
+    }
+
+    .pricing-options .price-tag span {
+      font-size: 0.8rem;
+      display: block;
+      margin-top: 2px;
     }
   }
 
@@ -2274,7 +2294,7 @@ function GDCKaraokeApp() {
                     </div>
                     <span className="pricing-or">or</span>
                     <div className="price-tag room-price">
-                      ${rooms[selectedRoom].roomPrice} <span>for the<br/>entire room</span>
+                      ${rooms[selectedRoom].roomPrice} <span>for the entire room</span>
                     </div>
                   </div>
                 ) : (
