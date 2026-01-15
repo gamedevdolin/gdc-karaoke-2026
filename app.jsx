@@ -34,9 +34,9 @@ const INITIAL_ROOMS = {
     tier: 'main-song',
     features: ['includes 3 drink tickets', '1 song on the stage'],
   },
-  small1: { id: 'small1', name: 'Bulleit Bourbon', capacity: 8, price: 45, tier: 'small', backgroundImage: '/images/bulliet.jpg', features: ['Includes 3 Drink Tickets']},
-  small2: { id: 'small2', name: 'Doodle', capacity: 8, price: 45, tier: 'small', backgroundImage: '/images/doodle.jpg', features: ['Includes 3 Drink Tickets']},
-  small3: { id: 'small3', name: 'Superhero', capacity: 8, price: 45, tier: 'small', backgroundImage: '/images/superhero.jpg', features: ['Includes 3 Drink Tickets']},
+  small1: { id: 'small1', name: 'Bulleit Bourbon', capacity: 8, price: 45, roomPrice: 300, tier: 'small', backgroundImage: '/images/bulliet.jpg', features: ['Includes 3 Drink Tickets']},
+  small2: { id: 'small2', name: 'Doodle', capacity: 8, price: 45, roomPrice: 300, tier: 'small', backgroundImage: '/images/doodle.jpg', features: ['Includes 3 Drink Tickets']},
+  small3: { id: 'small3', name: 'Superhero', capacity: 8, price: 45, roomPrice: 300, tier: 'small', backgroundImage: '/images/superhero.jpg', features: ['Includes 3 Drink Tickets']},
   medium1: { id: 'medium1', name: 'Patron', capacity: 15, price: 50, tier: 'medium', backgroundImage: '/images/patron.jpg', features: ['Includes 3 Drink Tickets']},
   medium2: { id: 'medium2', name: 'Warriors', capacity: 15, price: 50, tier: 'medium', backgroundImage: '/images/dubs.jpg', features: ['Includes 3 Drink Tickets']},
   medium3: { id: 'medium3', name: 'Jameson', capacity: 15, price: 50, tier: 'medium', backgroundImage: '/images/jamie.jpg', features: ['Includes 3 Drink Tickets']},
@@ -1010,7 +1010,33 @@ const styles = `
     font-size: 1rem;
     font-weight: 400;
   }
-  
+
+  .pricing-options {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+  }
+
+  .pricing-or {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 400;
+  }
+
+  .room-detail .price-tag.room-price {
+    background: transparent;
+    border: 2px solid var(--neon-green);
+    color: var(--neon-green);
+  }
+
+  @media (max-width: 768px) {
+    .pricing-options {
+      flex-direction: column;
+      gap: 10px;
+    }
+  }
+
   .capacity-bar {
     background: #333;
     height: 12px;
@@ -2241,9 +2267,21 @@ function GDCKaraokeApp() {
                   </div>
                   <h2>{rooms[selectedRoom].name}</h2>
                 </div>
-                <div className="price-tag">
-                  ${rooms[selectedRoom].price} <span>/person</span>
-                </div>
+                {rooms[selectedRoom].roomPrice ? (
+                  <div className="pricing-options">
+                    <div className="price-tag">
+                      ${rooms[selectedRoom].price} <span>/person</span>
+                    </div>
+                    <span className="pricing-or">or</span>
+                    <div className="price-tag room-price">
+                      ${rooms[selectedRoom].roomPrice} <span>for the<br/>entire room</span>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="price-tag">
+                    ${rooms[selectedRoom].price} <span>/person</span>
+                  </div>
+                )}
               </div>
               
               <p className="room-description" style={{ fontSize: '1.1rem', marginBottom: 20 }}>
