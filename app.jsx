@@ -34,26 +34,26 @@ const INITIAL_ROOMS = {
     tier: 'main-song',
     features: ['includes 3 drink tickets', '1 song on the stage'],
   },
-  small1: { id: 'small1', name: 'Small Room 1', capacity: 8, price: 45, tier: 'small', description: 'Intimate vibes for your crew.' },
-  small2: { id: 'small2', name: 'Small Room 2', capacity: 8, price: 45, tier: 'small', description: 'Intimate vibes for your crew.' },
-  small3: { id: 'small3', name: 'Small Room 3', capacity: 8, price: 45, tier: 'small', description: 'Intimate vibes for your crew.' },
-  medium1: { id: 'medium1', name: 'Medium Room 1', capacity: 15, price: 50, tier: 'medium', description: 'Room for the whole team.' },
-  medium2: { id: 'medium2', name: 'Medium Room 2', capacity: 15, price: 50, tier: 'medium', description: 'Room for the whole team.' },
-  medium3: { id: 'medium3', name: 'Medium Room 3', capacity: 15, price: 50, tier: 'medium', description: 'Room for the whole team.' },
-  medium4: { id: 'medium4', name: 'Medium Room 4', capacity: 15, price: 50, tier: 'medium', description: 'Room for the whole team.' },
-  medium5: { id: 'medium5', name: 'Medium Room 5', capacity: 15, price: 50, tier: 'medium', description: 'Room for the whole team.' },
-  medium6: { id: 'medium6', name: 'Medium Room 6', capacity: 15, price: 50, tier: 'medium', description: 'Room for the whole team.' },
-  large1: { id: 'large1', name: 'Large Room 1', capacity: 25, price: 55, tier: 'large', description: 'Space for the extended squad.' },
-  large2: { id: 'large2', name: 'Large Room 2', capacity: 25, price: 55, tier: 'large', description: 'Space for the extended squad.' },
-  large3: { id: 'large3', name: 'Large Room 3', capacity: 25, price: 55, tier: 'large', description: 'Space for the extended squad.' },
-  large4: { id: 'large4', name: 'Large Room 4', capacity: 25, price: 55, tier: 'large', description: 'Space for the extended squad.' },
-  large5: { id: 'large5', name: 'Large Room 5', capacity: 25, price: 55, tier: 'large', description: 'Space for the extended squad.' },
-  vip: { 
-    id: 'vip', 
-    name: 'The BIG Room', 
-    capacity: 30, 
-    price: 75, 
-    tier: 'vip', 
+  small1: { id: 'small1', name: 'Bulleit Bourbon', capacity: 8, price: 45, tier: 'small'},
+  small2: { id: 'small2', name: 'Doodle', capacity: 8, price: 45, tier: 'small'},
+  small3: { id: 'small3', name: 'Superhero', capacity: 8, price: 45, tier: 'small'},
+  medium1: { id: 'medium1', name: 'Patron', capacity: 15, price: 50, tier: 'medium'},
+  medium2: { id: 'medium2', name: 'Warriors', capacity: 15, price: 50, tier: 'medium'},
+  medium3: { id: 'medium3', name: 'Jameson', capacity: 15, price: 50, tier: 'medium'},
+  medium4: { id: 'medium4', name: 'Johnnie Walker', capacity: 15, price: 50, tier: 'medium'},
+  medium5: { id: 'medium5', name: 'Ciroc', capacity: 15, price: 50, tier: 'medium'},
+  medium6: { id: 'medium6', name: 'Grey Goose', capacity: 15, price: 50, tier: 'medium'},
+  large1: { id: 'large1', name: 'Hennessy', capacity: 25, price: 55, tier: 'large'},
+  large2: { id: 'large2', name: 'Crown Royal', capacity: 25, price: 55, tier: 'large'},
+  large3: { id: 'large3', name: 'Absolut', capacity: 25, price: 55, tier: 'large'},
+  large4: { id: 'large4', name: 'Cazadores', capacity: 25, price: 55, tier: 'large'},
+  large5: { id: 'large5', name: "D'Ussé", capacity: 25, price: 55, tier: 'large'},
+  vip1: {
+    id: 'vip1',
+    name: 'The BIG Room',
+    capacity: 30,
+    price: 75,
+    tier: 'vip',
     description: 'A massive room for you and 29 of your closest friends.',
     features: ['Includes 3 Drink Tickets'],
   },
@@ -758,7 +758,15 @@ const styles = `
     background: rgba(255, 107, 157, 0.15);
     color: var(--neon-pink);
   }
-  
+
+  .room-group-header .guest-count {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    flex: 1;
+    text-align: center;
+  }
+
   .room-group-header .group-meta {
     display: flex;
     align-items: center;
@@ -774,12 +782,13 @@ const styles = `
   
   .room-group-header .toggle-icon {
     font-size: 1.2rem;
-    transition: transform 0.2s ease;
     color: var(--text-secondary);
+    transition: transform 0.2s ease;
+    display: inline-block;
   }
-  
+
   .room-group-header.open .toggle-icon {
-    transform: rotate(180deg);
+    transform: rotate(90deg);
   }
   
   .room-group-content {
@@ -2003,16 +2012,15 @@ function GDCKaraokeApp() {
                   onClick={() => toggleGroup('small')}
                 >
                   <h3>
-                    <span className="tier-badge">Small</span>
-                    Small Rooms
+                    <span className="tier-badge">Small Room</span>
                   </h3>
+                  <span className="guest-count">Up to 8 Guests</span>
                   <div className="group-meta">
-                    <span>3 rooms • Up to 8 guests each</span>
                     <span className="group-price">
                       ${rooms.small1.price}/person<br/>
                       <span style={{ fontSize: '0.85em', opacity: 0.7 }}>$300/room</span>
                     </span>
-                    <span className="toggle-icon">{expandedGroups.small ? '▲' : '▼'}</span>
+                    <span className="toggle-icon">›</span>
                   </div>
                 </div>
                 {expandedGroups.small && (
@@ -2045,16 +2053,15 @@ function GDCKaraokeApp() {
                   onClick={() => toggleGroup('medium')}
                 >
                   <h3>
-                    <span className="tier-badge">Medium</span>
-                    Medium Rooms
+                    <span className="tier-badge">Medium Room</span>
                   </h3>
+                  <span className="guest-count">Up to 15 Guests</span>
                   <div className="group-meta">
-                    <span>6 rooms • Up to 15 guests each</span>
                     <span className="group-price">
                       ${rooms.medium1.price}/person<br/>
                       <span style={{ fontSize: '0.85em', opacity: 0.7 }}>$700/room</span>
                     </span>
-                    <span className="toggle-icon">{expandedGroups.medium ? '▲' : '▼'}</span>
+                    <span className="toggle-icon">›</span>
                   </div>
                 </div>
                 {expandedGroups.medium && (
@@ -2087,16 +2094,15 @@ function GDCKaraokeApp() {
                   onClick={() => toggleGroup('large')}
                 >
                   <h3>
-                    <span className="tier-badge">Large</span>
-                    Large Rooms
+                    <span className="tier-badge">Large Room</span>
                   </h3>
+                  <span className="guest-count">Up to 25 Guests</span>
                   <div className="group-meta">
-                    <span>5 rooms • Up to 25 guests each</span>
                     <span className="group-price">
                       ${rooms.large1.price}/person<br/>
                       <span style={{ fontSize: '0.85em', opacity: 0.7 }}>$1200/room</span>
                     </span>
-                    <span className="toggle-icon">{expandedGroups.large ? '▲' : '▼'}</span>
+                    <span className="toggle-icon">›</span>
                   </div>
                 </div>
                 {expandedGroups.large && (
@@ -2129,34 +2135,36 @@ function GDCKaraokeApp() {
                   onClick={() => toggleGroup('vip')}
                 >
                   <h3>
-                    <span className="tier-badge vip">LARGEST</span>
-                    BIG Room
+                    <span className="tier-badge vip">Largest Room</span>
                   </h3>
+                  <span className="guest-count">Up to {rooms.vip1.capacity} Guests</span>
                   <div className="group-meta">
-                    <span>Up to {rooms.vip.capacity} guests</span>
                     <span className="group-price">
-                      ${rooms.vip.price}/person<br/>
+                      ${rooms.vip1.price}/person<br/>
                       <span style={{ fontSize: '0.85em', opacity: 0.7 }}>$2000/room</span>
                     </span>
-                    <span className="toggle-icon">{expandedGroups.vip ? '▲' : '▼'}</span>
+                    <span className="toggle-icon">›</span>
                   </div>
                 </div>
                 {expandedGroups.vip && (
                   <div className="room-group-content">
-                    <div
-                      className="room-card vip"
-                      onClick={() => selectRoom('vip')}
-                    >
-                      <h3 className="room-name">{rooms.vip.name}</h3>
-                      <p className="room-description">{rooms.vip.description}</p>
-                      <div className="room-meta">
-                        <span className="room-capacity">
-                          <span className={getAvailableSpots('vip') > 0 ? 'available' : 'sold-out'}>
-                            {getAvailableSpots('vip')} spots left
-                          </span> / {rooms.vip.capacity}
-                        </span>
+                    {['vip1'].map(id => (
+                      <div
+                        key={id}
+                        className="room-card vip"
+                        onClick={() => selectRoom(id)}
+                      >
+                        <h3 className="room-name">{rooms[id].name}</h3>
+                        <p className="room-description">{rooms[id].description}</p>
+                        <div className="room-meta">
+                          <span className="room-capacity">
+                            <span className={getAvailableSpots(id) > 0 ? 'available' : 'sold-out'}>
+                              {getAvailableSpots(id)} spots left
+                            </span> / {rooms[id].capacity}
+                          </span>
+                        </div>
                       </div>
-                    </div>
+                    ))}
                   </div>
                 )}
               </div>
@@ -2229,7 +2237,7 @@ function GDCKaraokeApp() {
                       <div className="form-group">
                         <input
                           type="text"
-                          placeholder="Company (optional)"
+                          placeholder="Company"
                           value={signupForm.company}
                           onChange={(e) => setSignupForm({ ...signupForm, company: e.target.value })}
                         />
