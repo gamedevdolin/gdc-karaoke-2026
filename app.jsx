@@ -320,7 +320,7 @@ const styles = `
     justify-content: center;
     align-items: center;
     gap: 40px;
-    margin-top: 20px;
+    margin-top: 100px;
   }
 
   .mascot-row img {
@@ -328,20 +328,6 @@ const styles = `
     height: auto;
   }
 
-  /* Mascot placeholders */
-  .mascot-placeholder {
-    width: 100px;
-    height: 120px;
-    background: var(--card-bg);
-    border: 2px dashed #444;
-    border-radius: 8px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-    flex-shrink: 0;
-  }
 
   .mascot-rotate {
     animation: gentleRotate 2s ease-in-out infinite;
@@ -350,17 +336,6 @@ const styles = `
   .mascot-rotate-reverse {
     animation: gentleRotate 2s ease-in-out infinite;
     animation-delay: -1s;
-  }
-
-  .mascot-placeholder .icon {
-    font-size: 2.5rem;
-  }
-  
-  .mascot-placeholder .label {
-    font-size: 0.6rem;
-    color: #555;
-    text-transform: uppercase;
-    letter-spacing: 1px;
   }
   
   @media (max-width: 600px) {
@@ -397,8 +372,8 @@ const styles = `
   .hero-slides {
     display: flex;
     flex-direction: column;
-    gap: 30px;
-    margin: 60px 0;
+    gap: 15px;
+    margin: 100px 0;
     max-width: 900px;
     margin-left: auto;
     margin-right: auto;
@@ -433,6 +408,33 @@ const styles = `
     object-fit: contain;
     height: auto;
   }
+
+  .hero-slide.pandora-slide {
+    aspect-ratio: auto;
+    max-width: 900px;
+    margin: 0 auto;
+    height: auto;
+    background: transparent;
+    border: none;
+    animation: pandoraGlow 2s ease-in-out infinite;
+  }
+
+  .hero-slide.pandora-slide img {
+    object-fit: contain;
+    height: auto;
+    border-radius: 4px;
+  }
+
+  @keyframes pandoraGlow {
+    0%, 100% {
+      filter: drop-shadow(0 0 10px rgba(0, 255, 148, 0.3))
+              drop-shadow(0 0 20px rgba(0, 255, 148, 0.15));
+    }
+    50% {
+      filter: drop-shadow(0 0 20px rgba(0, 255, 148, 0.5))
+              drop-shadow(0 0 35px rgba(0, 255, 148, 0.25));
+    }
+  }
   
   .hero-slide .placeholder {
     display: flex;
@@ -462,13 +464,10 @@ const styles = `
 
   /* Slide Text Boxes */
   .slide-text-boxes {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 0;
+    display: flex;
     width: 100%;
     max-width: 900px;
     margin: 0 auto;
-    aspect-ratio: 16 / 9;
   }
 
   .text-box {
@@ -489,7 +488,7 @@ const styles = `
   .text-box-green {
     background: var(--neon-green);
     color: black;
-    grid-column: 1 / 3;
+    width: 100%;
   }
 
   .text-box-white {
@@ -555,11 +554,11 @@ const styles = `
   /* Section Label */
   .section-label {
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 3rem;
     font-weight: 800;
     letter-spacing: 3px;
     color: var(--neon-green);
-    margin: 40px 0 20px;
+    margin: 20px 0 20px;
   }
   
   /* Tab Navigation */
@@ -1764,20 +1763,13 @@ function GDCKaraokeApp() {
             <div className="slide-text-boxes">
               <div className="text-box text-box-green">
                 <div className="text-box-content">
-                  Last year was rough for<br/>the game <span className="highlight-red">industry</span>.
+                  Forget all your troubles, forget all your cares, and sing downtown at
                 </div>
               </div>
-              <div className="text-box text-box-white"></div>
-              <div className="text-box text-box-black"></div>
-              <div className="text-box text-box-green-large">
-                <div className="text-box-content">
-                  Let's have an unforgettable evening for game developers to forget all their troubles, forget all their cares and sing downtown at:
-                </div>
               </div>
-            </div>
 
-            <div className="hero-slide">
-              <img src="/images/slide2.png" alt="Pandora Karaoke" />
+            <div className="hero-slide pandora-slide">
+              <img src="/images/PANDORA.png" alt="Pandora Karaoke" />
             </div>
           </div>
           
@@ -1811,7 +1803,7 @@ function GDCKaraokeApp() {
                   className="room-card featured"
                   onClick={() => selectRoom('mainStage')}
                 >
-                  <div className="room-tier">★ Main Stage</div>
+            
                   <h3 className="room-name">{rooms.mainStage.name}</h3>
                   <p className="room-description">{rooms.mainStage.description}</p>
                   <div className="features-list">
@@ -1876,8 +1868,7 @@ function GDCKaraokeApp() {
               
               {/* Description Box */}
               <div className="description-box">
-                <p style={{ marginBottom: 15 }}>Booking one or more of Pandora's private rooms gives you and your guests a more intimate karaoke experience (known as "noraebang" in Korea).</p>
-                <p style={{ marginBottom: 10, color: 'var(--neon-green)', fontWeight: 600 }}>Private Room reservation includes:</p>
+                <p style={{ marginBottom: 10, color: 'var(--neon-green)', fontWeight: 600 }}>Welcome to the karaoke party page.</p>
                 <ul style={{ marginLeft: 20, lineHeight: 1.8 }}>
                   <li>Your own personal guest list with wristbands for your guests</li>
                   <li>Freedom to decorate/theme your own room</li>
