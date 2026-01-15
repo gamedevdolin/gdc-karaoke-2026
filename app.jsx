@@ -134,74 +134,149 @@ const styles = `
   /* Header */
   .header {
     text-align: center;
-    padding: 60px 20px 40px;
+    padding: 0;
     position: relative;
+    max-width: 640px;
+    margin: 60px auto 40px;
   }
-  
+
+  .header-background {
+    position: relative;
+    width: 100%;
+    min-height: 840px;
+    background-image: url('/images/disco.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    padding: 40px 70px 30px;
+  }
+
+  .header-background::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(10, 10, 10, 0.75) 0%,
+      rgba(10, 10, 10, 0.3) 30%,
+      rgba(10, 10, 10, 0.3) 70%,
+      rgba(10, 10, 10, 0.75) 100%
+    );
+    z-index: 1;
+  }
+
   .header-content {
     position: relative;
     z-index: 2;
   }
-  
+
   .header .top-tagline {
     font-family: 'Space Mono', monospace;
-    font-size: 0.9rem;
+    font-size: clamp(0.8rem, 2.5vw, 1rem);
     color: var(--neon-green);
-    letter-spacing: 2px;
+    letter-spacing: 3px;
     text-transform: uppercase;
     margin-bottom: 20px;
+    text-shadow:
+      0 0 10px rgba(0, 255, 148, 0.8),
+      0 0 20px rgba(0, 255, 148, 0.5),
+      2px 2px 4px rgba(0, 0, 0, 0.9);
+    animation: neonPulse 2s ease-in-out infinite;
   }
-  
+
+  @keyframes neonPulse {
+    0%, 100% {
+      text-shadow:
+        0 0 10px rgba(0, 255, 148, 0.8),
+        0 0 20px rgba(0, 255, 148, 0.5),
+        2px 2px 4px rgba(0, 0, 0, 0.9);
+    }
+    50% {
+      text-shadow:
+        0 0 20px rgba(0, 255, 148, 1),
+        0 0 30px rgba(0, 255, 148, 0.7),
+        2px 2px 4px rgba(0, 0, 0, 0.9);
+    }
+  }
+
   .header h1 {
-    font-size: clamp(2.5rem, 8vw, 5rem);
+    font-size: clamp(2.5rem, 8vw, 4.5rem);
     font-weight: 900;
     letter-spacing: -2px;
-    line-height: 1;
+    line-height: 1.1;
     margin-bottom: 30px;
   }
-  
-  .header h1 .green { color: var(--neon-green); }
-  .header h1 .white { color: white; }
-  
+
+  .header h1 .green {
+    color: var(--neon-green);
+    text-shadow:
+      0 0 20px rgba(0, 255, 148, 0.9),
+      0 0 40px rgba(0, 255, 148, 0.6),
+      3px 3px 6px rgba(0, 0, 0, 0.9),
+      -1px -1px 0 rgba(0, 0, 0, 0.8);
+  }
+
+  .header h1 .white {
+    color: white;
+    text-shadow:
+      0 0 10px rgba(255, 255, 255, 0.8),
+      3px 3px 6px rgba(0, 0, 0, 0.9),
+      -2px -2px 0 rgba(0, 0, 0, 0.5);
+  }
+
   .header .date-row {
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 20px;
-    margin-top: 20px;
+    position: absolute;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    z-index: 2;
   }
-  
+
   .header .date-text {
     font-family: 'Outfit', sans-serif;
-    font-size: clamp(1.2rem, 3.5vw, 1.6rem);
+    font-size: clamp(1rem, 3vw, 1.4rem);
     font-weight: 700;
-    color: var(--neon-green);
-    background: rgba(255, 107, 157, 0.15);
+    color: black;
+    background: var(--neon-green);
     padding: 12px 25px;
     letter-spacing: 1px;
     text-align: center;
+    box-shadow:
+      0 0 20px rgba(0, 255, 148, 0.6),
+      0 4px 15px rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.3);
   }
 
   .header .date-time {
-    font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+    font-size: clamp(0.8rem, 2.5vw, 1.1rem);
     font-weight: 600;
     margin-top: 8px;
-    color: white;
-    opacity: 0.9;
+    color: black;
   }
-  
+
   .header .subtitle {
     color: var(--text-secondary);
     margin-top: 25px;
     font-size: 1rem;
     font-weight: 300;
   }
-  
+
   .header .scroll-hint {
     color: var(--neon-green);
     margin-top: 15px;
     font-size: 0.9rem;
     animation: bounce 2s ease-in-out infinite;
+    text-shadow:
+      0 0 10px rgba(0, 255, 148, 0.8),
+      2px 2px 4px rgba(0, 0, 0, 0.9);
   }
   
   @keyframes bounce {
@@ -250,22 +325,33 @@ const styles = `
   }
   
   @media (max-width: 600px) {
+    .header {
+      margin: 40px auto 30px;
+    }
+
+    .header-background {
+      padding: 30px 15px 25px;
+    }
+
     .header .date-row {
+      position: static;
+      transform: none;
       flex-direction: column;
       gap: 15px;
+      margin-top: 20px;
     }
-    
+
     .mascot-placeholder {
       width: 80px;
       height: 100px;
     }
-    
+
     .header .date-row .mascots-mobile {
       display: flex;
       gap: 15px;
       order: 1;
     }
-    
+
     .header .date-text {
       order: 0;
     }
@@ -299,6 +385,18 @@ const styles = `
     height: 100%;
     object-fit: cover;
   }
+
+  .hero-slide.disco-slide {
+    aspect-ratio: auto;
+    max-width: 640px;
+    margin: 0 auto;
+    height: auto;
+  }
+
+  .hero-slide.disco-slide img {
+    object-fit: contain;
+    height: auto;
+  }
   
   .hero-slide .placeholder {
     display: flex;
@@ -325,7 +423,99 @@ const styles = `
   .hero-slide:nth-child(3) .placeholder .slide-number {
     color: var(--neon-blue);
   }
-  
+
+  /* Slide Text Boxes */
+  .slide-text-boxes {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    aspect-ratio: 16 / 9;
+  }
+
+  .text-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .text-box-content {
+    text-align: left;
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+  }
+
+  .text-box-green {
+    background: var(--neon-green);
+    color: black;
+    grid-column: 1 / 3;
+  }
+
+  .text-box-white {
+    background: #e8e8e8;
+    grid-column: 3 / 4;
+  }
+
+  .text-box-black {
+    background: black;
+    grid-column: 4 / 5;
+  }
+
+  .text-box-green-large {
+    background: var(--neon-green);
+    color: black;
+    grid-column: 1 / 5;
+    grid-row: 2 / 3;
+  }
+
+  .highlight-red {
+    color: #ff0000;
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
+
+  @media (max-width: 768px) {
+    .slide-text-boxes {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto auto auto;
+      aspect-ratio: auto;
+    }
+
+    .text-box-green {
+      grid-column: 1;
+      grid-row: 1;
+      padding: 30px 20px;
+    }
+
+    .text-box-white {
+      grid-column: 1;
+      grid-row: 2;
+      min-height: 40px;
+    }
+
+    .text-box-black {
+      grid-column: 1;
+      grid-row: 3;
+      min-height: 40px;
+    }
+
+    .text-box-green-large {
+      grid-column: 1;
+      grid-row: 4;
+      padding: 30px 20px;
+    }
+
+    .text-box-content {
+      font-size: 1rem;
+      text-align: center;
+    }
+  }
+
   /* Section Label */
   .section-label {
     text-align: center;
@@ -1506,37 +1696,45 @@ function GDCKaraokeApp() {
         <div className="container">
           {/* Header */}
           <header className="header">
-            <div className="header-content">
-              <p className="top-tagline">Sing your troubles away at</p>
-              
-              <h1>
-                <span className="white">KARAOKE NIGHT</span><br/>
-                <span className="green">@GDC 2026</span>
-              </h1>
-              
-              <div className="date-row">
-                <img src="/images/jigglypuff.png" alt="Jigglypuff" className="mascot-rotate" style={{ width: 100, height: 'auto' }} />
+            <div className="header-background">
+              <div className="header-content">
+                <p className="top-tagline">Sing your troubles away</p>
 
+                <h1>
+                  <span className="white">KARAOKE NIGHT</span><br/>
+                  <span className="green">@GDC 2026</span>
+                </h1>
+              </div>
+
+              <div className="date-row">
                 <div className="date-text">
                   <div>WEDNESDAY, MARCH 11TH</div>
                   <div className="date-time">9:00 PM - 12:00 AM</div>
                 </div>
-
-                <img src="/images/caitsith.png" alt="Cait Sith" className="mascot-rotate-reverse" style={{ width: 100, height: 'auto' }} />
               </div>
-              
-              <p className="subtitle">
-                Want to attend the greatest karaoke party in GDC history?
-              </p>
-              <p className="scroll-hint">↓ Keep scrolling ↓</p>
             </div>
+
+            <p className="scroll-hint">↓ Keep scrolling ↓</p>
           </header>
           
           {/* Hero Slides - Deck images */}
           <div className="hero-slides">
-            <div className="hero-slide">
-              <img src="/images/slide1.png" alt="It's been a rough year for the industry" />
+            {/* CSS Recreation of slide1 text */}
+            <div className="slide-text-boxes">
+              <div className="text-box text-box-green">
+                <div className="text-box-content">
+                  Last year was rough for<br/>the game <span className="highlight-red">industry</span>.
+                </div>
+              </div>
+              <div className="text-box text-box-white"></div>
+              <div className="text-box text-box-black"></div>
+              <div className="text-box text-box-green-large">
+                <div className="text-box-content">
+                  Let's have an unforgettable evening for game developers to forget all their troubles, forget all their cares and sing downtown at:
+                </div>
+              </div>
             </div>
+
             <div className="hero-slide">
               <img src="/images/slide2.png" alt="Pandora Karaoke" />
             </div>
