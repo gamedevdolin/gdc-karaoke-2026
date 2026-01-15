@@ -137,18 +137,17 @@ const styles = `
     padding: 0;
     position: relative;
     max-width: 640px;
-    margin: 60px auto 40px;
+    margin: 5px auto 40px;
   }
 
   .header-background {
     position: relative;
     width: 100%;
-    min-height: 840px;
+    aspect-ratio: 640 / 840;
     background-image: url('/images/disco.png');
-    background-size: contain;
+    background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
-    padding: 40px 70px 30px;
   }
 
   .header-background::before {
@@ -169,17 +168,21 @@ const styles = `
   }
 
   .header-content {
-    position: relative;
+    position: absolute;
+    top: 5%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
     z-index: 2;
   }
 
   .header .top-tagline {
     font-family: 'Space Mono', monospace;
-    font-size: clamp(0.8rem, 2.5vw, 1rem);
+    font-size: clamp(0.6rem, 1.8vw, 1rem);
     color: var(--neon-green);
     letter-spacing: 3px;
     text-transform: uppercase;
-    margin-bottom: 20px;
+    margin-bottom: 2%;
     text-shadow:
       0 0 10px rgba(0, 255, 148, 0.8),
       0 0 20px rgba(0, 255, 148, 0.5),
@@ -203,11 +206,16 @@ const styles = `
   }
 
   .header h1 {
-    font-size: clamp(2.5rem, 8vw, 4.5rem);
+    font-size: clamp(2rem, 6vw, 4.5rem);
     font-weight: 900;
     letter-spacing: -2px;
     line-height: 1.1;
-    margin-bottom: 30px;
+    margin: 0;
+    white-space: nowrap;
+  }
+
+  .header h1 br {
+    display: block;
   }
 
   .header h1 .green {
@@ -233,20 +241,20 @@ const styles = `
     justify-content: center;
     gap: 20px;
     position: absolute;
-    bottom: 30px;
+    bottom: 3.5%;
     left: 50%;
     transform: translateX(-50%);
-    width: 100%;
+    width: 90%;
     z-index: 2;
   }
 
   .header .date-text {
     font-family: 'Outfit', sans-serif;
-    font-size: clamp(1rem, 3vw, 1.4rem);
+    font-size: clamp(0.8rem, 2.5vw, 1.4rem);
     font-weight: 700;
     color: black;
     background: var(--neon-green);
-    padding: 12px 25px;
+    padding: 2% 5%;
     letter-spacing: 1px;
     text-align: center;
     box-shadow:
@@ -256,9 +264,9 @@ const styles = `
   }
 
   .header .date-time {
-    font-size: clamp(0.8rem, 2.5vw, 1.1rem);
+    font-size: clamp(0.7rem, 2vw, 1.1rem);
     font-weight: 600;
-    margin-top: 8px;
+    margin-top: 1%;
     color: black;
   }
 
