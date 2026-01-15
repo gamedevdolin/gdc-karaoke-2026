@@ -184,8 +184,10 @@ const styles = `
     text-transform: uppercase;
     margin-bottom: 15px;
     text-shadow:
-      0 0 10px rgba(0, 255, 148, 0.8),
-      0 0 20px rgba(0, 255, 148, 0.5),
+      0 0 15px rgba(0, 255, 148, 1),
+      0 0 30px rgba(0, 255, 148, 0.8),
+      0 0 50px rgba(0, 255, 148, 0.6),
+      0 0 80px rgba(0, 255, 148, 0.4),
       2px 2px 4px rgba(0, 0, 0, 0.9);
     animation: neonPulse 2s ease-in-out infinite;
   }
@@ -193,16 +195,18 @@ const styles = `
   @keyframes neonPulse {
     0%, 100% {
       text-shadow:
-        0 0 10px rgba(0, 255, 148, 0.7),
-        0 0 20px rgba(0, 255, 148, 0.4),
-        0 0 30px rgba(0, 255, 148, 0.2),
+        0 0 15px rgba(0, 255, 148, 1),
+        0 0 30px rgba(0, 255, 148, 0.8),
+        0 0 50px rgba(0, 255, 148, 0.6),
+        0 0 80px rgba(0, 255, 148, 0.4),
         2px 2px 4px rgba(0, 0, 0, 0.9);
     }
     50% {
       text-shadow:
-        0 0 15px rgba(0, 255, 148, 0.9),
-        0 0 30px rgba(0, 255, 148, 0.6),
-        0 0 45px rgba(0, 255, 148, 0.3),
+        0 0 20px rgba(0, 255, 148, 1),
+        0 0 40px rgba(0, 255, 148, 0.9),
+        0 0 70px rgba(0, 255, 148, 0.7),
+        0 0 100px rgba(0, 255, 148, 0.5),
         2px 2px 4px rgba(0, 0, 0, 0.9);
     }
   }
@@ -307,6 +311,36 @@ const styles = `
         0 0 40px rgba(0, 255, 148, 0.4),
         0 4px 15px rgba(0, 0, 0, 0.5);
     }
+  }
+
+  .date-row-standalone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 30px;
+  }
+
+  .date-row-standalone .date-text {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(0.8rem, 2.5vw, 1.4rem);
+    font-weight: 700;
+    color: black;
+    background: var(--neon-green);
+    padding: 15px 30px;
+    letter-spacing: 1px;
+    text-align: center;
+    box-shadow:
+      0 0 20px rgba(0, 255, 148, 0.6),
+      0 4px 15px rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    animation: dateGlow 2s ease-in-out infinite;
+  }
+
+  .date-row-standalone .date-time {
+    font-size: clamp(0.7rem, 2vw, 1.1rem);
+    font-weight: 600;
+    margin-top: 5px;
+    color: black;
   }
 
   @keyframes gentleRotate {
@@ -496,6 +530,16 @@ const styles = `
     letter-spacing: 2px;
   }
 
+  .text-box-content.no-break-desktop br {
+    display: block;
+  }
+
+  @media (min-width: 769px) {
+    .text-box-content.no-break-desktop {
+      font-size: clamp(1rem, 2vw, 1.8rem);
+    }
+  }
+
   .text-box-green {
     background: var(--neon-green);
     color: black;
@@ -523,16 +567,16 @@ const styles = `
 
   .two-column-boxes {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 15px;
     width: 100%;
     max-width: 900px;
     margin: 0 auto;
   }
 
-  @media (max-width: 600px) {
+  @media (min-width: 769px) {
     .two-column-boxes {
-      grid-template-columns: 1fr;
+      grid-template-columns: 1fr 1fr;
     }
   }
 
@@ -1830,7 +1874,7 @@ function GDCKaraokeApp() {
             {/* Two column text boxes */}
             <div className="two-column-boxes">
               <div className="text-box text-box-green">
-                <div className="text-box-content">
+                <div className="text-box-content no-break-desktop">
                   Main stage upstairs.<br/>Private rooms downstairs.<br/>Full venue takeover.
                 </div>
               </div>
@@ -1843,16 +1887,24 @@ function GDCKaraokeApp() {
           </div>
 
           {/* Book Tickets Label */}
-          
+
           {/* Description Box */}
           {view === 'home' && (
-            <div className="description-box">
-              <p style={{ marginBottom: 10, color: 'var(--neon-green)', fontWeight: 600 }}>Welcome to the karaoke party page, pals.</p>
-              <ul style={{ marginLeft: 20, lineHeight: 1.8 }}>
-                <li>Reserve a private room with your friends and colleagues.</li>
-                <li>Or buy a main room ticket for general admission.</li>
-                <li>Either way, it's gonna be a really good party.</li>
-              </ul>
+            <div className="description-box" style={{ textAlign: 'center', maxWidth: 900, margin: '0 auto 25px' }}>
+              <p style={{ marginBottom: 10, color: 'var(--neon-green)', fontWeight: 600 }}>Welcome to the karaoke party page.</p>
+              <p>Reserve a private room with your friends and colleagues.</p>
+              <p>Or buy a main room ticket for general admission.</p>
+              <p>Either way, it's gonna be a really good party.</p>
+            </div>
+          )}
+
+          {/* Date Box - Above Reserve Your Spot */}
+          {view === 'home' && (
+            <div className="date-row-standalone">
+              <div className="date-text">
+                <div>WEDNESDAY, MARCH 11TH</div>
+                <div className="date-time">9:00 PM - 12:00 AM</div>
+              </div>
             </div>
           )}
 
