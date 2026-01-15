@@ -1361,7 +1361,97 @@ const styles = `
     color: var(--neon-green);
     font-weight: 500;
   }
-  
+
+  /* Hosts Page */
+  .hosts-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 0;
+  }
+
+  .hosts-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 30px;
+    margin-top: 30px;
+  }
+
+  .host-card {
+    background: var(--card-bg);
+    border: 1px solid #333;
+    padding: 30px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .host-info {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .host-bio:first-of-type {
+    flex: 1;
+  }
+
+  .host-image {
+    margin-bottom: 20px;
+  }
+
+  .host-image img {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--neon-green);
+  }
+
+  .host-image-placeholder {
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+    color: #666;
+    font-size: 0.9rem;
+  }
+
+  .host-info h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: var(--neon-green);
+  }
+
+  .host-bio {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 20px;
+  }
+
+  .host-email {
+    display: inline-block;
+    color: var(--neon-green);
+    text-decoration: none;
+    padding: 10px 20px;
+    border: 1px solid var(--neon-green);
+    transition: all 0.2s ease;
+  }
+
+  .host-email:hover {
+    background: var(--neon-green);
+    color: black;
+  }
+
+  @media (max-width: 768px) {
+    .hosts-container {
+      grid-template-columns: 1fr;
+    }
+  }
+
   /* Password Prompt */
   .password-prompt {
     max-width: 400px;
@@ -2562,9 +2652,9 @@ function GDCKaraokeApp() {
                 </p>
               </div>
               <div className="info-card">
-                <h3>💼 Want to Sponsor?</h3>
+                <h3>Want to Sponsor?</h3>
                 <p>
-                  Get your studio or brand in front of 400+ singing game developers. Sponsorship packages are flexible, including signage, branded swag, private room options. Reach out to <a href="mailto:adam@gamedevdolin.com" style={{ color: 'var(--neon-green)' }}>Adam</a> or <a href="mailto:sylvia.cristina.amaya@gmail.com" style={{ color: 'var(--neon-green)' }}>Cristina</a> to learn more.
+                  Get your studio or brand in front of 400+ singing game developers. Sponsorship packages are flexible, including signage, branded swag, private room options. Reach out to <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); }} style={{ color: 'var(--neon-green)' }}>the hosts</a> to learn more.
                 </p>
               </div>
               <div className="info-card">
@@ -2576,19 +2666,73 @@ function GDCKaraokeApp() {
               <div className="info-card" style={{ border: '2px dashed #444', background: 'transparent', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
                 <p style={{ color: '#555', fontSize: '0.9rem', fontStyle: 'italic' }}>
                   This space for rent.<br/><br/>
-                  <a href="mailto:adam@gamedevdolin.com" style={{ color: 'var(--neon-green)' }}>Contact the hosts</a> to put your company here.
+                  <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); }} style={{ color: 'var(--neon-green)' }}>Contact the hosts</a> to put your company here.
                 </p>
               </div>
             </div>
           )}
-          
+
+          {/* Hosts Page */}
+          {view === 'hosts' && (
+            <div className="hosts-page">
+              <button className="back-btn" onClick={() => setView('home')}>
+                ← Back to home
+              </button>
+
+              <h2 className="section-label">Hi, we're your hosts!</h2>
+
+              <div className="hosts-container">
+                {/* Adam's card */}
+                <div className="host-card">
+                  <div className="host-image">
+                    {/* Add your image here: <img src="/images/adam.jpg" alt="Adam Dolin" /> */}
+                    <div className="host-image-placeholder">Adam's Photo</div>
+                  </div>
+                  <div className="host-info">
+                    <h3>Adam Dolin</h3>
+                    <p className="host-bio">
+                      {/* Add bio text here */}
+                      Adam Dolin is a WGA and BAFTA-winning narrative designer and writer whose work includes God of War, Horizon: Forbidden West, and God of War: Ragnarök. With over 16 years in the game industry, he’s collaborated with teams at Sony PlayStation, 2K, Activision, SEGA, and Netflix. He now runs Cold Brew Sunset, a narrative and UX consultancy helping teams of all sizes craft memorable, player-driven stories.                    
+                      </p>
+                    <a href="mailto:adam@gamedevdolin.com" className="host-email">
+                      adam@gamedevdolin.com
+                    </a>
+                    <p className="host-bio" style={{ marginTop: '20px' }}>
+                      Go-to karaoke song: The Cranberries - Zombie
+                    </p>
+                  </div>
+                </div>
+
+                {/* Cristina's card */}
+                <div className="host-card">
+                  <div className="host-image">
+                    {/* Add your image here: <img src="/images/cristina.jpg" alt="Cristina Amaya" /> */}
+                    <div className="host-image-placeholder">Cristina's Photo</div>
+                  </div>
+                  <div className="host-info">
+                    <h3>Cristina Amaya</h3>
+                    <p className="host-bio">
+                      Cristina Amaya is currently the Head of Events strategy for experiential gaming agency, Moonrock which includes clients such as Tencent, Samsung and Walmart. She has a decade of experience in the gaming industry including Riot Games, Twitch and Unity. She's founded non profit Latinx in Gaming and is on the board of the Esports Awards.
+                    </p>
+                    <a href="mailto:sylvia.cristina.amaya@gmail.com" className="host-email">
+                      sylvia.cristina.amaya@gmail.com
+                    </a>
+                    <p className="host-bio" style={{ marginTop: '20px' }}>
+                      Go-to karaoke song: No Doubt - Spiderwebs
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* Footer */}
           <footer className="footer">
             <p>
               <strong>GDC Karaoke Night 2026</strong> • {CONFIG.eventDate} • {CONFIG.eventTime}
             </p>
             <p className="hosts">
-              Hosted by <a href="mailto:adam@gamedevdolin.com">Adam Dolin</a> & <a href="mailto:sylvia.cristina.amaya@gmail.com">Cristina Amaya</a>
+              Hosted by <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); }}>Adam Dolin & Cristina Amaya</a>
             </p>
             <p style={{ marginTop: 15 }}>
               <span className="admin-link" onClick={() => setView('admin')}>•</span>
