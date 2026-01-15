@@ -50,12 +50,12 @@ const INITIAL_ROOMS = {
   large5: { id: 'large5', name: 'Large Room 5', capacity: 25, price: 55, tier: 'large', description: 'Space for the extended squad.' },
   vip: { 
     id: 'vip', 
-    name: 'VIP Room', 
+    name: 'The BIG Room', 
     capacity: 30, 
     price: 75, 
     tier: 'vip', 
-    description: 'The ultimate private karaoke experience.',
-    features: ['Premium sound system', 'Dedicated server', 'Best seats in the house'],
+    description: 'A massive room for you and 29 of your closest friends.',
+    features: ['3 Drink Tickets'],
   },
 };
 
@@ -1848,12 +1848,11 @@ function GDCKaraokeApp() {
           {/* Description Box */}
           {view === 'home' && (
             <div className="description-box">
-              <p style={{ marginBottom: 10, color: 'var(--neon-green)', fontWeight: 600 }}>Welcome to the karaoke party page.</p>
+              <p style={{ marginBottom: 10, color: 'var(--neon-green)', fontWeight: 600 }}>Welcome to the karaoke party page, pals.</p>
               <ul style={{ marginLeft: 20, lineHeight: 1.8 }}>
-                <li>Your own personal guest list with wristbands for your guests</li>
-                <li>Freedom to decorate/theme your own room</li>
-                <li>Access to the exclusive downstairs VIP section</li>
-                <li>3 free drinks per guest</li>
+                <li>Reserve a private room with your friends and colleagues. </li>
+                <li>Or buy a ticket for the main room.</li>
+                <li>Either way, it's gonna be a really good party.</li>
               </ul>
             </div>
           )}
@@ -1950,8 +1949,8 @@ function GDCKaraokeApp() {
                   onClick={() => toggleGroup('vip')}
                 >
                   <h3>
-                    <span className="tier-badge vip">VIP</span>
-                    VIP Room
+                    <span className="tier-badge vip">LARGEST</span>
+                    BIG Room
                   </h3>
                   <div className="group-meta">
                     <span>Up to {rooms.vip.capacity} guests</span>
@@ -2345,19 +2344,19 @@ function GDCKaraokeApp() {
                 <p>
                   <strong>{CONFIG.venueName}</strong><br/>
                   {CONFIG.venueAddress}<br/><br/>
-                  0.5 miles from Moscone Center. Main stage upstairs, 15 private rooms downstairs.
+                  0.5 miles from Moscone Center.
                 </p>
               </div>
               <div className="info-card">
                 <h3>💼 Want to Sponsor?</h3>
                 <p>
-                  Get your studio in front of 400+ game developers. Sponsorship packages include signage, branded swag, and private room options. Reach out to <a href="mailto:adam@gamedevdolin.com" style={{ color: 'var(--neon-green)' }}>Adam</a> or <a href="mailto:sylvia.cristina.amaya@gmail.com" style={{ color: 'var(--neon-green)' }}>Cristina</a> to learn more.
+                  Get your studio or brand in front of 400+ singing game developers. Sponsorship packages are flexible, including signage, branded swag, private room options. Reach out to <a href="mailto:adam@gamedevdolin.com" style={{ color: 'var(--neon-green)' }}>Adam</a> or <a href="mailto:sylvia.cristina.amaya@gmail.com" style={{ color: 'var(--neon-green)' }}>Cristina</a> to learn more.
                 </p>
               </div>
               <div className="info-card">
                 <h3>🛡️ Safety First</h3>
                 <p>
-                  Sober hosts, drink covers provided, hearing protection available, and narcan on-site. We're here for good vibes and safe nights.
+                  Sober hosts, drink covers provided, hearing protection available, and narcan on-site. We're here for good vibes, safe nights, and a zero-tolerance policy for harrassment, abuse, or unsettling behavior.
                 </p>
               </div>
               <div className="info-card" style={{ border: '2px dashed #444', background: 'transparent', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
