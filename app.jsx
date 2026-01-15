@@ -1400,8 +1400,8 @@ const styles = `
   }
 
   .host-image img {
-    width: 200px;
-    height: 200px;
+    width: 280px;
+    height: 280px;
     border-radius: 50%;
     object-fit: cover;
     border: 3px solid var(--neon-green);
@@ -2654,7 +2654,7 @@ function GDCKaraokeApp() {
               <div className="info-card">
                 <h3>Want to Sponsor?</h3>
                 <p>
-                  Get your studio or brand in front of 400+ singing game developers. Sponsorship packages are flexible, including signage, branded swag, private room options. Reach out to <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); }} style={{ color: 'var(--neon-green)' }}>the hosts</a> to learn more.
+                  Get your studio or brand in front of 400+ singing game developers. Sponsorship packages are flexible, including signage, branded swag, private room options. Reach out to <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); setTimeout(() => document.getElementById('hosts-title')?.scrollIntoView({ behavior: 'smooth' }), 100); }} style={{ color: 'var(--neon-green)' }}>the hosts</a> to learn more.
                 </p>
               </div>
               <div className="info-card">
@@ -2666,7 +2666,7 @@ function GDCKaraokeApp() {
               <div className="info-card" style={{ border: '2px dashed #444', background: 'transparent', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
                 <p style={{ color: '#555', fontSize: '0.9rem', fontStyle: 'italic' }}>
                   This space for rent.<br/><br/>
-                  <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); }} style={{ color: 'var(--neon-green)' }}>Contact the hosts</a> to put your company here.
+                  <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); setTimeout(() => document.getElementById('hosts-title')?.scrollIntoView({ behavior: 'smooth' }), 100); }} style={{ color: 'var(--neon-green)' }}>Contact the hosts</a> to put your company here.
                 </p>
               </div>
             </div>
@@ -2679,20 +2679,19 @@ function GDCKaraokeApp() {
                 ← Back to home
               </button>
 
-              <h2 className="section-label">Hi, we're your hosts!</h2>
+              <h2 id="hosts-title" className="section-label">Hi, we're your hosts!</h2>
 
               <div className="hosts-container">
                 {/* Adam's card */}
                 <div className="host-card">
                   <div className="host-image">
-                    {/* Add your image here: <img src="/images/adam.jpg" alt="Adam Dolin" /> */}
-                    <div className="host-image-placeholder">Adam's Photo</div>
+                    <img src="/images/adamhost.png" alt="Adam Dolin" />
                   </div>
                   <div className="host-info">
                     <h3>Adam Dolin</h3>
                     <p className="host-bio">
                       {/* Add bio text here */}
-                      Adam Dolin is a WGA and BAFTA-winning narrative designer and writer whose work includes God of War, Horizon: Forbidden West, and God of War: Ragnarök. With over 16 years in the game industry, he’s collaborated with teams at Sony PlayStation, 2K, Activision, SEGA, and Netflix. He now runs Cold Brew Sunset, a narrative and UX consultancy helping teams of all sizes craft memorable, player-driven stories.                    
+                      Adam Dolin is a WGA and BAFTA-winning narrative designer and writer whose work includes God of War, Horizon: Forbidden West, and God of War: Ragnarök. With over 16 years in the game industry, he's collaborated with teams at Sony PlayStation, 2K, Activision, SEGA, and Netflix. He now runs Cold Brew Sunset, a narrative and UX consultancy helping teams craft memorable, player-driven stories.                    
                       </p>
                     <a href="mailto:adam@gamedevdolin.com" className="host-email">
                       adam@gamedevdolin.com
@@ -2706,8 +2705,7 @@ function GDCKaraokeApp() {
                 {/* Cristina's card */}
                 <div className="host-card">
                   <div className="host-image">
-                    {/* Add your image here: <img src="/images/cristina.jpg" alt="Cristina Amaya" /> */}
-                    <div className="host-image-placeholder">Cristina's Photo</div>
+                    <img src="/images/crishost.png" alt="Cristina Amaya" />
                   </div>
                   <div className="host-info">
                     <h3>Cristina Amaya</h3>
@@ -2732,7 +2730,7 @@ function GDCKaraokeApp() {
               <strong>GDC Karaoke Night 2026</strong> • {CONFIG.eventDate} • {CONFIG.eventTime}
             </p>
             <p className="hosts">
-              Hosted by <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); }}>Adam Dolin & Cristina Amaya</a>
+              Hosted by <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); setTimeout(() => document.getElementById('hosts-title')?.scrollIntoView({ behavior: 'smooth' }), 100); }}>Adam Dolin & Cristina Amaya</a>
             </p>
             <p style={{ marginTop: 15 }}>
               <span className="admin-link" onClick={() => setView('admin')}>•</span>
