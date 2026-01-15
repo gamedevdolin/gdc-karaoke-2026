@@ -1701,8 +1701,10 @@ function GDCKaraokeApp() {
     vip: false,
   });
 
-  // Ref for room detail section
+  // Refs for room detail section
   const roomDetailRef = useRef(null);
+  const backButtonRef = useRef(null);
+  const tabNavRef = useRef(null);
 
   // Email signup state
   const [signups, setSignups] = useState([]);
@@ -1790,7 +1792,20 @@ function GDCKaraokeApp() {
     setFormData({ ...formData, quantity: 1 });
     setView('room');
     setTimeout(() => {
-      roomDetailRef.current?.scrollIntoView({ behavior: 'instant', block: 'start' });
+      const isMobile = window.innerWidth <= 768;
+      if (isMobile) {
+        backButtonRef.current?.scrollIntoView({ behavior: 'instant', block: 'start' });
+      } else {
+        roomDetailRef.current?.scrollIntoView({ behavior: 'instant', block: 'start' });
+      }
+    }, 0);
+  };
+
+  // Handle back to home
+  const goBackToHome = () => {
+    setView('home');
+    setTimeout(() => {
+      tabNavRef.current?.scrollIntoView({ behavior: 'instant', block: 'start' });
     }, 0);
   };
   
@@ -1959,7 +1974,7 @@ function GDCKaraokeApp() {
 
           {/* Tab Navigation - Main Room on left, Private Rooms on right (but Private is default) */}
           {view === 'home' && (
-            <nav className="tab-nav">
+            <nav className="tab-nav" ref={tabNavRef}>
               <button 
                 className={`tab-btn ${activeTab === 'main' ? 'active' : ''}`}
                 onClick={() => setActiveTab('main')}
@@ -2216,7 +2231,7 @@ function GDCKaraokeApp() {
           {/* Room Detail View */}
           {view === 'room' && selectedRoom && (
             <div className="room-detail" ref={roomDetailRef}>
-              <button className="back-btn" onClick={() => setView('home')}>
+              <button ref={backButtonRef} className="back-btn" onClick={goBackToHome}>
                 ← Back to all rooms
               </button>
               
