@@ -713,6 +713,9 @@ const styles = `
   /* Room Group Toggles */
   .room-group {
     margin-bottom: 15px;
+    max-width: 550px;
+    margin-left: auto;
+    margin-right: auto;
   }
   
   .room-group-header {
@@ -742,6 +745,7 @@ const styles = `
     display: flex;
     align-items: center;
     gap: 12px;
+    min-width: 130px;
   }
   
   .room-group-header .tier-badge {
@@ -2014,7 +2018,7 @@ function GDCKaraokeApp() {
                   <h3>
                     <span className="tier-badge">Small Room</span>
                   </h3>
-                  <span className="guest-count">Up to 8 Guests</span>
+                  <span className="guest-count">Up to 8<br></br>Guests</span>
                   <div className="group-meta">
                     <span className="group-price">
                       ${rooms.small1.price}/person<br/>
@@ -2055,7 +2059,7 @@ function GDCKaraokeApp() {
                   <h3>
                     <span className="tier-badge">Medium Room</span>
                   </h3>
-                  <span className="guest-count">Up to 15 Guests</span>
+                  <span className="guest-count">Up to 15<br></br>Guests</span>
                   <div className="group-meta">
                     <span className="group-price">
                       ${rooms.medium1.price}/person<br/>
@@ -2096,7 +2100,7 @@ function GDCKaraokeApp() {
                   <h3>
                     <span className="tier-badge">Large Room</span>
                   </h3>
-                  <span className="guest-count">Up to 25 Guests</span>
+                  <span className="guest-count">Up to 25<br></br>Guests</span>
                   <div className="group-meta">
                     <span className="group-price">
                       ${rooms.large1.price}/person<br/>
@@ -2137,7 +2141,7 @@ function GDCKaraokeApp() {
                   <h3>
                     <span className="tier-badge vip">Largest Room</span>
                   </h3>
-                  <span className="guest-count">Up to {rooms.vip1.capacity} Guests</span>
+                  <span className="guest-count">Up to 30<br></br>Guests</span>
                   <div className="group-meta">
                     <span className="group-price">
                       ${rooms.vip1.price}/person<br/>
