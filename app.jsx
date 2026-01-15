@@ -23,7 +23,7 @@ const INITIAL_ROOMS = {
     capacity: 120,
     price: 30,
     tier: 'main',
-    features: ['2 drink tickets included'],
+    features: ['includes 2 drink tickets'],
   },
   mainStageSong: {
     id: 'mainStageSong',
@@ -32,7 +32,7 @@ const INITIAL_ROOMS = {
     capacity: 20,
     price: 60,
     tier: 'main-song',
-    features: ['2 drink tickets included', '1 song on the stage'],
+    features: ['includes 3 drink tickets', '1 song on the stage'],
   },
   small1: { id: 'small1', name: 'Small Room 1', capacity: 8, price: 45, tier: 'small', description: 'Intimate vibes for your crew.' },
   small2: { id: 'small2', name: 'Small Room 2', capacity: 8, price: 45, tier: 'small', description: 'Intimate vibes for your crew.' },
@@ -1843,8 +1843,7 @@ function GDCKaraokeApp() {
           </div>
 
           {/* Book Tickets Label */}
-          <h2 className="section-label">RESERVE YOUR SPOT</h2>
-
+          
           {/* Description Box */}
           {view === 'home' && (
             <div className="description-box">
@@ -1856,6 +1855,8 @@ function GDCKaraokeApp() {
               </ul>
             </div>
           )}
+
+          <h2 className="section-label">RESERVE YOUR SPOT</h2>
 
           {/* Tab Navigation - Main Room on left, Private Rooms on right (but Private is default) */}
           {view === 'home' && (
@@ -1905,10 +1906,7 @@ function GDCKaraokeApp() {
                 </div>
               </div>
 
-              {/* Description Box */}
-              <div className="description-box">
-                Due to the length of the average karaoke song and the laws of time, we can only accommodate a limited number of singers on the main stage. Sign up to be the first to know when tickets drop—Main Stage singers will receive more information in late February.
-              </div>
+              
 
               <div className="room-grid">
                 {/* Main Stage + Song */}
@@ -1935,6 +1933,10 @@ function GDCKaraokeApp() {
                     </span>
                   </div>
                 </div>
+                {/* Description Box */}
+              <div className="description-box">
+                Due to the length of the average karaoke song and the laws of time, only a limited number of singers will be allowed to grace the main stage. Sign up to be the first to know when tickets drop—Main Stage singers will receive more information in late February.
+              </div>
               </div>
             </>
           )}
