@@ -506,6 +506,36 @@ const styles = `
     border: 3px solid rgba(255, 255, 255, 0.3);
   }
 
+  .text-box-white-black {
+    background: white;
+    color: black;
+    width: 100%;
+    box-shadow:
+      0 0 30px rgba(255, 255, 255, 0.2),
+      inset 0 0 60px rgba(0, 0, 0, 0.05);
+    border: 3px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .text-box-white-black s {
+    text-decoration: line-through;
+    text-decoration-thickness: 3px;
+  }
+
+  .two-column-boxes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  @media (max-width: 600px) {
+    .two-column-boxes {
+      grid-template-columns: 1fr;
+    }
+  }
+
   .text-box-white {
     background: #e8e8e8;
     grid-column: 3 / 4;
@@ -1778,7 +1808,7 @@ function GDCKaraokeApp() {
             <div className="slide-text-boxes">
               <div className="text-box text-box-green">
                 <div className="text-box-content">
-                  Forget all your troubles.<br/>Forget all your cares.<br/>Sing downtown at
+                  Forget all your troubles.<br/>Forget all your cares.<br/>Sing downtown at:
                 </div>
               </div>
               </div>
@@ -1796,8 +1826,22 @@ function GDCKaraokeApp() {
             <div className="hero-slide pandora-slide">
               <img src="/images/PANDORA.png" alt="Pandora Karaoke" />
             </div>
+
+            {/* Two column text boxes */}
+            <div className="two-column-boxes">
+              <div className="text-box text-box-green">
+                <div className="text-box-content">
+                  Main stage upstairs.<br/>Private rooms downstairs.<br/>Full venue takeover.
+                </div>
+              </div>
+              <div className="text-box text-box-white-black">
+                <div className="text-box-content">
+                  The Game Developer <s>Conference</s> Chorus.
+                </div>
+              </div>
+            </div>
           </div>
-          
+
           {/* Book Tickets Label */}
           <h2 className="section-label">RESERVE YOUR SPOT</h2>
 
