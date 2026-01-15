@@ -373,7 +373,7 @@ const styles = `
     display: flex;
     flex-direction: column;
     gap: 15px;
-    margin: 100px 0;
+    margin: 100px 0 30px;
     max-width: 900px;
     margin-left: auto;
     margin-right: auto;
@@ -425,6 +425,15 @@ const styles = `
     border-radius: 4px;
   }
 
+  .hero-video {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    display: block;
+    border-radius: 4px;
+    animation: pandoraGlow 2s ease-in-out infinite;
+  }
+
   @keyframes pandoraGlow {
     0%, 100% {
       filter: drop-shadow(0 0 10px rgba(0, 255, 148, 0.3))
@@ -474,21 +483,27 @@ const styles = `
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 20px;
+    padding: 40px 30px;
     font-family: 'Outfit', sans-serif;
-    font-weight: 600;
-    line-height: 1.4;
+    font-weight: 800;
+    line-height: 1.3;
   }
 
   .text-box-content {
-    text-align: left;
-    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    text-align: center;
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    text-transform: uppercase;
+    letter-spacing: 2px;
   }
 
   .text-box-green {
     background: var(--neon-green);
     color: black;
     width: 100%;
+    box-shadow:
+      0 0 30px rgba(0, 255, 148, 0.4),
+      inset 0 0 60px rgba(255, 255, 255, 0.1);
+    border: 3px solid rgba(255, 255, 255, 0.3);
   }
 
   .text-box-white {
@@ -1763,10 +1778,20 @@ function GDCKaraokeApp() {
             <div className="slide-text-boxes">
               <div className="text-box text-box-green">
                 <div className="text-box-content">
-                  Forget all your troubles, forget all your cares, and sing downtown at
+                  Forget all your troubles.<br/>Forget all your cares.<br/>Sing downtown at
                 </div>
               </div>
               </div>
+
+            <video
+              className="hero-video"
+              autoPlay
+              loop
+              muted
+              playsInline
+            >
+              <source src="/images/yunagroove.mp4" type="video/mp4" />
+            </video>
 
             <div className="hero-slide pandora-slide">
               <img src="/images/PANDORA.png" alt="Pandora Karaoke" />
@@ -1775,7 +1800,20 @@ function GDCKaraokeApp() {
           
           {/* Book Tickets Label */}
           <h2 className="section-label">RESERVE YOUR SPOT</h2>
-          
+
+          {/* Description Box */}
+          {view === 'home' && (
+            <div className="description-box">
+              <p style={{ marginBottom: 10, color: 'var(--neon-green)', fontWeight: 600 }}>Welcome to the karaoke party page.</p>
+              <ul style={{ marginLeft: 20, lineHeight: 1.8 }}>
+                <li>Your own personal guest list with wristbands for your guests</li>
+                <li>Freedom to decorate/theme your own room</li>
+                <li>Access to the exclusive downstairs VIP section</li>
+                <li>3 free drinks per guest</li>
+              </ul>
+            </div>
+          )}
+
           {/* Tab Navigation - Main Room on left, Private Rooms on right (but Private is default) */}
           {view === 'home' && (
             <nav className="tab-nav">
@@ -1861,22 +1899,6 @@ function GDCKaraokeApp() {
           {/* Home View - Private Rooms */}
           {view === 'home' && activeTab === 'private' && (
             <>
-              {/* Early Bird Banner */}
-              {/* <div className="early-bird-banner">
-                🐣 EARLY CHOCOBO PRICES 🐣
-              </div> */}
-              
-              {/* Description Box */}
-              <div className="description-box">
-                <p style={{ marginBottom: 10, color: 'var(--neon-green)', fontWeight: 600 }}>Welcome to the karaoke party page.</p>
-                <ul style={{ marginLeft: 20, lineHeight: 1.8 }}>
-                  <li>Your own personal guest list with wristbands for your guests</li>
-                  <li>Freedom to decorate/theme your own room</li>
-                  <li>Access to the exclusive downstairs VIP section</li>
-                  <li>3 free drinks per guest</li>
-                </ul>
-              </div>
-              
               {/* VIP Room Group */}
               <div className="room-group">
                 <div 
