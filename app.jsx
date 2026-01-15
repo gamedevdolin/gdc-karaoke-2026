@@ -169,7 +169,7 @@ const styles = `
 
   .header-content {
     position: absolute;
-    top:-3%;
+    top: 2%;
     left: 50%;
     transform: translateX(-50%);
     width: 90%;
@@ -182,7 +182,7 @@ const styles = `
     color: var(--neon-green);
     letter-spacing: 3px;
     text-transform: uppercase;
-    margin-bottom: 4%;
+    margin-bottom: 15px;
     text-shadow:
       0 0 10px rgba(0, 255, 148, 0.8),
       0 0 20px rgba(0, 255, 148, 0.5),
@@ -1732,10 +1732,10 @@ function GDCKaraokeApp() {
         <div className="container">
           {/* Header */}
           <header className="header">
+            <p className="top-tagline">Sing your troubles away</p>
+
             <div className="header-background">
               <div className="header-content">
-                <p className="top-tagline">Sing your troubles away</p>
-
                 <h1>
                   <span className="white">KARAOKE NIGHT</span><br/>
                   <span className="green">@GDC 2026</span>
