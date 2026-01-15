@@ -2182,7 +2182,7 @@ function GDCKaraokeApp() {
                   <div className="group-meta">
                     <span className="group-price">
                       ${rooms.medium1.price}/person<br/>
-                      <span style={{ fontSize: '0.85em', opacity: 0.7 }}>$700/room</span>
+                      <span style={{ fontSize: '0.85em', opacity: 0.7 }}>$650/room</span>
                     </span>
                     <span className="toggle-icon">›</span>
                   </div>
