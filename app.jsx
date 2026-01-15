@@ -2130,27 +2130,11 @@ function GDCKaraokeApp() {
                 </div>
               )}
               
-              <div className="capacity-bar">
-                <div 
-                  className={`capacity-fill ${
-                    getAvailableSpots(selectedRoom) < 5 ? 'warning' : ''
-                  } ${getAvailableSpots(selectedRoom) === 0 ? 'full' : ''}`}
-                  style={{ 
-                    width: `${(getBookedCount(selectedRoom) / rooms[selectedRoom].capacity) * 100}%` 
-                  }}
-                />
-              </div>
-              <p className="capacity-text">
-                <strong style={{ color: getAvailableSpots(selectedRoom) > 0 ? 'var(--neon-green)' : 'var(--neon-pink)' }}>
-                  {getAvailableSpots(selectedRoom)} spots available
-                </strong>
-                {' '}out of {rooms[selectedRoom].capacity} total capacity
-              </p>
+              
               
               {/* Coming Soon - Email Signup */}
               <div className="coming-soon-section">
-                <h3>🎤 Tickets Coming Soon!</h3>
-                <div className="date">FEBRUARY 2026</div>
+                
                 
                 {signupSuccess ? (
                   <div className="signup-success">
@@ -2158,7 +2142,7 @@ function GDCKaraokeApp() {
                   </div>
                 ) : (
                   <>
-                    <p>Sign up to reserve your spot and be first to know when tickets drop.</p>
+                    <p>Sign up now to be notified when tickets go on sale in mid-February</p>
                     <form className="signup-form" onSubmit={(e) => handleSignup(e, selectedRoom)}>
                       <div className="form-group">
                         <input 
@@ -2205,7 +2189,22 @@ function GDCKaraokeApp() {
                   </>
                 )}
               </div>
-              
+              <div className="capacity-bar">
+                <div 
+                  className={`capacity-fill ${
+                    getAvailableSpots(selectedRoom) < 5 ? 'warning' : ''
+                  } ${getAvailableSpots(selectedRoom) === 0 ? 'full' : ''}`}
+                  style={{ 
+                    width: `${(getBookedCount(selectedRoom) / rooms[selectedRoom].capacity) * 100}%` 
+                  }}
+                />
+              </div>
+              <p className="capacity-text">
+                <strong style={{ color: getAvailableSpots(selectedRoom) > 0 ? 'var(--neon-green)' : 'var(--neon-pink)' }}>
+                  {getAvailableSpots(selectedRoom)} spots available
+                </strong>
+                {' '}out of {rooms[selectedRoom].capacity} total capacity
+              </p>
               <div className="share-section">
                 <h4>Share this room with friends</h4>
                 <div className="share-link">
