@@ -169,7 +169,7 @@ const styles = `
 
   .header-content {
     position: absolute;
-    top: 5%;
+    top:-3%;
     left: 50%;
     transform: translateX(-50%);
     width: 90%;
@@ -182,7 +182,7 @@ const styles = `
     color: var(--neon-green);
     letter-spacing: 3px;
     text-transform: uppercase;
-    margin-bottom: 2%;
+    margin-bottom: 4%;
     text-shadow:
       0 0 10px rgba(0, 255, 148, 0.8),
       0 0 20px rgba(0, 255, 148, 0.5),
@@ -193,14 +193,16 @@ const styles = `
   @keyframes neonPulse {
     0%, 100% {
       text-shadow:
-        0 0 10px rgba(0, 255, 148, 0.8),
-        0 0 20px rgba(0, 255, 148, 0.5),
+        0 0 10px rgba(0, 255, 148, 0.7),
+        0 0 20px rgba(0, 255, 148, 0.4),
+        0 0 30px rgba(0, 255, 148, 0.2),
         2px 2px 4px rgba(0, 0, 0, 0.9);
     }
     50% {
       text-shadow:
-        0 0 20px rgba(0, 255, 148, 1),
-        0 0 30px rgba(0, 255, 148, 0.7),
+        0 0 15px rgba(0, 255, 148, 0.9),
+        0 0 30px rgba(0, 255, 148, 0.6),
+        0 0 45px rgba(0, 255, 148, 0.3),
         2px 2px 4px rgba(0, 0, 0, 0.9);
     }
   }
@@ -261,6 +263,7 @@ const styles = `
       0 0 20px rgba(0, 255, 148, 0.6),
       0 4px 15px rgba(0, 0, 0, 0.5);
     border: 2px solid rgba(255, 255, 255, 0.3);
+    animation: dateGlow 2s ease-in-out infinite;
   }
 
   .header .date-time {
@@ -292,9 +295,37 @@ const styles = `
     50% { transform: translateY(5px); }
   }
 
+  @keyframes dateGlow {
+    0%, 100% {
+      box-shadow:
+        0 0 15px rgba(0, 255, 148, 0.5),
+        0 4px 15px rgba(0, 0, 0, 0.5);
+    }
+    50% {
+      box-shadow:
+        0 0 25px rgba(0, 255, 148, 0.8),
+        0 0 40px rgba(0, 255, 148, 0.4),
+        0 4px 15px rgba(0, 0, 0, 0.5);
+    }
+  }
+
   @keyframes gentleRotate {
     0%, 100% { transform: rotate(-5deg); }
     50% { transform: rotate(5deg); }
+  }
+
+  /* Mascot Row */
+  .mascot-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 40px;
+    margin-top: 20px;
+  }
+
+  .mascot-row img {
+    width: 100px;
+    height: auto;
   }
 
   /* Mascot placeholders */
@@ -334,19 +365,16 @@ const styles = `
   
   @media (max-width: 600px) {
     .header {
-      margin: 40px auto 30px;
+      margin: 5px auto 30px;
     }
 
     .header-background {
-      padding: 30px 15px 25px;
+      /* Removed padding override - keep default */
     }
 
     .header .date-row {
-      position: static;
-      transform: none;
-      flex-direction: column;
-      gap: 15px;
-      margin-top: 20px;
+      /* Keep absolute positioning from parent styles */
+      bottom: 3.5%;
     }
 
     .mascot-placeholder {
@@ -1723,8 +1751,13 @@ function GDCKaraokeApp() {
             </div>
 
             <p className="scroll-hint">↓ Keep scrolling ↓</p>
+
+            <div className="mascot-row">
+              <img src="/images/jigglypuff.png" alt="Jigglypuff" className="mascot-rotate" />
+              <img src="/images/caitsith.png" alt="Cait Sith" className="mascot-rotate-reverse" />
+            </div>
           </header>
-          
+
           {/* Hero Slides - Deck images */}
           <div className="hero-slides">
             {/* CSS Recreation of slide1 text */}
