@@ -19,7 +19,7 @@ const INITIAL_ROOMS = {
   mainStage: {
     id: 'mainStage',
     name: 'Main Stage',
-    description: 'The heart of the party. Big stage, big energy, 100,000+ songs.',
+    description: 'Big stage. Big energy. The heart of the party.',
     capacity: 120,
     price: 30,
     tier: 'main',
@@ -28,7 +28,7 @@ const INITIAL_ROOMS = {
   mainStageSong: {
     id: 'mainStageSong',
     name: 'Main Stage + Song',
-    description: 'Everything in Main Stage, plus a guaranteed song slot on the big stage.',
+    description: 'An extra drink ticket + a guaranteed song on the big stage.',
     capacity: 20,
     price: 60,
     tier: 'main-song',
@@ -55,7 +55,7 @@ const INITIAL_ROOMS = {
     price: 75, 
     tier: 'vip', 
     description: 'A massive room for you and 29 of your closest friends.',
-    features: ['3 Drink Tickets'],
+    features: ['Includes 3 Drink Tickets'],
   },
 };
 
@@ -1610,10 +1610,10 @@ function GDCKaraokeApp() {
   const [showSuccess, setShowSuccess] = useState(false);
   const [copied, setCopied] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState({
-    vip: false,
-    large: false,
-    medium: false,
     small: false,
+    medium: false,
+    large: false,
+    vip: false,
   });
   
   // Email signup state
@@ -1849,8 +1849,8 @@ function GDCKaraokeApp() {
             <div className="description-box">
               <p style={{ marginBottom: 10, color: 'var(--neon-green)', fontWeight: 600 }}>Welcome to the karaoke party page, pals.</p>
               <ul style={{ marginLeft: 20, lineHeight: 1.8 }}>
-                <li>Reserve a private room with your friends and colleagues. </li>
-                <li>Or buy a ticket for the main room.</li>
+                <li>Reserve a private room with your friends and colleagues.</li>
+                <li>Or buy a main room ticket for general admission.</li>
                 <li>Either way, it's gonna be a really good party.</li>
               </ul>
             </div>
@@ -1914,7 +1914,7 @@ function GDCKaraokeApp() {
                   className="room-card featured"
                   onClick={() => selectRoom('mainStageSong')}
                 >
-                  <div className="room-tier">★ Main Stage + Song</div>
+                  
                   <h3 className="room-name">{rooms.mainStageSong.name}</h3>
                   <p className="room-description">{rooms.mainStageSong.description}</p>
                   <div className="features-list">
@@ -1944,9 +1944,135 @@ function GDCKaraokeApp() {
           {/* Home View - Private Rooms */}
           {view === 'home' && activeTab === 'private' && (
             <>
+              {/* Small Rooms Group */}
+              <div className="room-group">
+                <div
+                  className={`room-group-header ${expandedGroups.small ? 'open' : ''}`}
+                  onClick={() => toggleGroup('small')}
+                >
+                  <h3>
+                    <span className="tier-badge">Small</span>
+                    Small Rooms
+                  </h3>
+                  <div className="group-meta">
+                    <span>3 rooms • Up to 8 guests each</span>
+                    <span className="group-price">
+                      ${rooms.small1.price}/person<br/>
+                      <span style={{ fontSize: '0.85em', opacity: 0.7 }}>$300/room</span>
+                    </span>
+                    <span className="toggle-icon">{expandedGroups.small ? '▲' : '▼'}</span>
+                  </div>
+                </div>
+                {expandedGroups.small && (
+                  <div className="room-group-content">
+                    {['small1', 'small2', 'small3'].map(id => (
+                      <div
+                        key={id}
+                        className="room-card"
+                        onClick={() => selectRoom(id)}
+                      >
+                        <h3 className="room-name">{rooms[id].name}</h3>
+                        <p className="room-description">{rooms[id].description}</p>
+                        <div className="room-meta">
+                          <span className="room-capacity">
+                            <span className={getAvailableSpots(id) > 0 ? 'available' : 'sold-out'}>
+                              {getAvailableSpots(id)} spots left
+                            </span> / {rooms[id].capacity}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Medium Rooms Group */}
+              <div className="room-group">
+                <div
+                  className={`room-group-header ${expandedGroups.medium ? 'open' : ''}`}
+                  onClick={() => toggleGroup('medium')}
+                >
+                  <h3>
+                    <span className="tier-badge">Medium</span>
+                    Medium Rooms
+                  </h3>
+                  <div className="group-meta">
+                    <span>6 rooms • Up to 15 guests each</span>
+                    <span className="group-price">
+                      ${rooms.medium1.price}/person<br/>
+                      <span style={{ fontSize: '0.85em', opacity: 0.7 }}>$700/room</span>
+                    </span>
+                    <span className="toggle-icon">{expandedGroups.medium ? '▲' : '▼'}</span>
+                  </div>
+                </div>
+                {expandedGroups.medium && (
+                  <div className="room-group-content">
+                    {['medium1', 'medium2', 'medium3', 'medium4', 'medium5', 'medium6'].map(id => (
+                      <div
+                        key={id}
+                        className="room-card"
+                        onClick={() => selectRoom(id)}
+                      >
+                        <h3 className="room-name">{rooms[id].name}</h3>
+                        <p className="room-description">{rooms[id].description}</p>
+                        <div className="room-meta">
+                          <span className="room-capacity">
+                            <span className={getAvailableSpots(id) > 0 ? 'available' : 'sold-out'}>
+                              {getAvailableSpots(id)} spots left
+                            </span> / {rooms[id].capacity}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Large Rooms Group */}
+              <div className="room-group">
+                <div
+                  className={`room-group-header ${expandedGroups.large ? 'open' : ''}`}
+                  onClick={() => toggleGroup('large')}
+                >
+                  <h3>
+                    <span className="tier-badge">Large</span>
+                    Large Rooms
+                  </h3>
+                  <div className="group-meta">
+                    <span>5 rooms • Up to 25 guests each</span>
+                    <span className="group-price">
+                      ${rooms.large1.price}/person<br/>
+                      <span style={{ fontSize: '0.85em', opacity: 0.7 }}>$1200/room</span>
+                    </span>
+                    <span className="toggle-icon">{expandedGroups.large ? '▲' : '▼'}</span>
+                  </div>
+                </div>
+                {expandedGroups.large && (
+                  <div className="room-group-content">
+                    {['large1', 'large2', 'large3', 'large4', 'large5'].map(id => (
+                      <div
+                        key={id}
+                        className="room-card"
+                        onClick={() => selectRoom(id)}
+                      >
+                        <h3 className="room-name">{rooms[id].name}</h3>
+                        <p className="room-description">{rooms[id].description}</p>
+                        <div className="room-meta">
+                          <span className="room-capacity">
+                            <span className={getAvailableSpots(id) > 0 ? 'available' : 'sold-out'}>
+                              {getAvailableSpots(id)} spots left
+                            </span> / {rooms[id].capacity}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
               {/* VIP Room Group */}
               <div className="room-group">
-                <div 
+                <div
                   className={`room-group-header ${expandedGroups.vip ? 'open' : ''}`}
                   onClick={() => toggleGroup('vip')}
                 >
@@ -1956,13 +2082,16 @@ function GDCKaraokeApp() {
                   </h3>
                   <div className="group-meta">
                     <span>Up to {rooms.vip.capacity} guests</span>
-                    <span className="group-price">${rooms.vip.price}/person</span>
+                    <span className="group-price">
+                      ${rooms.vip.price}/person<br/>
+                      <span style={{ fontSize: '0.85em', opacity: 0.7 }}>$2000/room</span>
+                    </span>
                     <span className="toggle-icon">{expandedGroups.vip ? '▲' : '▼'}</span>
                   </div>
                 </div>
                 {expandedGroups.vip && (
                   <div className="room-group-content">
-                    <div 
+                    <div
                       className="room-card vip"
                       onClick={() => selectRoom('vip')}
                     >
@@ -1976,123 +2105,6 @@ function GDCKaraokeApp() {
                         </span>
                       </div>
                     </div>
-                  </div>
-                )}
-              </div>
-              
-              {/* Large Rooms Group */}
-              <div className="room-group">
-                <div 
-                  className={`room-group-header ${expandedGroups.large ? 'open' : ''}`}
-                  onClick={() => toggleGroup('large')}
-                >
-                  <h3>
-                    <span className="tier-badge">Large</span>
-                    Large Rooms
-                  </h3>
-                  <div className="group-meta">
-                    <span>5 rooms • Up to 25 guests each</span>
-                    <span className="group-price">${rooms.large1.price}/person</span>
-                    <span className="toggle-icon">{expandedGroups.large ? '▲' : '▼'}</span>
-                  </div>
-                </div>
-                {expandedGroups.large && (
-                  <div className="room-group-content">
-                    {['large1', 'large2', 'large3', 'large4', 'large5'].map(id => (
-                      <div 
-                        key={id}
-                        className="room-card"
-                        onClick={() => selectRoom(id)}
-                      >
-                        <h3 className="room-name">{rooms[id].name}</h3>
-                        <p className="room-description">{rooms[id].description}</p>
-                        <div className="room-meta">
-                          <span className="room-capacity">
-                            <span className={getAvailableSpots(id) > 0 ? 'available' : 'sold-out'}>
-                              {getAvailableSpots(id)} spots left
-                            </span> / {rooms[id].capacity}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-              
-              {/* Medium Rooms Group */}
-              <div className="room-group">
-                <div 
-                  className={`room-group-header ${expandedGroups.medium ? 'open' : ''}`}
-                  onClick={() => toggleGroup('medium')}
-                >
-                  <h3>
-                    <span className="tier-badge">Medium</span>
-                    Medium Rooms
-                  </h3>
-                  <div className="group-meta">
-                    <span>6 rooms • Up to 15 guests each</span>
-                    <span className="group-price">${rooms.medium1.price}/person</span>
-                    <span className="toggle-icon">{expandedGroups.medium ? '▲' : '▼'}</span>
-                  </div>
-                </div>
-                {expandedGroups.medium && (
-                  <div className="room-group-content">
-                    {['medium1', 'medium2', 'medium3', 'medium4', 'medium5', 'medium6'].map(id => (
-                      <div 
-                        key={id}
-                        className="room-card"
-                        onClick={() => selectRoom(id)}
-                      >
-                        <h3 className="room-name">{rooms[id].name}</h3>
-                        <p className="room-description">{rooms[id].description}</p>
-                        <div className="room-meta">
-                          <span className="room-capacity">
-                            <span className={getAvailableSpots(id) > 0 ? 'available' : 'sold-out'}>
-                              {getAvailableSpots(id)} spots left
-                            </span> / {rooms[id].capacity}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-              
-              {/* Small Rooms Group */}
-              <div className="room-group">
-                <div 
-                  className={`room-group-header ${expandedGroups.small ? 'open' : ''}`}
-                  onClick={() => toggleGroup('small')}
-                >
-                  <h3>
-                    <span className="tier-badge">Small</span>
-                    Small Rooms
-                  </h3>
-                  <div className="group-meta">
-                    <span>3 rooms • Up to 8 guests each</span>
-                    <span className="group-price">${rooms.small1.price}/person</span>
-                    <span className="toggle-icon">{expandedGroups.small ? '▲' : '▼'}</span>
-                  </div>
-                </div>
-                {expandedGroups.small && (
-                  <div className="room-group-content">
-                    {['small1', 'small2', 'small3'].map(id => (
-                      <div 
-                        key={id}
-                        className="room-card"
-                        onClick={() => selectRoom(id)}
-                      >
-                        <h3 className="room-name">{rooms[id].name}</h3>
-                        <p className="room-description">{rooms[id].description}</p>
-                        <div className="room-meta">
-                          <span className="room-capacity">
-                            <span className={getAvailableSpots(id) > 0 ? 'available' : 'sold-out'}>
-                              {getAvailableSpots(id)} spots left
-                            </span> / {rooms[id].capacity}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
                   </div>
                 )}
               </div>
@@ -2346,6 +2358,8 @@ function GDCKaraokeApp() {
                   <strong>{CONFIG.venueName}</strong><br/>
                   {CONFIG.venueAddress}<br/><br/>
                   0.5 miles from Moscone Center.
+                </p>
+                <p>Check out <a href="https://pandorakaraoke.com">Pandora Karaoke</a> for more info.
                 </p>
               </div>
               <div className="info-card">
