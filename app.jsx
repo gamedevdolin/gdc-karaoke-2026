@@ -34,28 +34,29 @@ const INITIAL_ROOMS = {
     tier: 'main-song',
     features: ['includes 3 drink tickets', '1 song on the stage'],
   },
-  small1: { id: 'small1', name: 'Bulleit Bourbon', capacity: 8, price: 45, tier: 'small'},
-  small2: { id: 'small2', name: 'Doodle', capacity: 8, price: 45, tier: 'small'},
-  small3: { id: 'small3', name: 'Superhero', capacity: 8, price: 45, tier: 'small'},
-  medium1: { id: 'medium1', name: 'Patron', capacity: 15, price: 50, tier: 'medium'},
-  medium2: { id: 'medium2', name: 'Warriors', capacity: 15, price: 50, tier: 'medium'},
-  medium3: { id: 'medium3', name: 'Jameson', capacity: 15, price: 50, tier: 'medium'},
-  medium4: { id: 'medium4', name: 'Johnnie Walker', capacity: 15, price: 50, tier: 'medium'},
-  medium5: { id: 'medium5', name: 'Ciroc', capacity: 15, price: 50, tier: 'medium'},
-  medium6: { id: 'medium6', name: 'Grey Goose', capacity: 15, price: 50, tier: 'medium'},
-  large1: { id: 'large1', name: 'Hennessy', capacity: 25, price: 55, tier: 'large'},
-  large2: { id: 'large2', name: 'Crown Royal', capacity: 25, price: 55, tier: 'large'},
-  large3: { id: 'large3', name: 'Absolut', capacity: 25, price: 55, tier: 'large'},
-  large4: { id: 'large4', name: 'Cazadores', capacity: 25, price: 55, tier: 'large'},
-  large5: { id: 'large5', name: "D'Ussé", capacity: 25, price: 55, tier: 'large'},
+  small1: { id: 'small1', name: 'Bulleit Bourbon', capacity: 8, price: 45, tier: 'small', backgroundImage: '/images/bulliet.jpg'},
+  small2: { id: 'small2', name: 'Doodle', capacity: 8, price: 45, tier: 'small', backgroundImage: '/images/doodle.jpg'},
+  small3: { id: 'small3', name: 'Superhero', capacity: 8, price: 45, tier: 'small', backgroundImage: '/images/superhero.jpg'},
+  medium1: { id: 'medium1', name: 'Patron', capacity: 15, price: 50, tier: 'medium', backgroundImage: '/images/patron.jpg'},
+  medium2: { id: 'medium2', name: 'Warriors', capacity: 15, price: 50, tier: 'medium', backgroundImage: '/images/dubs.jpg'},
+  medium3: { id: 'medium3', name: 'Jameson', capacity: 15, price: 50, tier: 'medium', backgroundImage: '/images/jamie.jpg'},
+  medium4: { id: 'medium4', name: 'Johnnie Walker', capacity: 15, price: 50, tier: 'medium', backgroundImage: '/images/johnny.jpg'},
+  medium5: { id: 'medium5', name: 'Ciroc', capacity: 15, price: 50, tier: 'medium', backgroundImage: '/images/ciroc.jpg'},
+  medium6: { id: 'medium6', name: 'Grey Goose', capacity: 15, price: 50, tier: 'medium', backgroundImage: '/images/greygoose.jpg'},
+  large1: { id: 'large1', name: 'Hennessy', capacity: 25, price: 55, tier: 'large', backgroundImage: '/images/henny.jpg'},
+  large2: { id: 'large2', name: 'Crown Royal', capacity: 25, price: 55, tier: 'large', backgroundImage: '/images/crown.jpg'},
+  large3: { id: 'large3', name: 'Absolut', capacity: 25, price: 55, tier: 'large', backgroundImage: '/images/absolut.jpg'},
+  large4: { id: 'large4', name: 'Cazadores', capacity: 25, price: 55, tier: 'large', backgroundImage: '/images/cazadores.jpg'},
+  large5: { id: 'large5', name: "D'Ussé", capacity: 25, price: 55, tier: 'large', backgroundImage: '/images/dusse.jpg'},
   vip1: {
     id: 'vip1',
     name: 'The BIG Room',
     capacity: 30,
     price: 75,
     tier: 'vip',
-    description: 'A massive room for you and 29 of your closest friends.',
+    description: 'A massive room for you and\n29 of your closest friends.',
     features: ['Includes 3 Drink Tickets'],
+    backgroundImage: '/images/BIGroom.jpg',
   },
 };
 
@@ -804,9 +805,35 @@ const styles = `
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 12px;
   }
-  
+
   .room-group-content .room-card {
     margin: 0;
+    position: relative;
+  }
+
+  .room-group-content .room-card.has-bg {
+    overflow: hidden;
+  }
+
+  .room-group-content .room-card.has-bg::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    right: -10%;
+    transform: translateY(-50%);
+    width: 60%;
+    height: 120%;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-image: var(--room-bg);
+    opacity: 0.7;
+    z-index: 0;
+  }
+
+  .room-group-content .room-card.has-bg > * {
+    position: relative;
+    z-index: 1;
   }
 
   /* Navigation */
@@ -914,6 +941,7 @@ const styles = `
     font-size: 0.95rem;
     margin-bottom: 15px;
     font-weight: 300;
+    white-space: pre-line;
   }
   
   .room-meta {
@@ -2032,7 +2060,8 @@ function GDCKaraokeApp() {
                     {['small1', 'small2', 'small3'].map(id => (
                       <div
                         key={id}
-                        className="room-card"
+                        className={`room-card ${rooms[id].backgroundImage ? 'has-bg' : ''}`}
+                        style={rooms[id].backgroundImage ? { '--room-bg': `url(${rooms[id].backgroundImage})` } : {}}
                         onClick={() => selectRoom(id)}
                       >
                         <h3 className="room-name">{rooms[id].name}</h3>
@@ -2073,7 +2102,8 @@ function GDCKaraokeApp() {
                     {['medium1', 'medium2', 'medium3', 'medium4', 'medium5', 'medium6'].map(id => (
                       <div
                         key={id}
-                        className="room-card"
+                        className={`room-card ${rooms[id].backgroundImage ? 'has-bg' : ''}`}
+                        style={rooms[id].backgroundImage ? { '--room-bg': `url(${rooms[id].backgroundImage})` } : {}}
                         onClick={() => selectRoom(id)}
                       >
                         <h3 className="room-name">{rooms[id].name}</h3>
@@ -2114,7 +2144,8 @@ function GDCKaraokeApp() {
                     {['large1', 'large2', 'large3', 'large4', 'large5'].map(id => (
                       <div
                         key={id}
-                        className="room-card"
+                        className={`room-card ${rooms[id].backgroundImage ? 'has-bg' : ''}`}
+                        style={rooms[id].backgroundImage ? { '--room-bg': `url(${rooms[id].backgroundImage})` } : {}}
                         onClick={() => selectRoom(id)}
                       >
                         <h3 className="room-name">{rooms[id].name}</h3>
@@ -2155,7 +2186,8 @@ function GDCKaraokeApp() {
                     {['vip1'].map(id => (
                       <div
                         key={id}
-                        className="room-card vip"
+                        className={`room-card vip ${rooms[id].backgroundImage ? 'has-bg' : ''}`}
+                        style={rooms[id].backgroundImage ? { '--room-bg': `url(${rooms[id].backgroundImage})` } : {}}
                         onClick={() => selectRoom(id)}
                       >
                         <h3 className="room-name">{rooms[id].name}</h3>
