@@ -2050,9 +2050,9 @@ function GDCKaraokeApp() {
           <header className="header">
             <div className="header-content">
               <h1 style={{ fontSize: 'clamp(4rem, 15vw, 10rem)', lineHeight: 0.95, textAlign: 'center' }}>
-                <span className="white">KARAOKE</span><br/>
-                <span className="white">NIGHT</span><br/>
-                <span className="green">@GDC 2026</span>
+                <span className="white" style={{ display: 'block' }}>KARAOKE</span>
+                <span className="white" style={{ display: 'block' }}>NIGHT</span>
+                <span className="green" style={{ display: 'block' }}>@GDC 2026</span>
               </h1>
             </div>
 
