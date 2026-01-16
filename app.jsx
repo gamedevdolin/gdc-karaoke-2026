@@ -135,10 +135,10 @@ const styles = `
   /* Header */
   .header {
     text-align: center;
-    padding: 0;
+    padding: 40px 0;
     position: relative;
-    max-width: 640px;
-    margin: 5px auto 40px;
+    max-width: 900px;
+    margin: 0 auto;
   }
 
   .header-background {
@@ -169,12 +169,11 @@ const styles = `
   }
 
   .header-content {
-    position: absolute;
-    top: 2%;
-    left: 50%;
-    transform: translateX(-50%);
+    position: relative;
     width: 90%;
+    margin: 0 auto;
     z-index: 2;
+    text-align: center;
   }
 
   .header .top-tagline {
@@ -355,7 +354,7 @@ const styles = `
     justify-content: center;
     align-items: center;
     gap: 40px;
-    margin-top: 100px;
+    margin: 20px 0;
   }
 
   .mascot-row img {
@@ -2049,31 +2048,21 @@ function GDCKaraokeApp() {
         <div className="container">
           {/* Header */}
           <header className="header">
-            <p className="top-tagline">Sing your troubles away</p>
-
-            <div className="header-background">
-              <div className="header-content">
-                <h1>
-                  <span className="white">KARAOKE NIGHT</span><br/>
-                  <span className="green">@GDC 2026</span>
-                </h1>
-              </div>
-
-              <div className="date-row">
-                <div className="date-text">
-                  <div>WEDNESDAY, MARCH 11TH</div>
-                  <div className="date-time">9:00 PM - 12:00 AM</div>
-                </div>
-              </div>
+            <div className="header-content">
+              <h1 style={{ fontSize: 'clamp(4rem, 15vw, 10rem)', lineHeight: 0.95, textAlign: 'center' }}>
+                <span className="white">KARAOKE</span><br/>
+                <span className="white">NIGHT</span><br/>
+                <span className="green">@GDC 2026</span>
+              </h1>
             </div>
 
-            <p className="scroll-hint">↓ Keep scrolling ↓</p>
-
-            <div className="mascot-row">
-              <img src="/images/jigglypuff.png" alt="Jigglypuff" className="mascot-rotate" />
-              <img src="/images/caitsith.png" alt="Cait Sith" className="mascot-rotate-reverse" />
-            </div>
+            {/* <p className="scroll-hint">↓ Keep scrolling ↓</p> */}
           </header>
+
+          <div className="mascot-row">
+            <img src="/images/jigglypuff.png" alt="Jigglypuff" className="mascot-rotate" />
+            <img src="/images/caitsith.png" alt="Cait Sith" className="mascot-rotate-reverse" />
+          </div>
 
           {/* Hero Slides - Deck images */}
           <div className="hero-slides">
@@ -2084,7 +2073,7 @@ function GDCKaraokeApp() {
                   Forget all your troubles.<br/>Forget all your cares.<br/>Sing downtown at:
                 </div>
               </div>
-              </div>
+            </div>
 
             <video
               className="hero-video"
@@ -2121,7 +2110,7 @@ function GDCKaraokeApp() {
           {/* Description Box */}
           {view === 'home' && (
             <div className="description-box" style={{ textAlign: 'center', maxWidth: 900, margin: '0 auto 25px' }}>
-              <p style={{ marginBottom: 10, color: 'var(--neon-green)', fontWeight: 600, fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Welcome to the karaoke party page.</p>
+              <p style={{ marginBottom: 10, color: 'var(--neon-green)', fontWeight: 600, fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Welcome to the karaoke party page</p>
               <p>Reserve a private room with your friends and colleagues.</p>
               <p>Or buy a main room ticket for general admission.</p>
               <p>Either way, it's gonna be a really good party.</p>
@@ -2130,12 +2119,19 @@ function GDCKaraokeApp() {
 
           {/* Date Box - Above Reserve Your Spot */}
           {view === 'home' && (
-            <div className="date-row-standalone">
+            <a
+              href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=GDC+Karaoke+Night+2026&dates=20260311T210000/20260312T000000&ctz=America/Los_Angeles&details=Karaoke+party+at+Pandora+Karaoke+during+GDC+2026&location=Pandora+Karaoke,+50+Mason+St,+San+Francisco,+CA+94102"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="date-row-standalone"
+              style={{ textDecoration: 'none', cursor: 'pointer' }}
+            >
               <div className="date-text">
                 <div>WEDNESDAY, MARCH 11TH</div>
                 <div className="date-time">9:00 PM - 12:00 AM</div>
+                <div style={{ fontSize: '0.8rem', marginTop: '8px', opacity: 0.7 }}>+ Add to Calendar</div>
               </div>
-            </div>
+            </a>
           )}
 
           <h2 className="section-label">RESERVE YOUR SPOT</h2>
@@ -2233,7 +2229,7 @@ function GDCKaraokeApp() {
                   onClick={() => toggleGroup('small')}
                 >
                   <h3>
-                    <span className="tier-badge">Small Room</span>
+                    <span className="tier-badge">Small Rooms</span>
                   </h3>
                   <span className="guest-count">Up to 8<br></br>Guests</span>
                   <div className="group-meta">
@@ -2276,7 +2272,7 @@ function GDCKaraokeApp() {
                   onClick={() => toggleGroup('medium')}
                 >
                   <h3>
-                    <span className="tier-badge">Medium Room</span>
+                    <span className="tier-badge">Medium Rooms</span>
                   </h3>
                   <span className="guest-count">Up to 15<br></br>Guests</span>
                   <div className="group-meta">
@@ -2319,7 +2315,7 @@ function GDCKaraokeApp() {
                   onClick={() => toggleGroup('large')}
                 >
                   <h3>
-                    <span className="tier-badge">Large Room</span>
+                    <span className="tier-badge">Large Rooms</span>
                   </h3>
                   <span className="guest-count">Up to 25<br></br>Guests</span>
                   <div className="group-meta">
@@ -2750,7 +2746,7 @@ function GDCKaraokeApp() {
           {/* Footer */}
           <footer className="footer">
             <p>
-              <strong>GDC Karaoke Night 2026</strong> • {CONFIG.eventDate} • {CONFIG.eventTime}
+              <strong>GDC Karaoke Night 2026</strong><p></p>{CONFIG.eventDate}<p></p>{CONFIG.eventTime}
             </p>
             <p className="hosts">
               Hosted by <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); setTimeout(() => document.getElementById('hosts-title')?.scrollIntoView({ behavior: 'smooth' }), 100); }}>Adam Dolin & Cristina Amaya</a>
