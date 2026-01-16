@@ -34,20 +34,20 @@ const INITIAL_ROOMS = {
     tier: 'main',
     features: ['includes 3 drink tickets', '1 song on the stage'],
   },
-  small1: { id: 'small1', name: 'Bulleit Bourbon', capacity: 8, price: 45, roomPrice: 300, tier: 'small', backgroundImage: '/images/bulliet.jpg', features: ['Includes 3 Drink Tickets']},
-  small2: { id: 'small2', name: 'Doodle', capacity: 8, price: 45, roomPrice: 300, tier: 'small', backgroundImage: '/images/doodle.jpg', features: ['Includes 3 Drink Tickets']},
-  small3: { id: 'small3', name: 'Superhero', capacity: 8, price: 45, roomPrice: 300, tier: 'small', backgroundImage: '/images/superhero.jpg', features: ['Includes 3 Drink Tickets']},
-  medium1: { id: 'medium1', name: 'Patron', capacity: 15, price: 50, roomPrice: 650, tier: 'medium', backgroundImage: '/images/patron.jpg', features: ['Includes 3 Drink Tickets']},
-  medium2: { id: 'medium2', name: 'Warriors', capacity: 15, price: 50, roomPrice: 650, tier: 'medium', backgroundImage: '/images/dubs.jpg', features: ['Includes 3 Drink Tickets']},
-  medium3: { id: 'medium3', name: 'Jameson', capacity: 15, price: 50, roomPrice: 650, tier: 'medium', backgroundImage: '/images/jamie.jpg', features: ['Includes 3 Drink Tickets']},
-  medium4: { id: 'medium4', name: 'Johnnie Walker', capacity: 15, price: 50, roomPrice: 650, tier: 'medium', backgroundImage: '/images/johnny.jpg', features: ['Includes 3 Drink Tickets']},
-  medium5: { id: 'medium5', name: 'Ciroc', capacity: 15, price: 50, roomPrice: 650, tier: 'medium', backgroundImage: '/images/ciroc.jpg', features: ['Includes 3 Drink Tickets']},
-  medium6: { id: 'medium6', name: 'Grey Goose', capacity: 15, price: 50, roomPrice: 650, tier: 'medium', backgroundImage: '/images/greygoose.jpg', features: ['Includes 3 Drink Tickets']},
-  large1: { id: 'large1', name: 'Hennessy', capacity: 25, price: 55, roomPrice: 1200, tier: 'large', backgroundImage: '/images/henny.jpg', features: ['Includes 3 Drink Tickets']},
-  large2: { id: 'large2', name: 'Crown Royal', capacity: 25, price: 55, roomPrice: 1200, tier: 'large', backgroundImage: '/images/crown.jpg', features: ['Includes 3 Drink Tickets']},
-  large3: { id: 'large3', name: 'Absolut', capacity: 25, price: 55, roomPrice: 1200, tier: 'large', backgroundImage: '/images/absolut.jpg', features: ['Includes 3 Drink Tickets']},
-  large4: { id: 'large4', name: 'Cazadores', capacity: 25, price: 55, roomPrice: 1200, tier: 'large', backgroundImage: '/images/cazadores.jpg', features: ['Includes 3 Drink Tickets']},
-  large5: { id: 'large5', name: "D'Ussé", capacity: 25, price: 55, roomPrice: 1200, tier: 'large', backgroundImage: '/images/dusse.jpg', features: ['Includes 3 Drink Tickets']},
+  small1: { id: 'small1', name: 'Bulleit Bourbon', capacity: 8, price: 45, roomPrice: 300, tier: 'small', backgroundImage: '/images/bulliet.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  small2: { id: 'small2', name: 'Doodle', capacity: 8, price: 45, roomPrice: 300, tier: 'small', backgroundImage: '/images/doodle.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  small3: { id: 'small3', name: 'Superhero', capacity: 8, price: 45, roomPrice: 300, tier: 'small', backgroundImage: '/images/superhero.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  medium1: { id: 'medium1', name: 'Patron', capacity: 15, price: 50, roomPrice: 650, tier: 'medium', backgroundImage: '/images/patron.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  medium2: { id: 'medium2', name: 'Warriors', capacity: 15, price: 50, roomPrice: 650, tier: 'medium', backgroundImage: '/images/dubs.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  medium3: { id: 'medium3', name: 'Jameson', capacity: 15, price: 50, roomPrice: 650, tier: 'medium', backgroundImage: '/images/jamie.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  medium4: { id: 'medium4', name: 'Johnnie Walker', capacity: 15, price: 50, roomPrice: 650, tier: 'medium', backgroundImage: '/images/johnny.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  medium5: { id: 'medium5', name: 'Ciroc', capacity: 15, price: 50, roomPrice: 650, tier: 'medium', backgroundImage: '/images/ciroc.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  medium6: { id: 'medium6', name: 'Grey Goose', capacity: 15, price: 50, roomPrice: 650, tier: 'medium', backgroundImage: '/images/greygoose.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  large1: { id: 'large1', name: 'Hennessy', capacity: 25, price: 55, roomPrice: 1200, tier: 'large', backgroundImage: '/images/henny.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  large2: { id: 'large2', name: 'Crown Royal', capacity: 25, price: 55, roomPrice: 1200, tier: 'large', backgroundImage: '/images/crown.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  large3: { id: 'large3', name: 'Absolut', capacity: 25, price: 55, roomPrice: 1200, tier: 'large', backgroundImage: '/images/absolut.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  large4: { id: 'large4', name: 'Cazadores', capacity: 25, price: 55, roomPrice: 1200, tier: 'large', backgroundImage: '/images/cazadores.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  large5: { id: 'large5', name: "D'Ussé", capacity: 25, price: 55, roomPrice: 1200, tier: 'large', backgroundImage: '/images/dusse.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
   vip1: {
     id: 'vip1',
     name: 'The BIG Room',
@@ -55,7 +55,7 @@ const INITIAL_ROOMS = {
     price: 75,
     roomPrice: 2000,
     tier: 'vip',
-    features: ['Includes 3 Drink Tickets'],
+    features: ['Includes 3 Drink Tickets Per Guest'],
     backgroundImage: '/images/BIGroom.jpg',
   },
 };
@@ -1104,7 +1104,13 @@ const styles = `
     padding: 8px 16px;
     font-size: 0.85rem;
   }
-  
+
+  .feature-tag.capacity {
+    background: rgba(255, 82, 82, 0.1);
+    border: 1px solid rgba(255, 82, 82, 0.3);
+    color: #FF5252;
+  }
+
   /* Booking Form */
   .booking-form {
     background: #111;
@@ -1876,6 +1882,7 @@ function GDCKaraokeApp() {
   const [signups, setSignups] = useState([]);
   const [signupForm, setSignupForm] = useState({ name: '', email: '', company: '', reserveEntireRoom: false });
   const [signupSuccess, setSignupSuccess] = useState(false);
+  const [submittedEmail, setSubmittedEmail] = useState('');
   
   // Admin password protection
   const [adminPassword, setAdminPassword] = useState('');
@@ -1898,9 +1905,10 @@ function GDCKaraokeApp() {
       date: new Date().toISOString().split('T')[0],
     };
     setSignups([...signups, newSignup]);
+    setSubmittedEmail(signupForm.email);
     setSignupSuccess(true);
     setSignupForm({ name: '', email: '', company: '', reserveEntireRoom: false });
-    setTimeout(() => setSignupSuccess(false), 3000);
+    // Success message stays permanently to discourage multiple signups
   };
   
   // Export signups as CSV
@@ -2099,7 +2107,7 @@ function GDCKaraokeApp() {
               </div>
               <div className="text-box text-box-white-black">
                 <div className="text-box-content">
-                  The Game Developer <s>Conference</s> Chorus.
+                  The Game Developer <s>Conference</s> Chorus
                 </div>
               </div>
             </div>
@@ -2119,19 +2127,26 @@ function GDCKaraokeApp() {
 
           {/* Date Box - Above Reserve Your Spot */}
           {view === 'home' && (
-            <a
-              href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=GDC+Karaoke+Night+2026&dates=20260311T210000/20260312T000000&ctz=America/Los_Angeles&details=Karaoke+party+at+Pandora+Karaoke+during+GDC+2026&location=Pandora+Karaoke,+50+Mason+St,+San+Francisco,+CA+94102"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="date-row-standalone"
-              style={{ textDecoration: 'none', cursor: 'pointer' }}
-            >
+            <div className="date-row-standalone">
               <div className="date-text">
                 <div>WEDNESDAY, MARCH 11TH</div>
                 <div className="date-time">9:00 PM - 12:00 AM</div>
-                <div style={{ fontSize: '0.8rem', marginTop: '8px', opacity: 0.7 }}>+ Add to Calendar</div>
+                <a
+                  href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=GDC+Karaoke+Night+2026&dates=20260311T210000/20260312T000000&ctz=America/Los_Angeles&details=Karaoke+party+at+Pandora+Karaoke+during+GDC+2026&location=Pandora+Karaoke,+50+Mason+St,+San+Francisco,+CA+94102"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ fontSize: '0.8rem', marginTop: '8px', color: '#000', textDecoration: 'none', display: 'inline-block' }}
+                >
+                  + Add to Calendar
+                </a>
               </div>
-            </a>
+            </div>
+          )}
+
+          {view === 'home' && (
+            <p style={{ textAlign: 'center', color: '#ff6b6b', fontSize: '0.95rem', margin: '20px 0 40px', fontStyle: 'italic', textShadow: '0 0 10px rgba(255, 107, 107, 0.4)' }}>
+              Tickets go on sale mid-February
+            </p>
           )}
 
           <h2 className="section-label">RESERVE YOUR SPOT</h2>
@@ -2252,6 +2267,7 @@ function GDCKaraokeApp() {
                       >
                         <h3 className="room-name">{rooms[id].name}</h3>
                         <p className="room-description">{rooms[id].description}</p>
+                        {/* Capacity counter - uncomment when ticket sales go live
                         <div className="room-meta">
                           <span className="room-capacity">
                             <span className={getAvailableSpots(id) > 0 ? 'available' : 'sold-out'}>
@@ -2259,6 +2275,7 @@ function GDCKaraokeApp() {
                             </span> / {rooms[id].capacity}
                           </span>
                         </div>
+                        */}
                       </div>
                     ))}
                   </div>
@@ -2295,6 +2312,7 @@ function GDCKaraokeApp() {
                       >
                         <h3 className="room-name">{rooms[id].name}</h3>
                         <p className="room-description">{rooms[id].description}</p>
+                        {/* Capacity counter - uncomment when ticket sales go live
                         <div className="room-meta">
                           <span className="room-capacity">
                             <span className={getAvailableSpots(id) > 0 ? 'available' : 'sold-out'}>
@@ -2302,6 +2320,7 @@ function GDCKaraokeApp() {
                             </span> / {rooms[id].capacity}
                           </span>
                         </div>
+                        */}
                       </div>
                     ))}
                   </div>
@@ -2338,6 +2357,7 @@ function GDCKaraokeApp() {
                       >
                         <h3 className="room-name">{rooms[id].name}</h3>
                         <p className="room-description">{rooms[id].description}</p>
+                        {/* Capacity counter - uncomment when ticket sales go live
                         <div className="room-meta">
                           <span className="room-capacity">
                             <span className={getAvailableSpots(id) > 0 ? 'available' : 'sold-out'}>
@@ -2345,6 +2365,7 @@ function GDCKaraokeApp() {
                             </span> / {rooms[id].capacity}
                           </span>
                         </div>
+                        */}
                       </div>
                     ))}
                   </div>
@@ -2381,6 +2402,7 @@ function GDCKaraokeApp() {
                       >
                         <h3 className="room-name">{rooms[id].name}</h3>
                         <p className="room-description">{rooms[id].description}</p>
+                        {/* Capacity counter - uncomment when ticket sales go live
                         <div className="room-meta">
                           <span className="room-capacity">
                             <span className={getAvailableSpots(id) > 0 ? 'available' : 'sold-out'}>
@@ -2388,6 +2410,7 @@ function GDCKaraokeApp() {
                             </span> / {rooms[id].capacity}
                           </span>
                         </div>
+                        */}
                       </div>
                     ))}
                   </div>
@@ -2395,7 +2418,7 @@ function GDCKaraokeApp() {
               </div>
             </>
           )}
-          
+
           {/* Room Detail View */}
           {view === 'room' && selectedRoom && (
             <div className="room-detail" ref={roomDetailRef}>
@@ -2433,6 +2456,7 @@ function GDCKaraokeApp() {
               
               {rooms[selectedRoom].features && (
                 <div className="features-list">
+                  <span className="feature-tag">Up to {rooms[selectedRoom].capacity} Guests</span>
                   {rooms[selectedRoom].features.map((f, i) => (
                     <span key={i} className="feature-tag">{f}</span>
                   ))}
@@ -2447,7 +2471,7 @@ function GDCKaraokeApp() {
                 
                 {signupSuccess ? (
                   <div className="signup-success">
-                    ✓ You're on the list! We'll email you when tickets go live.
+                    ✓ You're on the list! We'll email you at {submittedEmail} when tickets go live in mid-February.
                   </div>
                 ) : (
                   <>
@@ -2499,13 +2523,14 @@ function GDCKaraokeApp() {
                   </>
                 )}
               </div>
+              {/* Capacity bar and counter - uncomment when ticket sales go live
               <div className="capacity-bar">
-                <div 
+                <div
                   className={`capacity-fill ${
                     getAvailableSpots(selectedRoom) < 5 ? 'warning' : ''
                   } ${getAvailableSpots(selectedRoom) === 0 ? 'full' : ''}`}
-                  style={{ 
-                    width: `${(getBookedCount(selectedRoom) / rooms[selectedRoom].capacity) * 100}%` 
+                  style={{
+                    width: `${(getBookedCount(selectedRoom) / rooms[selectedRoom].capacity) * 100}%`
                   }}
                 />
               </div>
@@ -2515,6 +2540,7 @@ function GDCKaraokeApp() {
                 </strong>
                 {' '}out of {rooms[selectedRoom].capacity} total capacity
               </p>
+              */}
               <div className="share-section">
                 <h4>Share this room with friends</h4>
                 <div className="share-link">
@@ -2661,15 +2687,15 @@ function GDCKaraokeApp() {
                 </p>
               </div>
               <div className="info-card">
-                <h3>Want to Sponsor?</h3>
-                <p>
-                  Get your studio or brand in front of 400+ singing game developers. Sponsorship packages are flexible, including signage, branded swag, private room options.<br></br> Reach out to <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); setTimeout(() => document.getElementById('hosts-title')?.scrollIntoView({ behavior: 'smooth' }), 100); }} style={{ color: 'var(--neon-green)' }}>the hosts</a> to learn more.
-                </p>
-              </div>
-              <div className="info-card">
                 <h3>🛡️ Safety First</h3>
                 <p>
                   Sober hosts, drink covers provided, hearing protection available, and narcan on-site. We're here for good vibes, safe nights, and a zero-tolerance policy for harrassment, abuse, or unsettling behavior.
+                </p>
+              </div>
+              <div className="info-card">
+                <h3>Want to Sponsor?</h3>
+                <p>
+                  Get your studio or brand in front of 400+ singing game developers. Sponsorship packages are flexible, including signage, branded swag, private room options.<br></br> Reach out to <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); setTimeout(() => document.getElementById('hosts-title')?.scrollIntoView({ behavior: 'smooth' }), 100); }} style={{ color: 'var(--neon-green)' }}>the hosts</a> to learn more.
                 </p>
               </div>
               <div className="info-card" style={{ border: '2px dashed #444', background: 'transparent', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
