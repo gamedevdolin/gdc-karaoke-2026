@@ -1432,16 +1432,24 @@ const styles = `
     margin-bottom: 20px;
   }
 
-  .host-email {
+  .host-contact-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .host-contact-btn {
     display: inline-block;
     color: var(--neon-green);
     text-decoration: none;
     padding: 10px 20px;
     border: 1px solid var(--neon-green);
     transition: all 0.2s ease;
+    font-size: 0.9rem;
   }
 
-  .host-email:hover {
+  .host-contact-btn:hover {
     background: var(--neon-green);
     color: black;
   }
@@ -2230,7 +2238,7 @@ function GDCKaraokeApp() {
                   <div className="group-meta">
                     <span className="group-price">
                       ${rooms.small1.price}/person<br/>
-                      <span style={{ fontSize: '0.85em', opacity: 0.7 }}>$300/room</span>
+                      <span style={{ fontSize: '0.85em', opacity: 0.7 }}>${rooms.small1.roomPrice}/room</span>
                     </span>
                     <span className="toggle-icon">›</span>
                   </div>
@@ -2272,7 +2280,7 @@ function GDCKaraokeApp() {
                   <div className="group-meta">
                     <span className="group-price">
                       ${rooms.medium1.price}/person<br/>
-                      <span style={{ fontSize: '0.85em', opacity: 0.7 }}>$650/room</span>
+                      <span style={{ fontSize: '0.85em', opacity: 0.7 }}>${rooms.medium1.roomPrice}/room</span>
                     </span>
                     <span className="toggle-icon">›</span>
                   </div>
@@ -2314,7 +2322,7 @@ function GDCKaraokeApp() {
                   <div className="group-meta">
                     <span className="group-price">
                       ${rooms.large1.price}/person<br/>
-                      <span style={{ fontSize: '0.85em', opacity: 0.7 }}>$1200/room</span>
+                      <span style={{ fontSize: '0.85em', opacity: 0.7 }}>${rooms.large1.roomPrice}/room</span>
                     </span>
                     <span className="toggle-icon">›</span>
                   </div>
@@ -2356,7 +2364,7 @@ function GDCKaraokeApp() {
                   <div className="group-meta">
                     <span className="group-price">
                       ${rooms.vip1.price}/person<br/>
-                      <span style={{ fontSize: '0.85em', opacity: 0.7 }}>$2000/room</span>
+                      <span style={{ fontSize: '0.85em', opacity: 0.7 }}>${rooms.vip1.roomPrice}/room</span>
                     </span>
                     <span className="toggle-icon">›</span>
                   </div>
@@ -2693,9 +2701,14 @@ function GDCKaraokeApp() {
                       {/* Add bio text here */}
                       Adam Dolin is a WGA and BAFTA-winning narrative designer and writer whose work includes God of War, Horizon: Forbidden West, and God of War: Ragnarök. With over 16 years in the game industry, he's collaborated with teams at Sony PlayStation, 2K, Activision, SEGA, and Netflix. He now runs Cold Brew Sunset, a narrative and UX consultancy helping teams craft memorable, player-driven stories.                    
                       </p>
-                    <a href="mailto:adam@gamedevdolin.com" className="host-email">
-                      adam@gamedevdolin.com
-                    </a>
+                    <div className="host-contact-row">
+                      <a href="mailto:adam@gamedevdolin.com" className="host-contact-btn">
+                        Email
+                      </a>
+                      <a href="https://www.linkedin.com/in/adamdolin/" target="_blank" rel="noopener noreferrer" className="host-contact-btn">
+                        LinkedIn
+                      </a>
+                    </div>
                     <p className="host-bio" style={{ marginTop: '20px' }}>
                       Go-to karaoke song: The Cranberries - Zombie
                     </p>
@@ -2712,9 +2725,14 @@ function GDCKaraokeApp() {
                     <p className="host-bio">
                       Cristina Amaya is currently the Head of Events strategy for experiential gaming agency, Moonrock which includes clients such as Tencent, Samsung and Walmart. She has a decade of experience in the gaming industry including Riot Games, Twitch and Unity. She's founded non profit Latinx in Gaming and is on the board of the Esports Awards.
                     </p>
-                    <a href="mailto:sylvia.cristina.amaya@gmail.com" className="host-email">
-                      sylvia.cristina.amaya@gmail.com
-                    </a>
+                    <div className="host-contact-row">
+                      <a href="mailto:sylvia.cristina.amaya@gmail.com" className="host-contact-btn">
+                        Email
+                      </a>
+                      <a href="https://www.linkedin.com/in/silcris/" target="_blank" rel="noopener noreferrer" className="host-contact-btn">
+                        LinkedIn
+                      </a>
+                    </div>
                     <p className="host-bio" style={{ marginTop: '20px' }}>
                       Go-to karaoke song: No Doubt - Spiderwebs
                     </p>
