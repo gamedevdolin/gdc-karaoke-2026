@@ -2060,7 +2060,7 @@ function GDCKaraokeApp() {
               <h1 style={{ fontSize: 'clamp(4rem, 15vw, 10rem)', lineHeight: 0.95, textAlign: 'center' }}>
                 <span className="white" style={{ display: 'block' }}>KARAOKE</span>
                 <span className="white" style={{ display: 'block' }}>NIGHT</span>
-                <span className="green" style={{ display: 'block', marginLeft: '-0.15em' }}>@GDC 2026</span>
+                <span className="green" style={{ display: 'block', marginLeft: '-0.30em' }}>@GDC 2026</span>
               </h1>
             </div>
 
