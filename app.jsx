@@ -2120,7 +2120,7 @@ function GDCKaraokeApp() {
           {/* Description Box */}
           {view === 'home' && (
             <div className="description-box" style={{ textAlign: 'center', maxWidth: 900, margin: '0 auto 25px' }}>
-              <p style={{ marginBottom: 10, color: 'var(--neon-green)', fontWeight: 600, fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '1px', whiteSpace: 'nowrap' }}>Welcome to the karaoke party page.</p>
+              <p style={{ marginBottom: 10, color: 'var(--neon-green)', fontWeight: 600, fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Welcome to the karaoke party page.</p>
               <p>Reserve a private room with your friends and colleagues.</p>
               <p>Or buy a main room ticket for general admission.</p>
               <p>Either way, it's gonna be a really good party.</p>
