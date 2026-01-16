@@ -2120,7 +2120,7 @@ function GDCKaraokeApp() {
           {/* Description Box */}
           {view === 'home' && (
             <div className="description-box" style={{ textAlign: 'center', maxWidth: 900, margin: '0 auto 25px' }}>
-              <p style={{ marginBottom: 10, color: 'var(--neon-green)', fontWeight: 600 }}>Welcome to the karaoke party page.</p>
+              <p style={{ marginBottom: 10, color: 'var(--neon-green)', fontWeight: 600, fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '1px', whiteSpace: 'nowrap' }}>Welcome to the karaoke party page.</p>
               <p>Reserve a private room with your friends and colleagues.</p>
               <p>Or buy a main room ticket for general admission.</p>
               <p>Either way, it's gonna be a really good party.</p>
@@ -2656,13 +2656,13 @@ function GDCKaraokeApp() {
                   {CONFIG.venueAddress}<br/><br/>
                   0.5 miles from Moscone Center.
                 </p>
-                <p>Check out <a href="https://pandorakaraoke.com">Pandora Karaoke</a> for more info.
+                <p>Check out <a href="https://pandorakaraoke.com" style={{ color: 'var(--neon-green)' }}>Pandora Karaoke</a> for more info.
                 </p>
               </div>
               <div className="info-card">
                 <h3>Want to Sponsor?</h3>
                 <p>
-                  Get your studio or brand in front of 400+ singing game developers. Sponsorship packages are flexible, including signage, branded swag, private room options. Reach out to <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); setTimeout(() => document.getElementById('hosts-title')?.scrollIntoView({ behavior: 'smooth' }), 100); }} style={{ color: 'var(--neon-green)' }}>the hosts</a> to learn more.
+                  Get your studio or brand in front of 400+ singing game developers. Sponsorship packages are flexible, including signage, branded swag, private room options.<br></br> Reach out to <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); setTimeout(() => document.getElementById('hosts-title')?.scrollIntoView({ behavior: 'smooth' }), 100); }} style={{ color: 'var(--neon-green)' }}>the hosts</a> to learn more.
                 </p>
               </div>
               <div className="info-card">
@@ -2683,11 +2683,11 @@ function GDCKaraokeApp() {
           {/* Hosts Page */}
           {view === 'hosts' && (
             <div className="hosts-page">
-              <button className="back-btn" onClick={() => setView('home')}>
+              <h2 id="hosts-title" className="section-label">Hi, we're your hosts!</h2>
+
+              <button className="back-btn" onClick={() => setView('home')} style={{ display: 'block', margin: '0 auto 30px' }}>
                 ← Back to home
               </button>
-
-              <h2 id="hosts-title" className="section-label">Hi, we're your hosts!</h2>
 
               <div className="hosts-container">
                 {/* Adam's card */}
