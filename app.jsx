@@ -760,8 +760,8 @@ const styles = `
   }
   
   .room-group-header .tier-badge.vip {
-    background: rgba(255, 107, 157, 0.15);
-    color: var(--neon-pink);
+    background: rgba(0, 255, 148, 0.15);
+    color: var(--neon-green);
   }
 
   .room-group-header .guest-count {
@@ -920,8 +920,8 @@ const styles = `
   }
   
   .room-card.vip {
-    background: linear-gradient(135deg, var(--card-bg) 0%, #2f1f2f 100%);
-    border-color: var(--neon-pink);
+    background: linear-gradient(135deg, var(--card-bg) 0%, #1f2f1f 100%);
+    border-color: var(--neon-green);
   }
   
   .room-tier {
@@ -933,7 +933,7 @@ const styles = `
     margin-bottom: 8px;
   }
   
-  .room-card.vip .room-tier { color: var(--neon-pink); }
+  .room-card.vip .room-tier { color: var(--neon-green); }
   
   .room-name {
     font-size: 1.5rem;
@@ -2239,6 +2239,7 @@ function GDCKaraokeApp() {
                   <div className="group-meta">
                     <span className="group-price">
                       ${rooms.small1.price}/person<br/>
+                      <span style={{ fontSize: '0.7em', opacity: 0.5 }}>or</span><br/>
                       <span style={{ fontSize: '0.85em', opacity: 0.7 }}>${rooms.small1.roomPrice}/room</span>
                     </span>
                     <span className="toggle-icon">›</span>
@@ -2281,6 +2282,7 @@ function GDCKaraokeApp() {
                   <div className="group-meta">
                     <span className="group-price">
                       ${rooms.medium1.price}/person<br/>
+                      <span style={{ fontSize: '0.7em', opacity: 0.5 }}>or</span><br/>
                       <span style={{ fontSize: '0.85em', opacity: 0.7 }}>${rooms.medium1.roomPrice}/room</span>
                     </span>
                     <span className="toggle-icon">›</span>
@@ -2323,6 +2325,7 @@ function GDCKaraokeApp() {
                   <div className="group-meta">
                     <span className="group-price">
                       ${rooms.large1.price}/person<br/>
+                      <span style={{ fontSize: '0.7em', opacity: 0.5 }}>or</span><br/>
                       <span style={{ fontSize: '0.85em', opacity: 0.7 }}>${rooms.large1.roomPrice}/room</span>
                     </span>
                     <span className="toggle-icon">›</span>
@@ -2365,6 +2368,7 @@ function GDCKaraokeApp() {
                   <div className="group-meta">
                     <span className="group-price">
                       ${rooms.vip1.price}/person<br/>
+                      <span style={{ fontSize: '0.7em', opacity: 0.5 }}>or</span><br/>
                       <span style={{ fontSize: '0.85em', opacity: 0.7 }}>${rooms.vip1.roomPrice}/room</span>
                     </span>
                     <span className="toggle-icon">›</span>
