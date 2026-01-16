@@ -317,7 +317,7 @@ const styles = `
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
   }
 
   .date-row-standalone .date-text {
@@ -407,10 +407,8 @@ const styles = `
     display: flex;
     flex-direction: column;
     gap: 15px;
-    margin: 100px 0 30px;
+    margin: 60px auto 15px;
     max-width: 900px;
-    margin-left: auto;
-    margin-right: auto;
   }
   
   .hero-slide {
@@ -647,7 +645,7 @@ const styles = `
     font-weight: 800;
     letter-spacing: 3px;
     color: var(--neon-green);
-    margin: 20px 0 20px;
+    margin: 15px 0;
   }
   
   /* Tab Navigation */
@@ -704,7 +702,7 @@ const styles = `
     background: var(--card-bg);
     border: 1px solid #333;
     padding: 25px;
-    margin-bottom: 25px;
+    margin-bottom: 15px;
     color: var(--text-secondary);
     line-height: 1.7;
     font-size: 0.95rem;
@@ -2117,10 +2115,10 @@ function GDCKaraokeApp() {
 
           {/* Description Box */}
           {view === 'home' && (
-            <div className="description-box" style={{ textAlign: 'center', maxWidth: 900, margin: '0 auto 25px' }}>
+            <div className="description-box" style={{ textAlign: 'center', maxWidth: 900, margin: '0 auto 15px' }}>
               <p style={{ marginBottom: 10, color: 'var(--neon-green)', fontWeight: 600, fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Welcome to the karaoke party page</p>
               <p>Reserve a private room with your friends and colleagues.</p>
-              <p>Or buy a main room ticket for general admission.</p>
+              <p>Or grab a spot in the main room for general admission.</p>
               <p>Either way, it's gonna be a really good party.</p>
             </div>
           )}
@@ -2144,7 +2142,7 @@ function GDCKaraokeApp() {
           )}
 
           {view === 'home' && (
-            <p style={{ textAlign: 'center', color: '#ff6b6b', fontSize: '0.95rem', margin: '20px 0 40px', fontStyle: 'italic', textShadow: '0 0 10px rgba(255, 107, 107, 0.4)' }}>
+            <p style={{ textAlign: 'center', color: '#ff6b6b', fontSize: '0.95rem', margin: '15px 0', fontStyle: 'italic', textShadow: '0 0 10px rgba(255, 107, 107, 0.4)' }}>
               Tickets go on sale mid-February
             </p>
           )}
