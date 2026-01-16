@@ -2092,6 +2092,7 @@ function GDCKaraokeApp() {
               loop
               muted
               playsInline
+              poster="/images/yunagroove_fallback.png"
             >
               <source src="/images/yunagroove.mp4" type="video/mp4" />
             </video>
