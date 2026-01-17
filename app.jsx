@@ -925,8 +925,8 @@ const styles = `
   }
   
   .room-card.vip {
-    background: linear-gradient(135deg, var(--card-bg) 0%, #1f2f1f 100%);
-    border-color: var(--neon-green);
+    background: var(--card-bg);
+    border-color: #333;
   }
 
   .room-card.booked {
