@@ -1,0 +1,17 @@
+# Netlify configuration
+
+[build]
+  # No build command needed - static site
+  publish = "."
+
+[functions]
+  # Directory for serverless functions
+  directory = "netlify/functions"
+
+# Headers for security
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

@@ -1880,12 +1880,14 @@ function GDCKaraokeApp() {
   const [signups, setSignups] = useState([]);
   const [signupForm, setSignupForm] = useState({ name: '', email: '', company: '', reserveEntireRoom: false });
   const [signupSuccess, setSignupSuccess] = useState(false);
+  const [signupError, setSignupError] = useState('');
+  const [signupLoading, setSignupLoading] = useState(false);
   const [submittedEmail, setSubmittedEmail] = useState('');
-  
+
   // Admin password protection
   const [adminPassword, setAdminPassword] = useState('');
   const [adminUnlocked, setAdminUnlocked] = useState(false);
-  const ADMIN_PASSWORD = 'zombiespiderwebs';
+  const [adminLoading, setAdminLoading] = useState(false);
   
   // Toggle room group
   const toggleGroup = (group) => {
@@ -1893,22 +1895,74 @@ function GDCKaraokeApp() {
   };
   
   // Handle email signup
-  const handleSignup = (e, roomId) => {
+  const handleSignup = async (e, roomId) => {
     e.preventDefault();
-    const newSignup = {
-      id: signups.length + 1,
-      ...signupForm,
-      room: roomId,
-      roomName: rooms[roomId]?.name || roomId,
-      date: new Date().toISOString().split('T')[0],
-    };
-    setSignups([...signups, newSignup]);
-    setSubmittedEmail(signupForm.email);
-    setSignupSuccess(true);
-    setSignupForm({ name: '', email: '', company: '', reserveEntireRoom: false });
-    // Success message stays permanently to discourage multiple signups
+    setSignupLoading(true);
+    setSignupError('');
+
+    try {
+      const response = await fetch('/api/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: signupForm.name,
+          email: signupForm.email,
+          company: signupForm.company,
+          room: roomId,
+          roomName: rooms[roomId]?.name || roomId,
+          reserveEntireRoom: signupForm.reserveEntireRoom,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Signup failed');
+      }
+
+      setSubmittedEmail(signupForm.email);
+      setSignupSuccess(true);
+      setSignupForm({ name: '', email: '', company: '', reserveEntireRoom: false });
+      // Success message stays permanently to discourage multiple signups
+    } catch (error) {
+      setSignupError(error.message);
+      alert('Signup failed: ' + error.message);
+    } finally {
+      setSignupLoading(false);
+    }
   };
-  
+
+  // Fetch signups from database (admin only)
+  const fetchSignups = async () => {
+    try {
+      const response = await fetch('/api/signups', {
+        headers: { 'Authorization': `Bearer ${adminPassword}` },
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to fetch signups');
+      }
+
+      // Transform data to match existing format
+      const formattedSignups = data.signups.map(s => ({
+        id: s.id,
+        name: s.name,
+        email: s.email,
+        company: s.company,
+        room: s.room,
+        roomName: s.room_name,
+        reserveEntireRoom: s.reserve_entire_room,
+        date: s.created_at?.split('T')[0] || '',
+      }));
+
+      setSignups(formattedSignups);
+    } catch (error) {
+      console.error('Failed to fetch signups:', error);
+    }
+  };
+
   // Export signups as CSV
   const exportSignups = () => {
     const headers = ['Name', 'Email', 'Company', 'Interested Room', 'Reserve Entire Room', 'Signup Date'];
@@ -1920,7 +1974,7 @@ function GDCKaraokeApp() {
       s.reserveEntireRoom ? 'Yes' : 'No',
       s.date,
     ]);
-    
+
     const csv = [headers, ...rows].map(row => row.join(',')).join('\n');
     const blob = new Blob([csv], { type: 'text/csv' });
     const url = URL.createObjectURL(blob);
@@ -1929,13 +1983,37 @@ function GDCKaraokeApp() {
     a.download = 'gdc-karaoke-signups.csv';
     a.click();
   };
-  
-  // Check admin password
-  const checkAdminPassword = () => {
-    if (adminPassword.trim() === ADMIN_PASSWORD) {
-      setAdminUnlocked(true);
-    } else {
-      alert('Incorrect password. Please try again.');
+
+  // Check admin password by attempting to fetch signups
+  const checkAdminPassword = async () => {
+    setAdminLoading(true);
+    try {
+      const response = await fetch('/api/signups', {
+        headers: { 'Authorization': `Bearer ${adminPassword}` },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        // Transform and set signups
+        const formattedSignups = data.signups.map(s => ({
+          id: s.id,
+          name: s.name,
+          email: s.email,
+          company: s.company,
+          room: s.room,
+          roomName: s.room_name,
+          reserveEntireRoom: s.reserve_entire_room,
+          date: s.created_at?.split('T')[0] || '',
+        }));
+        setSignups(formattedSignups);
+        setAdminUnlocked(true);
+      } else {
+        alert('Incorrect password. Please try again.');
+      }
+    } catch (error) {
+      alert('Error checking password. Please try again.');
+    } finally {
+      setAdminLoading(false);
     }
   };
   
