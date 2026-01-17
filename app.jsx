@@ -317,7 +317,14 @@ const styles = `
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: 20px;
     margin-bottom: 15px;
+  }
+
+  .date-row-standalone .mascot-left,
+  .date-row-standalone .mascot-right {
+    width: 80px;
+    height: auto;
   }
 
   .date-row-standalone .date-text {
@@ -698,7 +705,7 @@ const styles = `
   .description-box {
     background: var(--card-bg);
     border: 1px solid #333;
-    padding: 25px;
+    padding: 12px 25px;
     margin-bottom: 15px;
     color: var(--text-secondary);
     line-height: 1.7;
@@ -2264,9 +2271,10 @@ function GDCKaraokeApp() {
             {/* <p className="scroll-hint">↓ Keep scrolling ↓</p> */}
           </header>
 
-          {/* Date Box - Between header and hero */}
+          {/* Date Box with Mascots */}
           {view === 'home' && (
             <div className="date-row-standalone">
+              <img src="/images/jigglypuff.png" alt="Jigglypuff" className="mascot-left mascot-rotate" />
               <div className="date-text">
                 <div>WEDNESDAY, MARCH 11TH</div>
                 <div className="date-time">9:00 PM - 12:00 AM</div>
@@ -2279,6 +2287,7 @@ function GDCKaraokeApp() {
                   + Add to Calendar
                 </a>
               </div>
+              <img src="/images/caitsith.png" alt="Cait Sith" className="mascot-right mascot-rotate-reverse" />
             </div>
           )}
 
@@ -2335,10 +2344,6 @@ function GDCKaraokeApp() {
             </div>
           )}
 
-          <div className="mascot-row">
-            <img src="/images/jigglypuff.png" alt="Jigglypuff" className="mascot-rotate" />
-            <img src="/images/caitsith.png" alt="Cait Sith" className="mascot-rotate-reverse" />
-          </div>
 
           {view === 'home' && (
             <p style={{ textAlign: 'center', color: '#ff6b6b', fontSize: '0.95rem', margin: '15px 0', fontStyle: 'italic', textShadow: '0 0 10px rgba(255, 107, 107, 0.4)' }}>
