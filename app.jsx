@@ -2358,8 +2358,8 @@ function GDCKaraokeApp() {
             <div className="description-box" style={{ textAlign: 'center', maxWidth: 900, margin: '0 auto 15px' }}>
               <p style={{ marginBottom: 10, color: 'var(--neon-green)', fontWeight: 600, fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Welcome to the karaoke party page</p>
               <p>Reserve a private room<span className="mobile-br"><br/></span> with your friends and colleagues.</p>
-              <p>Or grab a spot in the<span className="mobile-br"><br/></span> main room for general admission.</p>
-              <p>Either way, it's gonna<span className="mobile-br"><br/></span> be a really good party.</p>
+              <p>Or grab a spot in the<span className="mobile-br"><br/></span> Main Room for general admission.</p>
+              <p>Either way, it's gonna be<span className="mobile-br"><br/></span> a really good party.</p>
             </div>
           )}
 
