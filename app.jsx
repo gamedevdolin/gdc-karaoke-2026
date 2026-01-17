@@ -329,7 +329,7 @@ const styles = `
 
   .date-row-standalone .date-text {
     font-family: 'Outfit', sans-serif;
-    font-size: clamp(0.8rem, 2.5vw, 1.4rem);
+    font-size: clamp(1.1rem, 2.5vw, 1.4rem);
     font-weight: 700;
     color: black;
     background: white;
@@ -341,7 +341,7 @@ const styles = `
   }
 
   .date-row-standalone .date-time {
-    font-size: clamp(0.7rem, 2vw, 1.1rem);
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
     font-weight: 600;
     margin-top: 5px;
     color: black;
