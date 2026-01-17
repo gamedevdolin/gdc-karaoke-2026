@@ -327,6 +327,14 @@ const styles = `
     height: auto;
   }
 
+  .date-row-standalone .mascot-left {
+    margin-right: -10px;
+  }
+
+  .date-row-standalone .mascot-right {
+    margin-left: -10px;
+  }
+
   .date-row-standalone .date-text {
     font-family: 'Outfit', sans-serif;
     font-size: clamp(1.1rem, 2.5vw, 1.4rem);
