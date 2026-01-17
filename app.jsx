@@ -325,15 +325,12 @@ const styles = `
     font-size: clamp(0.8rem, 2.5vw, 1.4rem);
     font-weight: 700;
     color: black;
-    background: var(--neon-green);
+    background: white;
     padding: 15px 30px;
     letter-spacing: 1px;
     text-align: center;
-    box-shadow:
-      0 0 20px rgba(0, 255, 148, 0.6),
-      0 4px 15px rgba(0, 0, 0, 0.5);
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    animation: dateGlow 2s ease-in-out infinite;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(0, 0, 0, 0.1);
   }
 
   .date-row-standalone .date-time {
@@ -2267,10 +2264,23 @@ function GDCKaraokeApp() {
             {/* <p className="scroll-hint">↓ Keep scrolling ↓</p> */}
           </header>
 
-          <div className="mascot-row">
-            <img src="/images/jigglypuff.png" alt="Jigglypuff" className="mascot-rotate" />
-            <img src="/images/caitsith.png" alt="Cait Sith" className="mascot-rotate-reverse" />
-          </div>
+          {/* Date Box - Between header and hero */}
+          {view === 'home' && (
+            <div className="date-row-standalone">
+              <div className="date-text">
+                <div>WEDNESDAY, MARCH 11TH</div>
+                <div className="date-time">9:00 PM - 12:00 AM</div>
+                <a
+                  href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=GDC+Karaoke+Night+2026&dates=20260311T210000/20260312T000000&ctz=America/Los_Angeles&details=Karaoke+party+at+Pandora+Karaoke+during+GDC+2026&location=Pandora+Karaoke,+50+Mason+St,+San+Francisco,+CA+94102"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ fontSize: '0.8rem', marginTop: '8px', color: '#000', textDecoration: 'none', display: 'inline-block' }}
+                >
+                  + Add to Calendar
+                </a>
+              </div>
+            </div>
+          )}
 
           {/* Hero Slides - Deck images */}
           <div className="hero-slides">
@@ -2325,23 +2335,10 @@ function GDCKaraokeApp() {
             </div>
           )}
 
-          {/* Date Box - Above Reserve Your Spot */}
-          {view === 'home' && (
-            <div className="date-row-standalone">
-              <div className="date-text">
-                <div>WEDNESDAY, MARCH 11TH</div>
-                <div className="date-time">9:00 PM - 12:00 AM</div>
-                <a
-                  href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=GDC+Karaoke+Night+2026&dates=20260311T210000/20260312T000000&ctz=America/Los_Angeles&details=Karaoke+party+at+Pandora+Karaoke+during+GDC+2026&location=Pandora+Karaoke,+50+Mason+St,+San+Francisco,+CA+94102"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{ fontSize: '0.8rem', marginTop: '8px', color: '#000', textDecoration: 'none', display: 'inline-block' }}
-                >
-                  + Add to Calendar
-                </a>
-              </div>
-            </div>
-          )}
+          <div className="mascot-row">
+            <img src="/images/jigglypuff.png" alt="Jigglypuff" className="mascot-rotate" />
+            <img src="/images/caitsith.png" alt="Cait Sith" className="mascot-rotate-reverse" />
+          </div>
 
           {view === 'home' && (
             <p style={{ textAlign: 'center', color: '#ff6b6b', fontSize: '0.95rem', margin: '15px 0', fontStyle: 'italic', textShadow: '0 0 10px rgba(255, 107, 107, 0.4)' }}>
