@@ -930,29 +930,39 @@ const styles = `
   }
 
   .room-card.booked {
-    opacity: 0.5;
     pointer-events: none;
     position: relative;
   }
 
-  .room-card.booked::after {
-    content: 'BOOKED';
+  .room-card.booked .booked-overlay {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) rotate(-15deg);
-    font-size: 2rem;
-    font-weight: 800;
-    color: var(--neon-pink);
-    text-shadow: 0 0 20px rgba(255, 107, 157, 0.8);
-    z-index: 10;
-    letter-spacing: 0.2em;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.4) 100%);
+    z-index: 5;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .room-card.booked.has-bg::after {
-    background: rgba(0, 0, 0, 0.7);
-    padding: 10px 30px;
-    border-radius: 8px;
+  .room-card.booked .booked-label {
+    background: linear-gradient(135deg, var(--neon-pink) 0%, #ff4477 100%);
+    color: white;
+    font-size: 1rem;
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    padding: 10px 28px;
+    border-radius: 6px;
+    box-shadow: 0 4px 20px rgba(255, 107, 157, 0.5), 0 0 40px rgba(255, 107, 157, 0.3);
+    text-transform: uppercase;
+  }
+
+  .room-card.booked .room-name,
+  .room-card.booked .room-description {
+    opacity: 0.5;
   }
 
   .room-tier {
@@ -2455,17 +2465,13 @@ function GDCKaraokeApp() {
                         style={rooms[id].backgroundImage ? { '--room-bg': `url(${rooms[id].backgroundImage})` } : {}}
                         onClick={() => !rooms[id].booked && selectRoom(id)}
                       >
+                        {rooms[id].booked && (
+                          <div className="booked-overlay">
+                            <span className="booked-label">Booked</span>
+                          </div>
+                        )}
                         <h3 className="room-name">{rooms[id].name}</h3>
                         <p className="room-description">{rooms[id].description}</p>
-                        {/* Capacity counter - uncomment when ticket sales go live
-                        <div className="room-meta">
-                          <span className="room-capacity">
-                            <span className={getAvailableSpots(id) > 0 ? 'available' : 'sold-out'}>
-                              {getAvailableSpots(id)} spots left
-                            </span> / {rooms[id].capacity}
-                          </span>
-                        </div>
-                        */}
                       </div>
                     ))}
                   </div>
@@ -2500,17 +2506,13 @@ function GDCKaraokeApp() {
                         style={rooms[id].backgroundImage ? { '--room-bg': `url(${rooms[id].backgroundImage})` } : {}}
                         onClick={() => !rooms[id].booked && selectRoom(id)}
                       >
+                        {rooms[id].booked && (
+                          <div className="booked-overlay">
+                            <span className="booked-label">Booked</span>
+                          </div>
+                        )}
                         <h3 className="room-name">{rooms[id].name}</h3>
                         <p className="room-description">{rooms[id].description}</p>
-                        {/* Capacity counter - uncomment when ticket sales go live
-                        <div className="room-meta">
-                          <span className="room-capacity">
-                            <span className={getAvailableSpots(id) > 0 ? 'available' : 'sold-out'}>
-                              {getAvailableSpots(id)} spots left
-                            </span> / {rooms[id].capacity}
-                          </span>
-                        </div>
-                        */}
                       </div>
                     ))}
                   </div>
@@ -2545,17 +2547,13 @@ function GDCKaraokeApp() {
                         style={rooms[id].backgroundImage ? { '--room-bg': `url(${rooms[id].backgroundImage})` } : {}}
                         onClick={() => !rooms[id].booked && selectRoom(id)}
                       >
+                        {rooms[id].booked && (
+                          <div className="booked-overlay">
+                            <span className="booked-label">Booked</span>
+                          </div>
+                        )}
                         <h3 className="room-name">{rooms[id].name}</h3>
                         <p className="room-description">{rooms[id].description}</p>
-                        {/* Capacity counter - uncomment when ticket sales go live
-                        <div className="room-meta">
-                          <span className="room-capacity">
-                            <span className={getAvailableSpots(id) > 0 ? 'available' : 'sold-out'}>
-                              {getAvailableSpots(id)} spots left
-                            </span> / {rooms[id].capacity}
-                          </span>
-                        </div>
-                        */}
                       </div>
                     ))}
                   </div>
@@ -2590,17 +2588,13 @@ function GDCKaraokeApp() {
                         style={rooms[id].backgroundImage ? { '--room-bg': `url(${rooms[id].backgroundImage})` } : {}}
                         onClick={() => !rooms[id].booked && selectRoom(id)}
                       >
+                        {rooms[id].booked && (
+                          <div className="booked-overlay">
+                            <span className="booked-label">Booked</span>
+                          </div>
+                        )}
                         <h3 className="room-name">{rooms[id].name}</h3>
                         <p className="room-description">{rooms[id].description}</p>
-                        {/* Capacity counter - uncomment when ticket sales go live
-                        <div className="room-meta">
-                          <span className="room-capacity">
-                            <span className={getAvailableSpots(id) > 0 ? 'available' : 'sold-out'}>
-                              {getAvailableSpots(id)} spots left
-                            </span> / {rooms[id].capacity}
-                          </span>
-                        </div>
-                        */}
                       </div>
                     ))}
                   </div>
