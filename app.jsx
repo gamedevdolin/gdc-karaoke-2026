@@ -812,22 +812,30 @@ const styles = `
 
   .room-group-content .room-card.has-bg {
     overflow: hidden;
+    display: flex;
+    align-items: center;
+  }
+
+  .room-group-content .room-card.has-bg .room-name {
+    max-width: 45%;
+    word-wrap: break-word;
   }
 
   .room-group-content .room-card.has-bg::after {
     content: '';
     position: absolute;
     top: 50%;
-    right: -10%;
+    right: 0;
     transform: translateY(-50%);
-    width: 60%;
-    height: 120%;
-    background-size: contain;
+    width: 50%;
+    height: 100%;
+    background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-image: var(--room-bg);
-    opacity: 0.7;
+    opacity: 0.9;
     z-index: 0;
+    border-radius: 8px;
   }
 
   .room-group-content .room-card.has-bg > * {
