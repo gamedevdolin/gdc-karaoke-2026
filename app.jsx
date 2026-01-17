@@ -1915,9 +1915,9 @@ function GDCKaraokeApp() {
   const [adminUnlocked, setAdminUnlocked] = useState(false);
   const [adminLoading, setAdminLoading] = useState(false);
 
-  // Load room booked status from database on mount
+  // Load room data from database on mount
   React.useEffect(() => {
-    const loadRoomStatus = async () => {
+    const loadRoomData = async () => {
       try {
         const response = await fetch('/api/rooms');
         if (response.ok) {
@@ -1927,7 +1927,14 @@ function GDCKaraokeApp() {
               const updated = { ...prev };
               Object.keys(data.rooms).forEach(roomId => {
                 if (updated[roomId]) {
-                  updated[roomId] = { ...updated[roomId], booked: data.rooms[roomId].booked };
+                  const dbRoom = data.rooms[roomId];
+                  updated[roomId] = {
+                    ...updated[roomId],
+                    booked: dbRoom.booked ?? updated[roomId].booked,
+                    name: dbRoom.name ?? updated[roomId].name,
+                    price: dbRoom.price ?? updated[roomId].price,
+                    roomPrice: dbRoom.roomPrice ?? updated[roomId].roomPrice
+                  };
                 }
               });
               return updated;
@@ -1935,32 +1942,40 @@ function GDCKaraokeApp() {
           }
         }
       } catch (error) {
-        console.error('Failed to load room status:', error);
+        console.error('Failed to load room data:', error);
       }
     };
-    loadRoomStatus();
+    loadRoomData();
   }, []);
 
-  // Save room booked status to database
-  const updateRoomBookedStatus = async (roomId, booked) => {
-    // Update local state immediately
-    updateRoom(roomId, 'booked', booked);
+  // Save room data to database
+  const saveRoomToDatabase = async (roomId, field, value) => {
+    if (!adminUnlocked) return;
 
-    // Persist to database (only works if admin is authenticated)
-    if (adminUnlocked) {
-      try {
-        await fetch('/api/update-room', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${adminPassword}`
-          },
-          body: JSON.stringify({ roomId, booked })
-        });
-      } catch (error) {
-        console.error('Failed to save room status:', error);
-      }
+    try {
+      const payload = { roomId };
+      if (field === 'booked') payload.booked = value;
+      if (field === 'name') payload.name = value;
+      if (field === 'price') payload.price = value;
+      if (field === 'roomPrice') payload.roomPrice = value;
+
+      await fetch('/api/update-room', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${adminPassword}`
+        },
+        body: JSON.stringify(payload)
+      });
+    } catch (error) {
+      console.error('Failed to save room data:', error);
     }
+  };
+
+  // Update room and persist to database
+  const updateRoomWithPersist = (roomId, field, value) => {
+    updateRoom(roomId, field, value);
+    saveRoomToDatabase(roomId, field, value);
   };
 
   // Check URL parameters on load to open specific room
@@ -2870,7 +2885,7 @@ function GDCKaraokeApp() {
                                   <input
                                     type="checkbox"
                                     checked={room.booked || false}
-                                    onChange={(e) => updateRoomBookedStatus(id, e.target.checked)}
+                                    onChange={(e) => { updateRoom(id, 'booked', e.target.checked); saveRoomToDatabase(id, 'booked', e.target.checked); }}
                                     style={{ cursor: 'pointer' }}
                                   />
                                   <span style={{ color: room.booked ? 'var(--neon-pink)' : 'var(--text-secondary)' }}>
@@ -2884,6 +2899,7 @@ function GDCKaraokeApp() {
                                   type="text"
                                   value={room.name}
                                   onChange={(e) => updateRoom(id, 'name', e.target.value)}
+                                  onBlur={(e) => saveRoomToDatabase(id, 'name', e.target.value)}
                                 />
                               </div>
                               <div className="admin-input-row">
@@ -2892,6 +2908,7 @@ function GDCKaraokeApp() {
                                   type="number"
                                   value={room.price}
                                   onChange={(e) => updateRoom(id, 'price', e.target.value)}
+                                  onBlur={(e) => saveRoomToDatabase(id, 'price', parseInt(e.target.value) || 0)}
                                 />
                               </div>
                               {room.roomPrice !== undefined && (
@@ -2901,6 +2918,7 @@ function GDCKaraokeApp() {
                                     type="number"
                                     value={room.roomPrice}
                                     onChange={(e) => updateRoom(id, 'roomPrice', e.target.value)}
+                                    onBlur={(e) => saveRoomToDatabase(id, 'roomPrice', parseInt(e.target.value) || 0)}
                                   />
                                 </div>
                               )}

@@ -11,16 +11,21 @@ export default async (req, context) => {
   try {
     const sql = neon(process.env.NETLIFY_DATABASE_URL);
 
-    // Get all room statuses
+    // Get all room data
     const rooms = await sql`
-      SELECT room_id, booked
+      SELECT room_id, booked, name, price, room_price
       FROM rooms
     `;
 
     // Convert to object keyed by room_id
     const roomStatus = {};
     rooms.forEach(room => {
-      roomStatus[room.room_id] = { booked: room.booked };
+      roomStatus[room.room_id] = {
+        booked: room.booked,
+        name: room.name,
+        price: room.price,
+        roomPrice: room.room_price
+      };
     });
 
     return new Response(JSON.stringify({

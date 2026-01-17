@@ -21,10 +21,10 @@ export default async (req, context) => {
     }
 
     const body = await req.json();
-    const { roomId, booked } = body;
+    const { roomId, booked, name, price, roomPrice } = body;
 
-    if (!roomId || typeof booked !== 'boolean') {
-      return new Response(JSON.stringify({ error: 'roomId and booked status are required' }), {
+    if (!roomId) {
+      return new Response(JSON.stringify({ error: 'roomId is required' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
@@ -32,12 +32,17 @@ export default async (req, context) => {
 
     const sql = neon(process.env.NETLIFY_DATABASE_URL);
 
-    // Upsert room status (insert or update)
+    // Upsert room data (insert or update)
     await sql`
-      INSERT INTO rooms (room_id, booked)
-      VALUES (${roomId}, ${booked})
+      INSERT INTO rooms (room_id, booked, name, price, room_price)
+      VALUES (${roomId}, ${booked ?? false}, ${name ?? null}, ${price ?? null}, ${roomPrice ?? null})
       ON CONFLICT (room_id)
-      DO UPDATE SET booked = ${booked}, updated_at = NOW()
+      DO UPDATE SET
+        booked = COALESCE(${booked}, rooms.booked),
+        name = COALESCE(${name}, rooms.name),
+        price = COALESCE(${price}, rooms.price),
+        room_price = COALESCE(${roomPrice}, rooms.room_price),
+        updated_at = NOW()
     `;
 
     return new Response(JSON.stringify({
