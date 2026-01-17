@@ -1889,6 +1889,16 @@ function GDCKaraokeApp() {
   const [adminUnlocked, setAdminUnlocked] = useState(false);
   const [adminLoading, setAdminLoading] = useState(false);
   
+  // Check URL parameters on load to open specific room
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const roomParam = params.get('room');
+    if (roomParam && rooms[roomParam]) {
+      setSelectedRoom(roomParam);
+      setView('room');
+    }
+  }, []);
+
   // Toggle room group
   const toggleGroup = (group) => {
     setExpandedGroups(prev => ({ ...prev, [group]: !prev[group] }));
@@ -2676,7 +2686,34 @@ function GDCKaraokeApp() {
                   <div className="stat-label">Total Capacity</div>
                 </div>
               </div>
-              
+
+              {/* Room Signup Breakdown */}
+              <div className="admin-section" style={{ marginTop: 20 }}>
+                <h3>Signups by Room</h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 15, marginTop: 15 }}>
+                  {Object.entries(rooms).map(([id, room]) => {
+                    const roomSignups = signups.filter(s => s.room === id);
+                    const entireRoomCount = roomSignups.filter(s => s.reserveEntireRoom).length;
+                    return (
+                      <div key={id} style={{
+                        background: '#111',
+                        padding: 15,
+                        borderRadius: 8,
+                        borderLeft: `3px solid ${room.tier === 'platinum' ? '#e5e4e2' : room.tier === 'gold' ? '#ffd700' : room.tier === 'silver' ? '#c0c0c0' : 'var(--neon-green)'}`
+                      }}>
+                        <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: 5 }}>{room.tier.toUpperCase()}</div>
+                        <div style={{ fontWeight: 600, marginBottom: 10 }}>{room.name}</div>
+                        <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--neon-green)' }}>{roomSignups.length}</div>
+                        <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                          {entireRoomCount > 0 && <span style={{ color: 'var(--neon-pink)' }}>{entireRoomCount} want entire room</span>}
+                          {entireRoomCount === 0 && 'signups'}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
               {/* Email Signups List */}
               <div className="admin-section">
                 <h3>Email Signups ({signups.length})</h3>
