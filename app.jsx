@@ -920,7 +920,33 @@ const styles = `
     background: linear-gradient(135deg, var(--card-bg) 0%, #1f2f1f 100%);
     border-color: var(--neon-green);
   }
-  
+
+  .room-card.booked {
+    opacity: 0.5;
+    pointer-events: none;
+    position: relative;
+  }
+
+  .room-card.booked::after {
+    content: 'BOOKED';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-15deg);
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--neon-pink);
+    text-shadow: 0 0 20px rgba(255, 107, 157, 0.8);
+    z-index: 10;
+    letter-spacing: 0.2em;
+  }
+
+  .room-card.booked.has-bg::after {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 10px 30px;
+    border-radius: 8px;
+  }
+
   .room-tier {
     font-family: 'Space Mono', monospace;
     font-size: 0.75rem;
@@ -1888,7 +1914,55 @@ function GDCKaraokeApp() {
   const [adminPassword, setAdminPassword] = useState('');
   const [adminUnlocked, setAdminUnlocked] = useState(false);
   const [adminLoading, setAdminLoading] = useState(false);
-  
+
+  // Load room booked status from database on mount
+  React.useEffect(() => {
+    const loadRoomStatus = async () => {
+      try {
+        const response = await fetch('/api/rooms');
+        if (response.ok) {
+          const data = await response.json();
+          if (data.rooms) {
+            setRooms(prev => {
+              const updated = { ...prev };
+              Object.keys(data.rooms).forEach(roomId => {
+                if (updated[roomId]) {
+                  updated[roomId] = { ...updated[roomId], booked: data.rooms[roomId].booked };
+                }
+              });
+              return updated;
+            });
+          }
+        }
+      } catch (error) {
+        console.error('Failed to load room status:', error);
+      }
+    };
+    loadRoomStatus();
+  }, []);
+
+  // Save room booked status to database
+  const updateRoomBookedStatus = async (roomId, booked) => {
+    // Update local state immediately
+    updateRoom(roomId, 'booked', booked);
+
+    // Persist to database (only works if admin is authenticated)
+    if (adminUnlocked) {
+      try {
+        await fetch('/api/update-room', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${adminPassword}`
+          },
+          body: JSON.stringify({ roomId, booked })
+        });
+      } catch (error) {
+        console.error('Failed to save room status:', error);
+      }
+    }
+  };
+
   // Check URL parameters on load to open specific room
   React.useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -1896,6 +1970,13 @@ function GDCKaraokeApp() {
     if (roomParam && rooms[roomParam]) {
       setSelectedRoom(roomParam);
       setView('room');
+      // Scroll to the room detail section after a brief delay for render
+      setTimeout(() => {
+        const roomDetail = document.querySelector('.room-detail');
+        if (roomDetail) {
+          roomDetail.scrollIntoView({ behavior: 'instant', block: 'start' });
+        }
+      }, 100);
     }
   }, []);
 
@@ -2347,9 +2428,9 @@ function GDCKaraokeApp() {
                     {['small1', 'small2', 'small3'].map(id => (
                       <div
                         key={id}
-                        className={`room-card ${rooms[id].backgroundImage ? 'has-bg' : ''}`}
+                        className={`room-card ${rooms[id].backgroundImage ? 'has-bg' : ''} ${rooms[id].booked ? 'booked' : ''}`}
                         style={rooms[id].backgroundImage ? { '--room-bg': `url(${rooms[id].backgroundImage})` } : {}}
-                        onClick={() => selectRoom(id)}
+                        onClick={() => !rooms[id].booked && selectRoom(id)}
                       >
                         <h3 className="room-name">{rooms[id].name}</h3>
                         <p className="room-description">{rooms[id].description}</p>
@@ -2392,9 +2473,9 @@ function GDCKaraokeApp() {
                     {['medium1', 'medium2', 'medium3', 'medium4', 'medium5', 'medium6'].map(id => (
                       <div
                         key={id}
-                        className={`room-card ${rooms[id].backgroundImage ? 'has-bg' : ''}`}
+                        className={`room-card ${rooms[id].backgroundImage ? 'has-bg' : ''} ${rooms[id].booked ? 'booked' : ''}`}
                         style={rooms[id].backgroundImage ? { '--room-bg': `url(${rooms[id].backgroundImage})` } : {}}
-                        onClick={() => selectRoom(id)}
+                        onClick={() => !rooms[id].booked && selectRoom(id)}
                       >
                         <h3 className="room-name">{rooms[id].name}</h3>
                         <p className="room-description">{rooms[id].description}</p>
@@ -2437,9 +2518,9 @@ function GDCKaraokeApp() {
                     {['large1', 'large2', 'large3', 'large4', 'large5'].map(id => (
                       <div
                         key={id}
-                        className={`room-card ${rooms[id].backgroundImage ? 'has-bg' : ''}`}
+                        className={`room-card ${rooms[id].backgroundImage ? 'has-bg' : ''} ${rooms[id].booked ? 'booked' : ''}`}
                         style={rooms[id].backgroundImage ? { '--room-bg': `url(${rooms[id].backgroundImage})` } : {}}
-                        onClick={() => selectRoom(id)}
+                        onClick={() => !rooms[id].booked && selectRoom(id)}
                       >
                         <h3 className="room-name">{rooms[id].name}</h3>
                         <p className="room-description">{rooms[id].description}</p>
@@ -2482,9 +2563,9 @@ function GDCKaraokeApp() {
                     {['vip1'].map(id => (
                       <div
                         key={id}
-                        className={`room-card vip ${rooms[id].backgroundImage ? 'has-bg' : ''}`}
+                        className={`room-card vip ${rooms[id].backgroundImage ? 'has-bg' : ''} ${rooms[id].booked ? 'booked' : ''}`}
                         style={rooms[id].backgroundImage ? { '--room-bg': `url(${rooms[id].backgroundImage})` } : {}}
-                        onClick={() => selectRoom(id)}
+                        onClick={() => !rooms[id].booked && selectRoom(id)}
                       >
                         <h3 className="room-name">{rooms[id].name}</h3>
                         <p className="room-description">{rooms[id].description}</p>
@@ -2754,35 +2835,85 @@ function GDCKaraokeApp() {
               <div className="admin-section">
                 <h3>Room Configuration</h3>
                 <p style={{ color: 'var(--text-secondary)', marginBottom: 20, fontSize: '0.9rem' }}>
-                  Adjust room names and pricing before launch.
+                  Adjust room names and pricing. Mark rooms as booked when sold.
                 </p>
-                
-                <div className="admin-room-grid">
-                  {Object.entries(rooms).map(([id, room]) => (
-                    <div key={id} className="admin-room-card">
-                      <h4>{room.tier.toUpperCase()}</h4>
-                      <div className="admin-input-row">
-                        <label>Name:</label>
-                        <input 
-                          type="text"
-                          value={room.name}
-                          onChange={(e) => updateRoom(id, 'name', e.target.value)}
-                        />
-                      </div>
-                      <div className="admin-input-row">
-                        <label>Price:</label>
-                        <input 
-                          type="number"
-                          value={room.price}
-                          onChange={(e) => updateRoom(id, 'price', e.target.value)}
-                        />
-                      </div>
-                      <div style={{ marginTop: 10, fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                        Capacity: {room.capacity}
+
+                {/* Group by size */}
+                {['main', 'small', 'medium', 'large', 'vip'].map(tier => {
+                  const tierRooms = Object.entries(rooms).filter(([_, r]) => r.tier === tier);
+                  if (tierRooms.length === 0) return null;
+                  const tierLabels = { main: 'Main Stage', small: 'Small Rooms (8 guests)', medium: 'Medium Rooms (15 guests)', large: 'Large Rooms (25 guests)', vip: 'VIP Room (30 guests)' };
+                  return (
+                    <div key={tier} style={{ marginBottom: 30 }}>
+                      <h4 style={{
+                        fontSize: '1rem',
+                        color: tier === 'vip' ? '#ffd700' : tier === 'large' ? '#e5e4e2' : tier === 'medium' ? '#c0c0c0' : 'var(--neon-green)',
+                        marginBottom: 15,
+                        borderBottom: '1px solid #333',
+                        paddingBottom: 10
+                      }}>
+                        {tierLabels[tier] || tier.toUpperCase()}
+                      </h4>
+                      <div className="admin-room-grid">
+                        {tierRooms.map(([id, room]) => {
+                          const roomSignupCount = signups.filter(s => s.room === id).length;
+                          return (
+                            <div key={id} className="admin-room-card" style={{
+                              opacity: room.booked ? 0.6 : 1,
+                              borderLeft: room.booked ? '3px solid var(--neon-pink)' : '3px solid transparent'
+                            }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 10 }}>
+                                <span style={{ fontSize: '0.8rem', color: 'var(--neon-green)' }}>
+                                  {roomSignupCount} signup{roomSignupCount !== 1 ? 's' : ''}
+                                </span>
+                                <label style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: '0.8rem', cursor: 'pointer' }}>
+                                  <input
+                                    type="checkbox"
+                                    checked={room.booked || false}
+                                    onChange={(e) => updateRoomBookedStatus(id, e.target.checked)}
+                                    style={{ cursor: 'pointer' }}
+                                  />
+                                  <span style={{ color: room.booked ? 'var(--neon-pink)' : 'var(--text-secondary)' }}>
+                                    {room.booked ? 'BOOKED' : 'Booked?'}
+                                  </span>
+                                </label>
+                              </div>
+                              <div className="admin-input-row">
+                                <label>Name:</label>
+                                <input
+                                  type="text"
+                                  value={room.name}
+                                  onChange={(e) => updateRoom(id, 'name', e.target.value)}
+                                />
+                              </div>
+                              <div className="admin-input-row">
+                                <label>$/Guest:</label>
+                                <input
+                                  type="number"
+                                  value={room.price}
+                                  onChange={(e) => updateRoom(id, 'price', e.target.value)}
+                                />
+                              </div>
+                              {room.roomPrice !== undefined && (
+                                <div className="admin-input-row">
+                                  <label>$/Room:</label>
+                                  <input
+                                    type="number"
+                                    value={room.roomPrice}
+                                    onChange={(e) => updateRoom(id, 'roomPrice', e.target.value)}
+                                  />
+                                </div>
+                              )}
+                              <div style={{ marginTop: 10, fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                                Capacity: {room.capacity}
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
-                  ))}
-                </div>
+                  );
+                })}
               </div>
             </div>
           )}
