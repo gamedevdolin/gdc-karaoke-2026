@@ -720,6 +720,14 @@ const styles = `
     font-size: 0.95rem;
   }
 
+  .description-box p {
+    margin-bottom: 0.5em;
+  }
+
+  .description-box p:last-child {
+    margin-bottom: 0;
+  }
+
   /* Mobile-only line break using ::before pseudo-element */
   .mobile-br::before {
     content: ' ';
@@ -837,12 +845,18 @@ const styles = `
   .room-group-content .room-card.has-bg {
     overflow: hidden;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
   }
 
   .room-group-content .room-card.has-bg .room-name {
-    max-width: 45%;
+    max-width: 55%;
     word-wrap: break-word;
+  }
+
+  .room-group-content .room-card.has-bg .room-card-spots {
+    max-width: 55%;
   }
 
   .room-group-content .room-card.has-bg::after {
@@ -1009,9 +1023,28 @@ const styles = `
   .room-description {
     color: var(--text-secondary);
     font-size: 0.95rem;
-    margin-bottom: 15px;
-    font-weight: 300;
-    white-space: pre-line;
+  }
+
+  .room-card-spots {
+    margin-top: 12px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+  }
+
+  .room-card-spots .spots-count {
+    font-weight: 600;
+  }
+
+  .room-card-spots .spots-count.available {
+    color: var(--neon-green);
+  }
+
+  .room-card-spots .spots-count.low {
+    color: #ffaa00;
+  }
+
+  .room-card-spots .spots-count.sold-out {
+    color: var(--neon-pink);
   }
   
   .room-meta {
@@ -1058,10 +1091,14 @@ const styles = `
   .room-detail-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     flex-wrap: wrap;
     gap: 20px;
     margin-bottom: 30px;
+  }
+
+  .room-detail-header .features-list {
+    display: none;
   }
   
   .room-detail h2 {
@@ -1105,7 +1142,25 @@ const styles = `
     .room-detail-header {
       flex-direction: column;
       align-items: flex-start;
-      gap: 20px;
+      gap: 15px;
+    }
+
+    .room-detail-header .features-list {
+      display: flex;
+      order: 2;
+    }
+
+    .room-detail-header .pricing-options,
+    .room-detail-header > .price-tag {
+      order: 3;
+    }
+
+    .room-detail-header > div:first-child {
+      order: 1;
+    }
+
+    .room-detail .features-list.desktop-only {
+      display: none;
     }
 
     .pricing-options {
@@ -2358,8 +2413,8 @@ function GDCKaraokeApp() {
           {view === 'home' && (
             <div className="description-box" style={{ textAlign: 'center', maxWidth: 900, margin: '0 auto 15px' }}>
               <p style={{ marginBottom: 10, color: 'var(--neon-green)', fontWeight: 600, fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Welcome to the karaoke party page</p>
-              <p>Reserve a private room<span className="mobile-br"></span>with your friends and colleagues.</p>
-              <p>Or grab a spot in the<span className="mobile-br"></span>Main Room for general admission.</p>
+              <p>Reserve a private room with<span className="mobile-br"></span> your friends and colleagues.</p>
+              <p>Or grab a spot in the Main Room<span className="mobile-br"></span>for general admission.</p>
               <p>Either way, it's gonna be<span className="mobile-br"></span>a really good party.</p>
             </div>
           )}
@@ -2494,6 +2549,11 @@ function GDCKaraokeApp() {
                         )}
                         <h3 className="room-name">{rooms[id].name}</h3>
                         <p className="room-description">{rooms[id].description}</p>
+                        <div className="room-card-spots">
+                          <span className={`spots-count ${getAvailableSpots(id) === 0 ? 'sold-out' : getAvailableSpots(id) < 3 ? 'low' : 'available'}`}>
+                            {getAvailableSpots(id)} spots left
+                          </span> / {rooms[id].capacity}
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -2535,6 +2595,11 @@ function GDCKaraokeApp() {
                         )}
                         <h3 className="room-name">{rooms[id].name}</h3>
                         <p className="room-description">{rooms[id].description}</p>
+                        <div className="room-card-spots">
+                          <span className={`spots-count ${getAvailableSpots(id) === 0 ? 'sold-out' : getAvailableSpots(id) < 3 ? 'low' : 'available'}`}>
+                            {getAvailableSpots(id)} spots left
+                          </span> / {rooms[id].capacity}
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -2576,6 +2641,11 @@ function GDCKaraokeApp() {
                         )}
                         <h3 className="room-name">{rooms[id].name}</h3>
                         <p className="room-description">{rooms[id].description}</p>
+                        <div className="room-card-spots">
+                          <span className={`spots-count ${getAvailableSpots(id) === 0 ? 'sold-out' : getAvailableSpots(id) < 3 ? 'low' : 'available'}`}>
+                            {getAvailableSpots(id)} spots left
+                          </span> / {rooms[id].capacity}
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -2617,6 +2687,11 @@ function GDCKaraokeApp() {
                         )}
                         <h3 className="room-name">{rooms[id].name}</h3>
                         <p className="room-description">{rooms[id].description}</p>
+                        <div className="room-card-spots">
+                          <span className={`spots-count ${getAvailableSpots(id) === 0 ? 'sold-out' : getAvailableSpots(id) < 3 ? 'low' : 'available'}`}>
+                            {getAvailableSpots(id)} spots left
+                          </span> / {rooms[id].capacity}
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -2639,6 +2714,15 @@ function GDCKaraokeApp() {
                   </div>
                   <h2>{rooms[selectedRoom].name}</h2>
                 </div>
+                {/* Features list - shown inside header on mobile */}
+                {rooms[selectedRoom].features && (
+                  <div className="features-list">
+                    <span className="feature-tag">Up to {rooms[selectedRoom].capacity} Guests</span>
+                    {rooms[selectedRoom].features.map((f, i) => (
+                      <span key={i} className="feature-tag">{f}</span>
+                    ))}
+                  </div>
+                )}
                 {rooms[selectedRoom].roomPrice ? (
                   <div className="pricing-options">
                     <div className="price-tag">
@@ -2655,13 +2739,14 @@ function GDCKaraokeApp() {
                   </div>
                 )}
               </div>
-              
+
               <p className="room-description" style={{ fontSize: '1.1rem', marginBottom: 20 }}>
                 {rooms[selectedRoom].description}
               </p>
-              
+
+              {/* Features list - shown below description on desktop */}
               {rooms[selectedRoom].features && (
-                <div className="features-list">
+                <div className="features-list desktop-only">
                   <span className="feature-tag">Up to {rooms[selectedRoom].capacity} Guests</span>
                   {rooms[selectedRoom].features.map((f, i) => (
                     <span key={i} className="feature-tag">{f}</span>
@@ -2669,67 +2754,8 @@ function GDCKaraokeApp() {
                 </div>
               )}
               
-              
-              
-              {/* Coming Soon - Email Signup */}
-              <div className="coming-soon-section">
-                
-                
-                {signupSuccess ? (
-                  <div className="signup-success">
-                    ✓ You're on the list! We'll email you at {submittedEmail} when tickets go live in mid-February.
-                  </div>
-                ) : (
-                  <>
-                    <p>Sign up now to be notified when tickets go on sale in February</p>
-                    <form className="signup-form" onSubmit={(e) => handleSignup(e, selectedRoom)}>
-                      <div className="form-group">
-                        <input 
-                          type="text" 
-                          required
-                          placeholder="Your name"
-                          value={signupForm.name}
-                          onChange={(e) => setSignupForm({ ...signupForm, name: e.target.value })}
-                        />
-                      </div>
-                      <div className="form-group">
-                        <input 
-                          type="email" 
-                          required
-                          placeholder="you@company.com"
-                          value={signupForm.email}
-                          onChange={(e) => setSignupForm({ ...signupForm, email: e.target.value })}
-                        />
-                      </div>
-                      <div className="form-group">
-                        <input
-                          type="text"
-                          placeholder="Company"
-                          value={signupForm.company}
-                          onChange={(e) => setSignupForm({ ...signupForm, company: e.target.value })}
-                        />
-                      </div>
-                      {selectedRoom !== 'mainStage' && selectedRoom !== 'mainStageSong' && (
-                        <div className="form-group checkbox-group">
-                          <label className="checkbox-label">
-                            <input
-                              type="checkbox"
-                              checked={signupForm.reserveEntireRoom}
-                              onChange={(e) => setSignupForm({ ...signupForm, reserveEntireRoom: e.target.checked })}
-                            />
-                            <span>I'm interested in reserving the entire room</span>
-                          </label>
-                        </div>
-                      )}
-                      <button type="submit" className="signup-btn">
-                        Notify Me →
-                      </button>
-                      <p className="privacy-notice">We'll only use this info to notify you about tickets and event updates. <span className="mobile-break"></span>No spam.</p>
-                    </form>
-                  </>
-                )}
-              </div>
-              {/* Capacity bar and counter - uncomment when ticket sales go live
+
+              {/* Capacity bar and counter */}
               <div className="capacity-bar">
                 <div
                   className={`capacity-fill ${
@@ -2746,7 +2772,18 @@ function GDCKaraokeApp() {
                 </strong>
                 {' '}out of {rooms[selectedRoom].capacity} total capacity
               </p>
-              */}
+
+              {/* Purchase Section - placeholder for Stripe integration */}
+              <div className="purchase-section" style={{ marginTop: 30, padding: 20, border: '1px dashed #444', borderRadius: 8, textAlign: 'center' }}>
+                <p style={{ color: 'var(--text-secondary)', marginBottom: 15 }}>
+                  Purchase buttons coming soon - Stripe integration in progress
+                </p>
+                {rooms[selectedRoom].roomPrice && (
+                  <p style={{ fontSize: '0.9rem', color: '#666' }}>
+                    Save ${(rooms[selectedRoom].price * rooms[selectedRoom].capacity) - rooms[selectedRoom].roomPrice} by booking the entire room!
+                  </p>
+                )}
+              </div>
               <div className="share-section">
                 <h4>Share this room with friends</h4>
                 <div className="share-link">
@@ -2981,7 +3018,13 @@ function GDCKaraokeApp() {
               <div className="info-card">
                 <h3>Want to Sponsor?</h3>
                 <p>
-                  Get your studio or brand in front of 400+ singing game developers. Sponsorship packages are flexible, including signage, branded swag, private room options.<br></br> Reach out to <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); setTimeout(() => document.getElementById('hosts-title')?.scrollIntoView({ behavior: 'smooth' }), 100); }} style={{ color: 'var(--neon-green)' }}>the hosts</a> to learn more.
+                  This event is independently organized by Adam Dolin / Cold Brew Sunset as a love letter to karaoke and the game dev community—no corporate backing, just a desire to throw a great party during GDC.
+                </p>
+                <p>
+                  If you'd like to support the party and get your studio or brand in front of 400+ singing game developers, we're offering flexible sponsorship options, including signage and private room experiences.
+                </p>
+                <p>
+                  Reach out to <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); setTimeout(() => document.getElementById('hosts-title')?.scrollIntoView({ behavior: 'smooth' }), 100); }} style={{ color: 'var(--neon-green)' }}>the hosts</a> to learn more.
                 </p>
               </div>
               <div className="info-card" style={{ border: '2px dashed #444', background: 'transparent', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>
