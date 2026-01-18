@@ -1138,6 +1138,45 @@ const styles = `
     color: var(--neon-green);
   }
 
+  /* Price button styles */
+  .price-btn {
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    font-family: inherit;
+  }
+
+  .price-btn:hover:not(:disabled) {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(0, 255, 148, 0.4);
+  }
+
+  .price-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .price-btn.room-price {
+    border: 2px solid var(--neon-green);
+  }
+
+  .price-btn.room-price:hover:not(:disabled) {
+    background: rgba(0, 255, 148, 0.1);
+  }
+
+  .pricing-options-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+
+  .savings-text {
+    font-size: 0.85rem;
+    color: var(--neon-green);
+    margin-top: 8px;
+    text-align: right;
+  }
+
   @media (max-width: 768px) {
     .room-detail-header {
       flex-direction: column;
@@ -1151,7 +1190,9 @@ const styles = `
     }
 
     .room-detail-header .pricing-options,
-    .room-detail-header > .price-tag {
+    .room-detail-header .pricing-options-wrapper,
+    .room-detail-header > .price-tag,
+    .room-detail-header > button.price-tag {
       order: 3;
     }
 
@@ -1161,6 +1202,11 @@ const styles = `
 
     .room-detail .features-list.desktop-only {
       display: none;
+    }
+
+    .pricing-options-wrapper {
+      width: 100%;
+      align-items: stretch;
     }
 
     .pricing-options {
@@ -1180,6 +1226,11 @@ const styles = `
       font-size: 0.8rem;
       display: block;
       margin-top: 2px;
+    }
+
+    .savings-text {
+      text-align: center;
+      margin-top: 10px;
     }
   }
 
@@ -2012,14 +2063,20 @@ function GDCKaraokeApp() {
   const [adminUnlocked, setAdminUnlocked] = useState(false);
   const [adminLoading, setAdminLoading] = useState(false);
 
-  // Load room data from database on mount
+  // Stripe checkout state
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [orderCounts, setOrderCounts] = useState({}); // { roomId: { bookedCount, hasEntireRoomBooking } }
+
+  // Load room data and availability from database on mount
   React.useEffect(() => {
     const loadRoomData = async () => {
       try {
-        const response = await fetch('/api/rooms');
+        // Fetch room availability (includes order counts)
+        const response = await fetch('/api/room-availability');
         if (response.ok) {
           const data = await response.json();
           if (data.rooms) {
+            const newOrderCounts = {};
             setRooms(prev => {
               const updated = { ...prev };
               Object.keys(data.rooms).forEach(roomId => {
@@ -2032,10 +2089,16 @@ function GDCKaraokeApp() {
                     price: dbRoom.price ?? updated[roomId].price,
                     roomPrice: dbRoom.roomPrice ?? updated[roomId].roomPrice
                   };
+                  // Store order counts separately
+                  newOrderCounts[roomId] = {
+                    bookedCount: dbRoom.bookedCount || 0,
+                    hasEntireRoomBooking: dbRoom.hasEntireRoomBooking || false
+                  };
                 }
               });
               return updated;
             });
+            setOrderCounts(newOrderCounts);
           }
         }
       } catch (error) {
@@ -2228,15 +2291,57 @@ function GDCKaraokeApp() {
     quantity: 1,
   });
   
-  // Calculate bookings per room
+  // Calculate bookings per room (uses real order data from database)
   const getBookedCount = (roomId) => {
-    return bookings
-      .filter(b => b.room === roomId)
-      .reduce((sum, b) => sum + b.quantity, 0);
+    return orderCounts[roomId]?.bookedCount || 0;
   };
-  
+
   const getAvailableSpots = (roomId) => {
+    // If entire room is booked, no spots available
+    if (orderCounts[roomId]?.hasEntireRoomBooking) {
+      return 0;
+    }
     return rooms[roomId].capacity - getBookedCount(roomId);
+  };
+
+  // Handle Stripe checkout
+  const handleCheckout = async (isEntireRoom = false) => {
+    if (!selectedRoom) return;
+
+    const room = rooms[selectedRoom];
+    const quantity = isEntireRoom ? room.capacity : formData.quantity;
+    const unitPrice = isEntireRoom ? room.roomPrice : room.price;
+
+    setCheckoutLoading(true);
+
+    try {
+      const response = await fetch('/api/create-checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          roomId: selectedRoom,
+          roomName: room.name,
+          quantity,
+          unitPrice,
+          isEntireRoom,
+          roomCapacity: room.capacity
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.url) {
+        // Redirect to Stripe Checkout
+        window.location.href = data.url;
+      } else if (data.error) {
+        alert(data.error);
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      alert('Failed to start checkout. Please try again.');
+    } finally {
+      setCheckoutLoading(false);
+    }
   };
   
   // Handle room selection
@@ -2724,19 +2829,36 @@ function GDCKaraokeApp() {
                   </div>
                 )}
                 {rooms[selectedRoom].roomPrice ? (
-                  <div className="pricing-options">
-                    <div className="price-tag">
-                      ${rooms[selectedRoom].price} <span>/person</span>
+                  <div className="pricing-options-wrapper">
+                    <div className="pricing-options">
+                      <button
+                        className="price-tag price-btn"
+                        onClick={() => handleCheckout(false)}
+                        disabled={checkoutLoading || getAvailableSpots(selectedRoom) === 0}
+                      >
+                        ${rooms[selectedRoom].price} <span>/person</span>
+                      </button>
+                      <span className="pricing-or">or</span>
+                      <button
+                        className="price-tag room-price price-btn"
+                        onClick={() => handleCheckout(true)}
+                        disabled={checkoutLoading || getAvailableSpots(selectedRoom) === 0}
+                      >
+                        ${rooms[selectedRoom].roomPrice} <span>for the entire room</span>
+                      </button>
                     </div>
-                    <span className="pricing-or">or</span>
-                    <div className="price-tag room-price">
-                      ${rooms[selectedRoom].roomPrice} <span>for the entire room</span>
-                    </div>
+                    <p className="savings-text">
+                      Save ${(rooms[selectedRoom].price * rooms[selectedRoom].capacity) - rooms[selectedRoom].roomPrice} by booking the entire room!
+                    </p>
                   </div>
                 ) : (
-                  <div className="price-tag">
+                  <button
+                    className="price-tag price-btn"
+                    onClick={() => handleCheckout(false)}
+                    disabled={checkoutLoading || getAvailableSpots(selectedRoom) === 0}
+                  >
                     ${rooms[selectedRoom].price} <span>/person</span>
-                  </div>
+                  </button>
                 )}
               </div>
 
@@ -2773,17 +2895,6 @@ function GDCKaraokeApp() {
                 {' '}out of {rooms[selectedRoom].capacity} total capacity
               </p>
 
-              {/* Purchase Section - placeholder for Stripe integration */}
-              <div className="purchase-section" style={{ marginTop: 30, padding: 20, border: '1px dashed #444', borderRadius: 8, textAlign: 'center' }}>
-                <p style={{ color: 'var(--text-secondary)', marginBottom: 15 }}>
-                  Purchase buttons coming soon - Stripe integration in progress
-                </p>
-                {rooms[selectedRoom].roomPrice && (
-                  <p style={{ fontSize: '0.9rem', color: '#666' }}>
-                    Save ${(rooms[selectedRoom].price * rooms[selectedRoom].capacity) - rooms[selectedRoom].roomPrice} by booking the entire room!
-                  </p>
-                )}
-              </div>
               <div className="share-section">
                 <h4>Share this room with friends</h4>
                 <div className="share-link">
@@ -2918,7 +3029,7 @@ function GDCKaraokeApp() {
                 {['main', 'small', 'medium', 'large', 'vip'].map(tier => {
                   const tierRooms = Object.entries(rooms).filter(([_, r]) => r.tier === tier);
                   if (tierRooms.length === 0) return null;
-                  const tierLabels = { main: 'Main Stage', small: 'Small Rooms (8 guests)', medium: 'Medium Rooms (15 guests)', large: 'Large Rooms (25 guests)', vip: 'VIP Room (30 guests)' };
+                  const tierLabels = { main: 'Main Stage', small: 'Small Rooms (8 guests)', medium: 'Medium Rooms (15 guests)', large: 'Large Rooms (25 guests)', vip: 'Largest Room (30 guests)' };
                   return (
                     <div key={tier} style={{ marginBottom: 30 }}>
                       <h4 style={{
