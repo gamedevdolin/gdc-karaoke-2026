@@ -103,9 +103,23 @@ export default async (req, context) => {
         isEntireRoom: isEntireRoom ? 'true' : 'false',
         roomCapacity: roomCapacity.toString()
       },
-      // Collect customer email
+      // Collect customer info
       customer_creation: 'always',
       billing_address_collection: 'auto',
+      // Custom fields for name and company
+      custom_fields: [
+        {
+          key: 'full_name',
+          label: { type: 'custom', custom: 'Full Name' },
+          type: 'text',
+        },
+        {
+          key: 'company',
+          label: { type: 'custom', custom: 'Company / Studio (optional)' },
+          type: 'text',
+          optional: true,
+        },
+      ],
     });
 
     // Create a pending order in the database

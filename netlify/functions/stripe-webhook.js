@@ -40,6 +40,13 @@ export default async (req, context) => {
       case 'checkout.session.completed': {
         const session = event.data.object;
 
+        // Extract custom fields (full_name, company)
+        const customFields = session.custom_fields || [];
+        const fullNameField = customFields.find(f => f.key === 'full_name');
+        const companyField = customFields.find(f => f.key === 'company');
+        const fullName = fullNameField?.text?.value || session.customer_details?.name || '';
+        const company = companyField?.text?.value || '';
+
         // Update the order with payment info
         await sql`
           UPDATE orders
@@ -47,7 +54,8 @@ export default async (req, context) => {
             payment_status = 'paid',
             stripe_payment_intent = ${session.payment_intent},
             buyer_email = ${session.customer_details?.email || ''},
-            buyer_name = ${session.customer_details?.name || ''},
+            buyer_name = ${fullName},
+            buyer_company = ${company},
             updated_at = NOW()
           WHERE stripe_session_id = ${session.id}
         `;

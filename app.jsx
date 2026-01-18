@@ -2067,6 +2067,11 @@ function GDCKaraokeApp() {
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [orderCounts, setOrderCounts] = useState({}); // { roomId: { bookedCount, hasEntireRoomBooking } }
 
+  // Orders state for admin panel
+  const [orders, setOrders] = useState([]);
+  const [orderStats, setOrderStats] = useState({ paid_count: 0, pending_count: 0, total_revenue: 0, total_tickets: 0 });
+  const [ordersLoading, setOrdersLoading] = useState(false);
+
   // Load room data and availability from database on mount
   React.useEffect(() => {
     const loadRoomData = async () => {
@@ -2250,6 +2255,80 @@ function GDCKaraokeApp() {
     a.click();
   };
 
+  // Fetch orders from database (admin only)
+  const fetchOrders = async () => {
+    setOrdersLoading(true);
+    try {
+      const response = await fetch('/api/orders', {
+        headers: { 'Authorization': `Bearer ${adminPassword}` },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setOrders(data.orders || []);
+        setOrderStats(data.stats || { paid_count: 0, pending_count: 0, total_revenue: 0, total_tickets: 0 });
+      }
+    } catch (error) {
+      console.error('Failed to fetch orders:', error);
+    } finally {
+      setOrdersLoading(false);
+    }
+  };
+
+  // Reset all orders (admin only - for testing)
+  const resetOrders = async () => {
+    if (!confirm('Are you sure you want to delete ALL orders and reset room bookings? This cannot be undone.')) {
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/reset-orders', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${adminPassword}` },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(data.message);
+        // Refresh orders and room data
+        fetchOrders();
+        // Reload room availability
+        window.location.reload();
+      } else {
+        alert('Failed to reset: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Failed to reset orders:', error);
+      alert('Failed to reset orders');
+    }
+  };
+
+  // Export attendees as CSV
+  const exportAttendees = () => {
+    const paidOrders = orders.filter(o => o.payment_status === 'paid');
+    const headers = ['Name', 'Email', 'Company', 'Room', 'Tickets', 'Total Paid', 'Entire Room', 'Purchase Date'];
+    const rows = paidOrders.map(o => [
+      o.buyer_name || '',
+      o.buyer_email || '',
+      o.buyer_company || '',
+      rooms[o.room_id]?.name || o.room_id,
+      o.quantity,
+      '$' + o.total_amount,
+      o.is_entire_room ? 'Yes' : 'No',
+      o.created_at?.split('T')[0] || '',
+    ]);
+
+    const csv = [headers, ...rows].map(row => row.map(cell => `"${cell}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'gdc-karaoke-attendees.csv';
+    a.click();
+  };
+
   // Check admin password by attempting to fetch signups
   const checkAdminPassword = async () => {
     setAdminLoading(true);
@@ -2273,6 +2352,8 @@ function GDCKaraokeApp() {
         }));
         setSignups(formattedSignups);
         setAdminUnlocked(true);
+        // Also fetch orders
+        fetchOrders();
       } else {
         alert('Incorrect password. Please try again.');
       }
@@ -2933,7 +3014,10 @@ function GDCKaraokeApp() {
             <div className="admin-panel">
               <div className="admin-header">
                 <h2>Admin Panel</h2>
-                <div style={{ display: 'flex', gap: 10 }}>
+                <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                  <button className="export-btn" onClick={exportAttendees}>
+                    Export Attendees (CSV)
+                  </button>
                   <button className="export-btn" onClick={exportSignups}>
                     Export Signups (CSV)
                   </button>
@@ -2942,17 +3026,83 @@ function GDCKaraokeApp() {
                   </button>
                 </div>
               </div>
-              
+
               {/* Stats */}
               <div className="stats-grid">
                 <div className="stat-card">
-                  <div className="stat-value">{signups.length}</div>
-                  <div className="stat-label">Email Signups</div>
+                  <div className="stat-value" style={{ color: 'var(--neon-green)' }}>${orderStats.total_revenue}</div>
+                  <div className="stat-label">Revenue</div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-value">{orderStats.total_tickets}</div>
+                  <div className="stat-label">Tickets Sold</div>
+                </div>
+                <div className="stat-card">
+                  <div className="stat-value">{orderStats.paid_count}</div>
+                  <div className="stat-label">Paid Orders</div>
                 </div>
                 <div className="stat-card">
                   <div className="stat-value">{totalCapacity}</div>
                   <div className="stat-label">Total Capacity</div>
                 </div>
+              </div>
+
+              {/* Paid Orders Section */}
+              <div className="admin-section" style={{ marginTop: 20 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 }}>
+                  <h3>Paid Orders ({orders.filter(o => o.payment_status === 'paid').length})</h3>
+                  <button
+                    onClick={resetOrders}
+                    style={{
+                      background: 'transparent',
+                      border: '1px solid var(--neon-pink)',
+                      color: 'var(--neon-pink)',
+                      padding: '8px 16px',
+                      borderRadius: 4,
+                      cursor: 'pointer',
+                      fontSize: '0.85rem'
+                    }}
+                  >
+                    Reset All Orders (Testing)
+                  </button>
+                </div>
+
+                {ordersLoading ? (
+                  <p style={{ color: 'var(--text-secondary)' }}>Loading orders...</p>
+                ) : orders.filter(o => o.payment_status === 'paid').length > 0 ? (
+                  <div style={{ overflowX: 'auto' }}>
+                    <table className="guest-table">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Email</th>
+                          <th>Company</th>
+                          <th>Room</th>
+                          <th>Qty</th>
+                          <th>Total</th>
+                          <th>Entire Room</th>
+                          <th>Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {orders.filter(o => o.payment_status === 'paid').map(order => (
+                          <tr key={order.id}>
+                            <td>{order.buyer_name || '—'}</td>
+                            <td>{order.buyer_email || '—'}</td>
+                            <td>{order.buyer_company || '—'}</td>
+                            <td>{rooms[order.room_id]?.name || order.room_id}</td>
+                            <td>{order.quantity}</td>
+                            <td>${order.total_amount}</td>
+                            <td>{order.is_entire_room ? '✓ Yes' : '—'}</td>
+                            <td>{order.created_at?.split('T')[0] || ''}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <p style={{ color: 'var(--text-secondary)' }}>No paid orders yet.</p>
+                )}
               </div>
 
               {/* Room Signup Breakdown */}

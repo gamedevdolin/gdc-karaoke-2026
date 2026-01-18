@@ -54,9 +54,14 @@ export default async (req, context) => {
       CREATE INDEX IF NOT EXISTS idx_orders_stripe_session ON orders(stripe_session_id)
     `;
 
+    // Add buyer_company column if it doesn't exist
+    await sql`
+      ALTER TABLE orders ADD COLUMN IF NOT EXISTS buyer_company VARCHAR
+    `;
+
     return new Response(JSON.stringify({
       success: true,
-      message: 'Orders table created successfully'
+      message: 'Orders table created/updated successfully'
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
