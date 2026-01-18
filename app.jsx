@@ -2422,7 +2422,7 @@ function GDCKaraokeApp() {
 
           {view === 'home' && (
             <p style={{ textAlign: 'center', color: '#ff6b6b', fontSize: '0.95rem', margin: '15px 0', fontStyle: 'italic', textShadow: '0 0 10px rgba(255, 107, 107, 0.4)' }}>
-              Tickets go on sale mid-February
+              The event will go live in mid-February, so grab your private rooms now!
             </p>
           )}
 
