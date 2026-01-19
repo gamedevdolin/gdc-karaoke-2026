@@ -3357,10 +3357,10 @@ function GDCKaraokeApp() {
               <div className="info-card">
                 <h3>Want to Sponsor?</h3>
                 <p>
-                  This event is independently organized by Adam Dolin and Cold Brew Sunset as a love letter to fellow theater kids-turned-game devs. No corporate backing, just a desire to throw a great party during GDC.
+                  This is an independently organized event for fellow theater kids-turned-game devs. No corporate backing, just a desire to throw a great party during GDC.
                 </p>
                 <p>
-                  But if you'd like to support the party and get your studio or brand in front of 400+ singing game developers, we're offering flexible sponsorship options, including signage and private room experiences.
+                  But if you'd like to get your studio or brand in front of 400+ singing game developers, we're offering flexible sponsorship options.
                 </p>
                 <p>
                   Reach out to <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); setTimeout(() => document.getElementById('hosts-title')?.scrollIntoView({ behavior: 'smooth' }), 100); }} style={{ color: 'var(--neon-green)' }}>the hosts</a> to learn more.
