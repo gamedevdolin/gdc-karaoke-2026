@@ -1055,6 +1055,16 @@ const styles = `
     padding-top: 15px;
     border-top: 1px solid #333;
   }
+
+  .card-note {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #333;
+    line-height: 1.5;
+    font-style: italic;
+  }
   
   .room-capacity {
     font-family: 'Space Mono', monospace;
@@ -1190,7 +1200,7 @@ const styles = `
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
+    gap: 24px;
     background: linear-gradient(135deg, rgba(0, 255, 148, 0.15) 0%, rgba(255, 107, 157, 0.15) 100%);
     border: 2px solid var(--neon-green);
     border-radius: 12px;
@@ -1214,11 +1224,13 @@ const styles = `
     color: #000;
     font-weight: 800;
     font-size: 0.85rem;
-    padding: 6px 12px;
+    padding: 12px 20px;
     border-radius: 6px;
     letter-spacing: 1px;
     text-transform: uppercase;
     animation: badgePulse 1.5s ease-in-out infinite;
+    text-align: center;
+    line-height: 1.4;
   }
 
   @keyframes badgePulse {
@@ -2026,7 +2038,68 @@ const styles = `
     margin-top: 20px;
     font-size: 0.85rem;
   }
-  
+
+  .legal-links {
+    margin-top: 15px;
+    font-size: 0.8rem;
+  }
+
+  .legal-links a {
+    color: var(--text-secondary);
+  }
+
+  .legal-links a:hover {
+    color: var(--neon-green);
+  }
+
+  /* Legal Pages (Privacy & Terms) */
+  .legal-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    color: var(--text-primary);
+    line-height: 1.7;
+  }
+
+  .legal-page h1 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+    color: var(--neon-green);
+  }
+
+  .legal-page h2 {
+    font-size: 1.3rem;
+    margin-top: 30px;
+    margin-bottom: 15px;
+    color: var(--text-primary);
+  }
+
+  .legal-page p {
+    margin-bottom: 15px;
+    color: var(--text-secondary);
+  }
+
+  .legal-page ul {
+    margin-bottom: 15px;
+    padding-left: 25px;
+  }
+
+  .legal-page li {
+    margin-bottom: 10px;
+    color: var(--text-secondary);
+  }
+
+  .legal-page strong {
+    color: var(--text-primary);
+  }
+
+  .legal-updated {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+    opacity: 0.7;
+  }
+
   /* Success Modal */
   .modal-overlay {
     position: fixed;
@@ -2105,7 +2178,7 @@ const MOCK_BOOKINGS = [];
 
 // Main App Component
 function GDCKaraokeApp() {
-  const [view, setView] = useState('home'); // home, room, admin
+  const [view, setView] = useState('home'); // home, room, admin, privacy, terms
   const [activeTab, setActiveTab] = useState('private'); // 'main' or 'private'
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [rooms, setRooms] = useState(INITIAL_ROOMS);
@@ -2217,10 +2290,19 @@ function GDCKaraokeApp() {
     saveRoomToDatabase(roomId, field, value);
   };
 
-  // Check URL parameters on load to open specific room
+  // Check URL parameters on load to open specific room or page
   React.useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const roomParam = params.get('room');
+    const viewParam = params.get('view');
+
+    // Handle direct links to privacy/terms pages
+    if (viewParam === 'privacy' || viewParam === 'terms') {
+      setView(viewParam);
+      window.scrollTo(0, 0);
+      return;
+    }
+
     if (roomParam && rooms[roomParam]) {
       setSelectedRoom(roomParam);
       setView('room');
@@ -2460,10 +2542,11 @@ function GDCKaraokeApp() {
   };
 
   // Handle Stripe checkout
-  const handleCheckout = async (isEntireRoom = false) => {
-    if (!selectedRoom) return;
+  const handleCheckout = async (isEntireRoom = false, roomId = null) => {
+    const targetRoom = roomId || selectedRoom;
+    if (!targetRoom) return;
 
-    const room = rooms[selectedRoom];
+    const room = rooms[targetRoom];
     const quantity = isEntireRoom ? room.capacity : formData.quantity;
     const unitPrice = isEntireRoom ? room.roomPrice : room.price;
 
@@ -2474,7 +2557,7 @@ function GDCKaraokeApp() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          roomId: selectedRoom,
+          roomId: targetRoom,
           roomName: room.name,
           quantity,
           unitPrice,
@@ -2682,7 +2765,7 @@ function GDCKaraokeApp() {
 
           {view === 'home' && (
             <div className="presale-banner">
-              <span className="presale-badge">PRE-SALE is now LIVE!</span>
+              <span className="presale-badge"><span style={{ whiteSpace: 'nowrap' }}>PRE-SALE IS NOW</span><br/>LIVE!</span>
               <span className="presale-text">Reserve your room now before the event opens to the general public in mid-February.</span>
             </div>
           )}
@@ -2713,10 +2796,14 @@ function GDCKaraokeApp() {
               <div className="room-grid">
                 {/* Main Stage */}
                 <div
-                  className="room-card featured"
-                  onClick={() => selectRoom('mainStage')}
+                  className={`room-card featured ${checkoutLoading ? 'loading' : ''}`}
+                  onClick={() => {
+                    if (checkoutLoading || getAvailableSpots('mainStage') === 0) return;
+                    handleCheckout(false, 'mainStage');
+                  }}
+                  style={{ cursor: checkoutLoading || getAvailableSpots('mainStage') === 0 ? 'not-allowed' : 'pointer', opacity: getAvailableSpots('mainStage') === 0 ? 0.6 : 1 }}
                 >
-            
+
                   <h3 className="room-name">{rooms.mainStage.name}</h3>
                   <p className="room-description">{rooms.mainStage.description}</p>
                   <div className="features-list">
@@ -2737,15 +2824,19 @@ function GDCKaraokeApp() {
                 </div>
               </div>
 
-              
+
 
               <div className="room-grid">
                 {/* Main Stage + Song */}
                 <div
-                  className="room-card featured"
-                  onClick={() => selectRoom('mainStageSong')}
+                  className={`room-card featured ${checkoutLoading ? 'loading' : ''}`}
+                  onClick={() => {
+                    if (checkoutLoading || getAvailableSpots('mainStageSong') === 0) return;
+                    handleCheckout(false, 'mainStageSong');
+                  }}
+                  style={{ cursor: checkoutLoading || getAvailableSpots('mainStageSong') === 0 ? 'not-allowed' : 'pointer', opacity: getAvailableSpots('mainStageSong') === 0 ? 0.6 : 1 }}
                 >
-                  
+
                   <h3 className="room-name">{rooms.mainStageSong.name}</h3>
                   <p className="room-description">{rooms.mainStageSong.description}</p>
                   <div className="features-list">
@@ -2763,11 +2854,10 @@ function GDCKaraokeApp() {
                       ${rooms.mainStageSong.price} <span>/person</span>
                     </span>
                   </div>
+                  <p className="card-note">
+                    Due to the length of the average karaoke song and the laws of time, only a limited number of singers will be allowed to grace the main stage. Main Stage singers will receive more information in late February.
+                  </p>
                 </div>
-                {/* Description Box */}
-              <div className="description-box">
-                Due to the length of the average karaoke song and the laws of time, only a limited number of singers will be allowed to grace the main stage. Sign up to be the first to know when tickets drop—Main Stage singers will receive more information in late February.
-              </div>
               </div>
             </>
           )}
@@ -3357,7 +3447,7 @@ function GDCKaraokeApp() {
               <div className="info-card">
                 <h3>Want to Sponsor?</h3>
                 <p>
-                  This is an independently organized event for fellow theater kids-turned-game devs. No corporate backing, just a desire to throw a great party during GDC.
+                  This is an independently organized event. No corporate backing, just a former theater kid-turned-game dev who wants to throw a great party during GDC.
                 </p>
                 <p>
                   But if you'd like to get your studio or brand in front of 400+ singing game developers, we're offering flexible sponsorship options.
@@ -3437,6 +3527,91 @@ function GDCKaraokeApp() {
             </div>
           )}
 
+          {/* Privacy Policy */}
+          {view === 'privacy' && (
+            <div className="legal-page">
+              <button className="back-btn" onClick={() => setView('home')}>← Back</button>
+              <h1>Privacy Policy</h1>
+              <p className="legal-updated">Last updated: January 2026</p>
+
+              <h2>Information We Collect</h2>
+              <p>When you purchase tickets for GDC Karaoke Night 2026, we collect:</p>
+              <ul>
+                <li><strong>Contact Information:</strong> Your name, email address, and optionally your company/studio name</li>
+                <li><strong>Payment Information:</strong> Payment is processed securely through Stripe. We do not store your credit card details on our servers.</li>
+                <li><strong>Purchase Details:</strong> Which room and ticket type you purchased</li>
+              </ul>
+
+              <h2>How We Use Your Information</h2>
+              <ul>
+                <li>To process your ticket purchase and send confirmation emails</li>
+                <li>To maintain an attendee list for event check-in and safety purposes</li>
+                <li>To comply with GDC affiliate event requirements (attendee list submission)</li>
+                <li>To contact you with important event updates</li>
+              </ul>
+
+              <h2>Information Sharing</h2>
+              <p>We share your information only as required:</p>
+              <ul>
+                <li><strong>GDC/Informa:</strong> As a GDC affiliated event, we are required to submit a complete attendee list for safety and compliance purposes</li>
+                <li><strong>Stripe:</strong> Our payment processor, who handles transactions securely</li>
+                <li><strong>Venue:</strong> Basic attendee count for capacity management</li>
+              </ul>
+              <p>We do not sell your personal information to third parties.</p>
+
+              <h2>Data Retention</h2>
+              <p>We retain your purchase information for the duration needed to fulfill the event and comply with any legal requirements, typically no longer than one year after the event.</p>
+
+              <h2>Contact Us</h2>
+              <p>Questions about this privacy policy? Contact us at the email addresses listed on our hosts page.</p>
+            </div>
+          )}
+
+          {/* Terms of Service */}
+          {view === 'terms' && (
+            <div className="legal-page">
+              <button className="back-btn" onClick={() => setView('home')}>← Back</button>
+              <h1>Terms of Service</h1>
+              <p className="legal-updated">Last updated: January 2026</p>
+
+              <h2>Event Details</h2>
+              <p><strong>GDC Karaoke Night 2026</strong><br/>
+              Date: {CONFIG.eventDate}<br/>
+              Time: {CONFIG.eventTime}<br/>
+              Venue: {CONFIG.venueName}, {CONFIG.venueAddress}</p>
+
+              <h2>Ticket Purchases</h2>
+              <ul>
+                <li>All ticket sales are final. No refunds will be issued except in the case of event cancellation.</li>
+                <li>Tickets are non-transferable without prior approval from the event organizers.</li>
+                <li>You must be 21 years or older to attend this event.</li>
+              </ul>
+
+              <h2>Room Reservations</h2>
+              <ul>
+                <li>Private room reservations include access for up to the stated room capacity.</li>
+                <li>By reserving a room, you agree to provide a complete list of attendees prior to the event.</li>
+                <li>Room assignments are subject to change based on venue availability.</li>
+              </ul>
+
+              <h2>Attendee Requirements</h2>
+              <ul>
+                <li>As a GDC affiliated event, all attendees must be registered. We are required to submit a complete guest list for safety purposes.</li>
+                <li>Valid government-issued ID is required for entry.</li>
+                <li>The event organizers reserve the right to refuse entry or remove any attendee for inappropriate behavior.</li>
+              </ul>
+
+              <h2>Event Changes</h2>
+              <p>The organizers reserve the right to modify event details, including venue, time, or entertainment, as necessary. Ticket holders will be notified of significant changes via email.</p>
+
+              <h2>Liability</h2>
+              <p>Attendees assume all risks associated with attendance. The organizers are not responsible for any injury, loss, or damage to personal property.</p>
+
+              <h2>Contact</h2>
+              <p>For questions about these terms, please contact the event hosts.</p>
+            </div>
+          )}
+
           {/* Footer */}
           <footer className="footer">
             <p>
@@ -3444,6 +3619,11 @@ function GDCKaraokeApp() {
             </p>
             <p className="hosts">
               Hosted by <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); setTimeout(() => document.getElementById('hosts-title')?.scrollIntoView({ behavior: 'smooth' }), 100); }}>Adam Dolin & Cristina Amaya</a>
+            </p>
+            <p className="legal-links">
+              <a href="#" onClick={(e) => { e.preventDefault(); setView('privacy'); window.scrollTo(0, 0); }}>Privacy Policy</a>
+              {' • '}
+              <a href="#" onClick={(e) => { e.preventDefault(); setView('terms'); window.scrollTo(0, 0); }}>Terms of Service</a>
             </p>
             <p style={{ marginTop: 15 }}>
               <span className="admin-link" onClick={() => setView('admin')}>•</span>
