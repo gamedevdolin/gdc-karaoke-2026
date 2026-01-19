@@ -20,7 +20,7 @@ const INITIAL_ROOMS = {
     id: 'mainStage',
     name: 'General Admission',
     description: 'Big stage. Big energy. The heart of the party.',
-    capacity: 120,
+    capacity: 100,
     price: 35,
     tier: 'main',
     features: ['includes 2 drink tickets'],
