@@ -328,11 +328,11 @@ const styles = `
   }
 
   .date-row-standalone .mascot-left {
-    margin-right: -10px;
+    margin-right: 50px;
   }
 
   .date-row-standalone .mascot-right {
-    margin-left: -10px;
+    margin-left: 50px;
   }
 
   .date-row-standalone .date-text {
@@ -412,8 +412,16 @@ const styles = `
     .header .date-text {
       order: 0;
     }
+
+    .date-row-standalone .mascot-left {
+      margin-right: -10px;
+    }
+
+    .date-row-standalone .mascot-right {
+      margin-left: -10px;
+    }
   }
-  
+
   /* Hero Slides Section */
   .hero-slides {
     display: flex;
@@ -1104,13 +1112,15 @@ const styles = `
     border: 1px solid #333;
     padding: 40px;
     margin-top: 30px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
   }
-  
+
   .room-detail-header {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
+    flex-direction: column;
+    align-items: flex-start;
     gap: 20px;
     margin-bottom: 30px;
   }
@@ -1185,23 +1195,24 @@ const styles = `
   .pricing-options-wrapper {
     display: flex;
     flex-direction: column;
-    align-items: flex-end;
+    align-items: flex-start;
   }
 
   .savings-text {
     font-size: 0.85rem;
     color: var(--neon-green);
     margin-top: 15px;
-    text-align: right;
+    text-align: left;
   }
 
   .attendee-notice {
     font-size: 0.75rem;
     color: var(--text-secondary);
     margin-top: 15px;
-    text-align: right;
+    text-align: left;
     line-height: 1.4;
     opacity: 0.8;
+    max-width: 600px;
   }
 
   .presale-banner {
@@ -1266,11 +1277,28 @@ const styles = `
     .room-detail-header .features-list {
       display: flex;
       order: 2;
-      margin-bottom: 5px;
+      margin-bottom: 0;
+    }
+
+    .room-detail-header .pricing-options-wrapper {
+      order: 3;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .room-detail-header .pricing-options-wrapper .savings-text {
+      order: 1;
+    }
+
+    .room-detail-header .pricing-options-wrapper .attendee-notice {
+      order: 2;
+    }
+
+    .room-detail-header .pricing-options-wrapper .pricing-options {
+      order: 3;
     }
 
     .room-detail-header .pricing-options,
-    .room-detail-header .pricing-options-wrapper,
     .room-detail-header > .price-tag,
     .room-detail-header > button.price-tag {
       order: 3;
@@ -1286,7 +1314,19 @@ const styles = `
 
     .pricing-options-wrapper {
       width: 100%;
-      align-items: stretch;
+      align-items: center;
+    }
+
+    .savings-text {
+      text-align: center;
+      margin-top: 18px;
+    }
+
+    .attendee-notice {
+      text-align: center;
+      margin-top: 18px;
+      margin-bottom: 20px;
+      max-width: none;
     }
 
     .pricing-options {
@@ -1306,16 +1346,6 @@ const styles = `
       font-size: 0.8rem;
       display: block;
       margin-top: 2px;
-    }
-
-    .savings-text {
-      text-align: center;
-      margin-top: 18px;
-    }
-
-    .attendee-notice {
-      text-align: center;
-      margin-top: 18px;
     }
 
     .presale-banner {
