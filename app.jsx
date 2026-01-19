@@ -738,6 +738,14 @@ const styles = `
       content: '\\A';
       white-space: pre;
     }
+
+    .description-box {
+      padding: 12px 15px;
+    }
+
+    .description-box .description-line {
+      font-size: clamp(0.7rem, 2.8vw, 0.95rem);
+    }
   }
   
   /* Room Group Toggles */
@@ -1183,14 +1191,14 @@ const styles = `
   .savings-text {
     font-size: 0.85rem;
     color: var(--neon-green);
-    margin-top: 8px;
+    margin-top: 15px;
     text-align: right;
   }
 
   .attendee-notice {
     font-size: 0.75rem;
     color: var(--text-secondary);
-    margin-top: 12px;
+    margin-top: 15px;
     text-align: right;
     line-height: 1.4;
     opacity: 0.8;
@@ -1258,6 +1266,7 @@ const styles = `
     .room-detail-header .features-list {
       display: flex;
       order: 2;
+      margin-bottom: 5px;
     }
 
     .room-detail-header .pricing-options,
@@ -1301,11 +1310,12 @@ const styles = `
 
     .savings-text {
       text-align: center;
-      margin-top: 10px;
+      margin-top: 18px;
     }
 
     .attendee-notice {
       text-align: center;
+      margin-top: 18px;
     }
 
     .presale-banner {
@@ -2756,9 +2766,9 @@ function GDCKaraokeApp() {
           {view === 'home' && (
             <div className="description-box" style={{ textAlign: 'center', maxWidth: 900, margin: '0 auto 15px' }}>
               <p style={{ marginBottom: 10, color: 'var(--neon-green)', fontWeight: 600, fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Welcome to the karaoke party page</p>
-              <p style={{ whiteSpace: 'nowrap', marginBottom: 8 }}>Reserve a private room with your friends and colleagues.</p>
-              <p style={{ whiteSpace: 'nowrap', marginBottom: 8 }}>Or grab a spot in the Main Room for general admission.</p>
-              <p style={{ whiteSpace: 'nowrap' }}>Either way, it's gonna be a really good party.</p>
+              <p className="description-line" style={{ whiteSpace: 'nowrap', marginBottom: 8 }}>Reserve a private room with your friends and colleagues.</p>
+              <p className="description-line" style={{ whiteSpace: 'nowrap', marginBottom: 8 }}>Or grab a spot in the Main Room for general admission.</p>
+              <p className="description-line" style={{ whiteSpace: 'nowrap' }}>Either way, it's gonna be a really good party.</p>
             </div>
           )}
 
