@@ -1177,6 +1177,65 @@ const styles = `
     text-align: right;
   }
 
+  .attendee-notice {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    margin-top: 12px;
+    text-align: right;
+    line-height: 1.4;
+    opacity: 0.8;
+  }
+
+  .presale-banner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: linear-gradient(135deg, rgba(0, 255, 148, 0.15) 0%, rgba(255, 107, 157, 0.15) 100%);
+    border: 2px solid var(--neon-green);
+    border-radius: 12px;
+    padding: 16px 24px;
+    margin: 20px auto;
+    max-width: 700px;
+    animation: bannerGlow 2s ease-in-out infinite;
+  }
+
+  @keyframes bannerGlow {
+    0%, 100% {
+      box-shadow: 0 0 20px rgba(0, 255, 148, 0.3), inset 0 0 20px rgba(0, 255, 148, 0.05);
+    }
+    50% {
+      box-shadow: 0 0 30px rgba(0, 255, 148, 0.5), inset 0 0 30px rgba(0, 255, 148, 0.1);
+    }
+  }
+
+  .presale-badge {
+    background: var(--neon-green);
+    color: #000;
+    font-weight: 800;
+    font-size: 0.85rem;
+    padding: 6px 12px;
+    border-radius: 6px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    animation: badgePulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes badgePulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  .presale-text {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+  }
+
+  .presale-text strong {
+    color: var(--neon-green);
+    text-shadow: 0 0 10px rgba(0, 255, 148, 0.5);
+  }
+
   @media (max-width: 768px) {
     .room-detail-header {
       flex-direction: column;
@@ -1231,6 +1290,21 @@ const styles = `
     .savings-text {
       text-align: center;
       margin-top: 10px;
+    }
+
+    .attendee-notice {
+      text-align: center;
+    }
+
+    .presale-banner {
+      flex-direction: column;
+      gap: 8px;
+      padding: 14px 18px;
+      text-align: center;
+    }
+
+    .presale-text {
+      font-size: 1rem;
     }
   }
 
@@ -2599,17 +2673,18 @@ function GDCKaraokeApp() {
           {view === 'home' && (
             <div className="description-box" style={{ textAlign: 'center', maxWidth: 900, margin: '0 auto 15px' }}>
               <p style={{ marginBottom: 10, color: 'var(--neon-green)', fontWeight: 600, fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Welcome to the karaoke party page</p>
-              <p>Reserve a private room with<span className="mobile-br"></span> your friends and colleagues.</p>
-              <p>Or grab a spot in the Main Room<span className="mobile-br"></span>for general admission.</p>
-              <p>Either way, it's gonna be<span className="mobile-br"></span>a really good party.</p>
+              <p style={{ whiteSpace: 'nowrap', marginBottom: 8 }}>Reserve a private room with your friends and colleagues.</p>
+              <p style={{ whiteSpace: 'nowrap', marginBottom: 8 }}>Or grab a spot in the Main Room for general admission.</p>
+              <p style={{ whiteSpace: 'nowrap' }}>Either way, it's gonna be a really good party.</p>
             </div>
           )}
 
 
           {view === 'home' && (
-            <p style={{ textAlign: 'center', color: '#ff6b6b', fontSize: '0.95rem', margin: '15px 0', fontStyle: 'italic', textShadow: '0 0 10px rgba(255, 107, 107, 0.4)' }}>
-              The event will go live in mid-February, so grab your private rooms now!
-            </p>
+            <div className="presale-banner">
+              <span className="presale-badge">PRE-SALE is now LIVE!</span>
+              <span className="presale-text">Reserve your room now before the event opens to the general public in mid-February.</span>
+            </div>
           )}
 
           <h2 className="section-label">RESERVE YOUR SPOT</h2>
@@ -2930,6 +3005,9 @@ function GDCKaraokeApp() {
                     </div>
                     <p className="savings-text">
                       Save ${(rooms[selectedRoom].price * rooms[selectedRoom].capacity) - rooms[selectedRoom].roomPrice} by booking the entire room!
+                    </p>
+                    <p className="attendee-notice">
+                      By booking a room, you agree to provide a full list of attendees prior to the event. As a GDC affiliated event, we are required to maintain a complete guest list for safety purposes.
                     </p>
                   </div>
                 ) : (
@@ -3279,10 +3357,10 @@ function GDCKaraokeApp() {
               <div className="info-card">
                 <h3>Want to Sponsor?</h3>
                 <p>
-                  This event is independently organized by Adam Dolin / Cold Brew Sunset as a love letter to karaoke and the game dev community—no corporate backing, just a desire to throw a great party during GDC.
+                  This event is independently organized by Adam Dolin and Cold Brew Sunset as a love letter to fellow theater kids-turned-game devs. No corporate backing, just a desire to throw a great party during GDC.
                 </p>
                 <p>
-                  If you'd like to support the party and get your studio or brand in front of 400+ singing game developers, we're offering flexible sponsorship options, including signage and private room experiences.
+                  But if you'd like to support the party and get your studio or brand in front of 400+ singing game developers, we're offering flexible sponsorship options, including signage and private room experiences.
                 </p>
                 <p>
                   Reach out to <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); setTimeout(() => document.getElementById('hosts-title')?.scrollIntoView({ behavior: 'smooth' }), 100); }} style={{ color: 'var(--neon-green)' }}>the hosts</a> to learn more.
