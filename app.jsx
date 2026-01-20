@@ -1117,6 +1117,30 @@ const styles = `
     margin-right: auto;
   }
 
+  .room-detail-content {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 30px;
+    align-items: start;
+  }
+
+  .room-detail-left {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .room-detail-image {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+    aspect-ratio: 4 / 3;
+  }
+
+  .room-detail-image-mobile {
+    display: none;
+  }
+
   .room-detail-header {
     display: flex;
     flex-direction: column;
@@ -1268,6 +1292,24 @@ const styles = `
   }
 
   @media (max-width: 768px) {
+    .room-detail-content {
+      grid-template-columns: 1fr;
+    }
+
+    .room-detail-image {
+      display: none;
+    }
+
+    .room-detail-image-mobile {
+      display: block;
+      width: 100%;
+      max-width: 400px;
+      margin: 20px auto;
+      border-radius: 8px;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+    }
+
     .room-detail-header {
       flex-direction: column;
       align-items: flex-start;
@@ -3097,26 +3139,52 @@ function GDCKaraokeApp() {
               <button ref={backButtonRef} className="back-btn" onClick={goBackToHome}>
                 ← Back to all rooms
               </button>
-              
-              <div className="room-detail-header">
-                <div>
-                  <div className="room-tier" style={{ marginBottom: 10 }}>
-                    {rooms[selectedRoom].tier.toUpperCase()} ROOM
-                  </div>
-                  <h2>{rooms[selectedRoom].name}</h2>
-                </div>
-                {/* Features list - shown inside header on mobile */}
-                {rooms[selectedRoom].features && (
-                  <div className="features-list">
-                    <span className="feature-tag">Up to {rooms[selectedRoom].capacity} Guests</span>
-                    {rooms[selectedRoom].features.map((f, i) => (
-                      <span key={i} className="feature-tag">{f}</span>
-                    ))}
-                  </div>
-                )}
-                {rooms[selectedRoom].roomPrice ? (
-                  <div className="pricing-options-wrapper">
-                    <div className="pricing-options">
+
+              <div className="room-detail-content">
+                <div className="room-detail-left">
+                  <div className="room-detail-header">
+                    <div>
+                      <div className="room-tier" style={{ marginBottom: 10 }}>
+                        {rooms[selectedRoom].tier.toUpperCase()} ROOM
+                      </div>
+                      <h2>{rooms[selectedRoom].name}</h2>
+                    </div>
+                    {/* Features list - shown inside header on mobile */}
+                    {rooms[selectedRoom].features && (
+                      <div className="features-list">
+                        <span className="feature-tag">Up to {rooms[selectedRoom].capacity} Guests</span>
+                        {rooms[selectedRoom].features.map((f, i) => (
+                          <span key={i} className="feature-tag">{f}</span>
+                        ))}
+                      </div>
+                    )}
+                    {rooms[selectedRoom].roomPrice ? (
+                      <div className="pricing-options-wrapper">
+                        <div className="pricing-options">
+                          <button
+                            className="price-tag price-btn"
+                            onClick={() => handleCheckout(false)}
+                            disabled={checkoutLoading || getAvailableSpots(selectedRoom) === 0}
+                          >
+                            ${rooms[selectedRoom].price} <span>/person</span>
+                          </button>
+                          <span className="pricing-or">or</span>
+                          <button
+                            className="price-tag room-price price-btn"
+                            onClick={() => handleCheckout(true)}
+                            disabled={checkoutLoading || getAvailableSpots(selectedRoom) === 0}
+                          >
+                            ${rooms[selectedRoom].roomPrice} <span>for the entire room</span>
+                          </button>
+                        </div>
+                        <p className="savings-text">
+                          Save ${(rooms[selectedRoom].price * rooms[selectedRoom].capacity) - rooms[selectedRoom].roomPrice} by booking the entire room!
+                        </p>
+                        <p className="attendee-notice">
+                          By booking a room, you agree to provide a full list of attendees prior to the event. As a GDC affiliated event, we are required to maintain a complete guest list for safety purposes.
+                        </p>
+                      </div>
+                    ) : (
                       <button
                         className="price-tag price-btn"
                         onClick={() => handleCheckout(false)}
@@ -3124,47 +3192,38 @@ function GDCKaraokeApp() {
                       >
                         ${rooms[selectedRoom].price} <span>/person</span>
                       </button>
-                      <span className="pricing-or">or</span>
-                      <button
-                        className="price-tag room-price price-btn"
-                        onClick={() => handleCheckout(true)}
-                        disabled={checkoutLoading || getAvailableSpots(selectedRoom) === 0}
-                      >
-                        ${rooms[selectedRoom].roomPrice} <span>for the entire room</span>
-                      </button>
-                    </div>
-                    <p className="savings-text">
-                      Save ${(rooms[selectedRoom].price * rooms[selectedRoom].capacity) - rooms[selectedRoom].roomPrice} by booking the entire room!
-                    </p>
-                    <p className="attendee-notice">
-                      By booking a room, you agree to provide a full list of attendees prior to the event. As a GDC affiliated event, we are required to maintain a complete guest list for safety purposes.
-                    </p>
+                    )}
                   </div>
-                ) : (
-                  <button
-                    className="price-tag price-btn"
-                    onClick={() => handleCheckout(false)}
-                    disabled={checkoutLoading || getAvailableSpots(selectedRoom) === 0}
-                  >
-                    ${rooms[selectedRoom].price} <span>/person</span>
-                  </button>
+
+                  {/* Features list - shown below description on desktop */}
+                  {rooms[selectedRoom].features && (
+                    <div className="features-list desktop-only">
+                      <span className="feature-tag">Up to {rooms[selectedRoom].capacity} Guests</span>
+                      {rooms[selectedRoom].features.map((f, i) => (
+                        <span key={i} className="feature-tag">{f}</span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Mobile image - shown below pricing on mobile */}
+                  {rooms[selectedRoom].backgroundImage && (
+                    <img
+                      src={rooms[selectedRoom].backgroundImage}
+                      alt={rooms[selectedRoom].name}
+                      className="room-detail-image-mobile"
+                    />
+                  )}
+                </div>
+
+                {/* Desktop image - shown on right side */}
+                {rooms[selectedRoom].backgroundImage && (
+                  <img
+                    src={rooms[selectedRoom].backgroundImage}
+                    alt={rooms[selectedRoom].name}
+                    className="room-detail-image"
+                  />
                 )}
               </div>
-
-              <p className="room-description" style={{ fontSize: '1.1rem', marginBottom: 20 }}>
-                {rooms[selectedRoom].description}
-              </p>
-
-              {/* Features list - shown below description on desktop */}
-              {rooms[selectedRoom].features && (
-                <div className="features-list desktop-only">
-                  <span className="feature-tag">Up to {rooms[selectedRoom].capacity} Guests</span>
-                  {rooms[selectedRoom].features.map((f, i) => (
-                    <span key={i} className="feature-tag">{f}</span>
-                  ))}
-                </div>
-              )}
-              
 
               {/* Capacity bar and counter */}
               <div className="capacity-bar">
