@@ -2134,6 +2134,38 @@ const styles = `
     color: var(--neon-green);
   }
 
+  .footer-content {
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .footer-main {
+    text-align: center;
+  }
+
+  .footer-logo {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  @media (max-width: 768px) {
+    .footer-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .footer-logo {
+      position: static;
+      transform: none;
+      order: 1;
+    }
+  }
+
   /* Legal Pages (Privacy & Terms) */
   .legal-page {
     max-width: 800px;
@@ -3781,10 +3813,10 @@ function GDCKaraokeApp() {
               <div className="info-card">
                 <h3>Want to Sponsor?</h3>
                 <p>
-                  This is an independently organized event. No corporate backing, just a former theater kid-turned-game dev who wants to throw a great party during GDC.
+                  This is an independently organized event--just a former theater kid-turned-game dev who wants to throw a great party during GDC.
                 </p>
                 <p>
-                  But if you'd like to get your studio or brand in front of 400+ singing game developers, we're offering flexible sponsorship options.
+                  If you'd like to get your studio or brand in front of 400+ singing game developers, we're offering flexible sponsorship options.
                 </p>
                 <p>
                   Reach out to <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); setTimeout(() => document.getElementById('hosts-title')?.scrollIntoView({ behavior: 'smooth' }), 100); }} style={{ color: 'var(--neon-green)' }}>the hosts</a> to learn more.
@@ -4088,24 +4120,39 @@ function GDCKaraokeApp() {
 
           {/* Footer */}
           <footer className="footer">
-            <p>
-              <strong>GDC Karaoke Night 2026</strong><p></p>{CONFIG.eventDate}<p></p>{CONFIG.eventTime}
-            </p>
-            <p className="hosts">
-              Hosted by <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); setTimeout(() => document.getElementById('hosts-title')?.scrollIntoView({ behavior: 'smooth' }), 100); }}>Adam Dolin & Cristina Amaya</a>
-            </p>
-            <p className="legal-links">
-              <a href="#" onClick={(e) => { e.preventDefault(); setView('privacy'); window.scrollTo(0, 0); }}>Privacy Policy</a>
-              {' • '}
-              <a href="#" onClick={(e) => { e.preventDefault(); setView('terms'); window.scrollTo(0, 0); }}>Terms of Service</a>
-              {' • '}
-              <a href="#" onClick={(e) => { e.preventDefault(); setView('conduct'); window.scrollTo(0, 0); }}>Code of Conduct</a>
-              {' • '}
-              <a href="#" onClick={(e) => { e.preventDefault(); setView('refunds'); window.scrollTo(0, 0); }}>Refund Policy</a>
-            </p>
-            <p style={{ marginTop: 15 }}>
-              <span className="admin-link" onClick={() => setView('admin')}>•</span>
-            </p>
+            <div className="footer-content">
+              <div className="footer-main">
+                <p>
+                  <strong>GDC Karaoke Night 2026</strong><p></p>{CONFIG.eventDate}<p></p>{CONFIG.eventTime}
+                </p>
+                <p className="hosts">
+                  Hosted by <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); setTimeout(() => document.getElementById('hosts-title')?.scrollIntoView({ behavior: 'smooth' }), 100); }}>Adam Dolin & Cristina Amaya</a>
+                </p>
+                <p className="legal-links">
+                  <a href="#" onClick={(e) => { e.preventDefault(); setView('privacy'); window.scrollTo(0, 0); }}>Privacy Policy</a>
+                  {' • '}
+                  <a href="#" onClick={(e) => { e.preventDefault(); setView('terms'); window.scrollTo(0, 0); }}>Terms of Service</a>
+                  {' • '}
+                  <a href="#" onClick={(e) => { e.preventDefault(); setView('conduct'); window.scrollTo(0, 0); }}>Code of Conduct</a>
+                  {' • '}
+                  <a href="#" onClick={(e) => { e.preventDefault(); setView('refunds'); window.scrollTo(0, 0); }}>Refund Policy</a>
+                </p>
+                <p style={{ marginTop: 15 }}>
+                  <span className="admin-link" onClick={() => setView('admin')}>•</span>
+                </p>
+              </div>
+              <div className="footer-logo">
+                {/* TODO: Add link back when website is ready
+                <a href="https://coldbrewsunset.com" target="_blank" rel="noopener noreferrer">
+                */}
+                <img
+                  src="/images/cbslogo.png"
+                  alt="Cold Brew Sunset"
+                  style={{ maxWidth: 150, height: 'auto', opacity: 0.7 }}
+                />
+                {/* </a> */}
+              </div>
+            </div>
           </footer>
         </div>
         
