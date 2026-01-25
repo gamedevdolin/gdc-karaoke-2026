@@ -34,23 +34,23 @@ const INITIAL_ROOMS = {
     tier: 'main',
     features: ['includes 3 drink tickets', '1 song on the stage'],
   },
-  small1: { id: 'small1', name: 'Bulleit Bourbon', capacity: 8, price: 45, roomPrice: 300, tier: 'small', backgroundImage: '/images/bulliet.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
-  small2: { id: 'small2', name: 'Doodle', capacity: 8, price: 45, roomPrice: 300, tier: 'small', backgroundImage: '/images/doodle.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
-  small3: { id: 'small3', name: 'Superhero', capacity: 8, price: 45, roomPrice: 300, tier: 'small', backgroundImage: '/images/superhero.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
-  medium1: { id: 'medium1', name: 'Patron', capacity: 15, price: 50, roomPrice: 650, tier: 'medium', backgroundImage: '/images/patron.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
-  medium2: { id: 'medium2', name: 'Warriors', capacity: 15, price: 50, roomPrice: 650, tier: 'medium', backgroundImage: '/images/dubs.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
-  medium3: { id: 'medium3', name: 'Jameson', capacity: 15, price: 50, roomPrice: 650, tier: 'medium', backgroundImage: '/images/jamie.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
-  medium4: { id: 'medium4', name: 'Johnnie Walker', capacity: 15, price: 50, roomPrice: 650, tier: 'medium', backgroundImage: '/images/johnny.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
-  medium5: { id: 'medium5', name: 'Ciroc', capacity: 15, price: 50, roomPrice: 650, tier: 'medium', backgroundImage: '/images/ciroc.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
-  medium6: { id: 'medium6', name: 'Grey Goose', capacity: 15, price: 50, roomPrice: 650, tier: 'medium', backgroundImage: '/images/greygoose.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
-  large1: { id: 'large1', name: 'Hennessy', capacity: 25, price: 55, roomPrice: 1200, tier: 'large', backgroundImage: '/images/henny.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
-  large2: { id: 'large2', name: 'Crown Royal', capacity: 25, price: 55, roomPrice: 1200, tier: 'large', backgroundImage: '/images/crown.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
-  large3: { id: 'large3', name: 'Absolut', capacity: 25, price: 55, roomPrice: 1200, tier: 'large', backgroundImage: '/images/absolut.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
-  large4: { id: 'large4', name: 'Cazadores', capacity: 25, price: 55, roomPrice: 1200, tier: 'large', backgroundImage: '/images/cazadores.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
-  large5: { id: 'large5', name: "D'Ussé", capacity: 25, price: 55, roomPrice: 1200, tier: 'large', backgroundImage: '/images/dusse.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  small1: { id: 'small1', name: 'Bullet Bill', capacity: 8, price: 45, roomPrice: 300, tier: 'small', backgroundImage: '/images/bulliet.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  small2: { id: 'small2', name: 'Doodle Jump', capacity: 8, price: 45, roomPrice: 300, tier: 'small', backgroundImage: '/images/doodle.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  small3: { id: 'small3', name: 'Heated Rivalry', capacity: 8, price: 45, roomPrice: 300, tier: 'small', backgroundImage: '/images/superhero.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  medium1: { id: 'medium1', name: 'Kickstarter', capacity: 15, price: 50, roomPrice: 650, tier: 'medium', backgroundImage: '/images/patron.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  medium2: { id: 'medium2', name: 'Collosseum of Fools', capacity: 15, price: 50, roomPrice: 650, tier: 'medium', backgroundImage: '/images/dubs.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  medium3: { id: 'medium3', name: 'The Drunken Huntsman', capacity: 15, price: 50, roomPrice: 650, tier: 'medium', backgroundImage: '/images/jamie.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  medium4: { id: 'medium4', name: '7th Heaven', capacity: 15, price: 50, roomPrice: 650, tier: 'medium', backgroundImage: '/images/johnny.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  medium5: { id: 'medium5', name: 'Croc (Legend of the Gobos)', capacity: 15, price: 50, roomPrice: 650, tier: 'medium', backgroundImage: '/images/ciroc.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  medium6: { id: 'medium6', name: 'Untitled Karaoke Room', capacity: 15, price: 50, roomPrice: 650, tier: 'medium', backgroundImage: '/images/greygoose.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  large1: { id: 'large1', name: 'Crypto Night', capacity: 25, price: 55, roomPrice: 1200, tier: 'large', backgroundImage: '/images/henny.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  large2: { id: 'large2', name: 'Royal Match', capacity: 25, price: 55, roomPrice: 1200, tier: 'large', backgroundImage: '/images/crown.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  large3: { id: 'large3', name: 'The Honeybee Inn', capacity: 25, price: 55, roomPrice: 1200, tier: 'large', backgroundImage: '/images/absolut.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  large4: { id: 'large4', name: 'Calavera Cafe', capacity: 25, price: 55, roomPrice: 1200, tier: 'large', backgroundImage: '/images/cazadores.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
+  large5: { id: 'large5', name: 'The Last Drop', capacity: 25, price: 55, roomPrice: 1200, tier: 'large', backgroundImage: '/images/dusse.jpg', features: ['Includes 3 Drink Tickets Per Guest']},
   vip1: {
     id: 'vip1',
-    name: 'The BIG Room',
+    name: 'Room 46',
     capacity: 30,
     price: 75,
     roomPrice: 2000,
@@ -2426,44 +2426,68 @@ function GDCKaraokeApp() {
   const [orderStats, setOrderStats] = useState({ paid_count: 0, pending_count: 0, total_revenue: 0, total_tickets: 0 });
   const [ordersLoading, setOrdersLoading] = useState(false);
 
-  // Load room data and availability from database on mount
+  // Load room data and availability from database on mount (with caching)
   React.useEffect(() => {
+    const CACHE_KEY = 'gdc_room_availability';
+    const CACHE_DURATION = 60000; // 60 seconds
+
     const loadRoomData = async () => {
       try {
-        // Fetch room availability (includes order counts)
+        // Check for cached data first
+        const cached = sessionStorage.getItem(CACHE_KEY);
+        if (cached) {
+          const { data, timestamp } = JSON.parse(cached);
+          if (Date.now() - timestamp < CACHE_DURATION) {
+            // Use cached data
+            applyRoomData(data);
+            return;
+          }
+        }
+
+        // Fetch fresh data
         const response = await fetch('/api/room-availability');
         if (response.ok) {
           const data = await response.json();
           if (data.rooms) {
-            const newOrderCounts = {};
-            setRooms(prev => {
-              const updated = { ...prev };
-              Object.keys(data.rooms).forEach(roomId => {
-                if (updated[roomId]) {
-                  const dbRoom = data.rooms[roomId];
-                  updated[roomId] = {
-                    ...updated[roomId],
-                    booked: dbRoom.booked ?? updated[roomId].booked,
-                    name: dbRoom.name ?? updated[roomId].name,
-                    price: dbRoom.price ?? updated[roomId].price,
-                    roomPrice: dbRoom.roomPrice ?? updated[roomId].roomPrice
-                  };
-                  // Store order counts separately
-                  newOrderCounts[roomId] = {
-                    bookedCount: dbRoom.bookedCount || 0,
-                    hasEntireRoomBooking: dbRoom.hasEntireRoomBooking || false
-                  };
-                }
-              });
-              return updated;
-            });
-            setOrderCounts(newOrderCounts);
+            // Cache the response
+            sessionStorage.setItem(CACHE_KEY, JSON.stringify({
+              data: data,
+              timestamp: Date.now()
+            }));
+            applyRoomData(data);
           }
         }
       } catch (error) {
         console.error('Failed to load room data:', error);
       }
     };
+
+    const applyRoomData = (data) => {
+      const newOrderCounts = {};
+      setRooms(prev => {
+        const updated = { ...prev };
+        Object.keys(data.rooms).forEach(roomId => {
+          if (updated[roomId]) {
+            const dbRoom = data.rooms[roomId];
+            updated[roomId] = {
+              ...updated[roomId],
+              booked: dbRoom.booked ?? updated[roomId].booked,
+              name: dbRoom.name ?? updated[roomId].name,
+              price: dbRoom.price ?? updated[roomId].price,
+              roomPrice: dbRoom.roomPrice ?? updated[roomId].roomPrice
+            };
+            // Store order counts separately
+            newOrderCounts[roomId] = {
+              bookedCount: dbRoom.bookedCount || 0,
+              hasEntireRoomBooking: dbRoom.hasEntireRoomBooking || false
+            };
+          }
+        });
+        return updated;
+      });
+      setOrderCounts(newOrderCounts);
+    };
+
     loadRoomData();
   }, []);
 
@@ -2508,6 +2532,9 @@ function GDCKaraokeApp() {
 
     // Handle successful payment redirect
     if (successParam === 'true') {
+      // Clear room availability cache so fresh data is fetched
+      sessionStorage.removeItem('gdc_room_availability');
+
       const purchasedRoom = roomParam && rooms[roomParam] ? rooms[roomParam] : null;
       setPurchaseInfo({
         roomName: purchasedRoom?.name || (isTestPurchase ? 'Test Purchase' : 'your tickets'),
