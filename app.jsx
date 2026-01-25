@@ -2182,6 +2182,130 @@ const styles = `
     opacity: 0.7;
   }
 
+  /* Success Page */
+  .success-page {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  .success-content {
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid var(--neon-green);
+    border-radius: 16px;
+    padding: 40px 30px;
+  }
+
+  .success-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: var(--neon-green);
+    color: #000;
+    font-size: 48px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 25px;
+  }
+
+  .success-page h1 {
+    font-size: 2rem;
+    color: var(--neon-green);
+    margin-bottom: 15px;
+  }
+
+  .success-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    margin-bottom: 30px;
+  }
+
+  .success-details {
+    text-align: left;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 30px;
+  }
+
+  .success-details h3 {
+    font-size: 1rem;
+    color: var(--neon-green);
+    margin-bottom: 15px;
+  }
+
+  .success-details ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .success-details li {
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+    padding-left: 20px;
+    position: relative;
+  }
+
+  .success-details li::before {
+    content: "•";
+    color: var(--neon-green);
+    position: absolute;
+    left: 0;
+  }
+
+  .success-details strong {
+    color: var(--text-primary);
+  }
+
+  .success-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 25px;
+  }
+
+  .success-actions .btn-primary {
+    background: var(--neon-green);
+    color: #000;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1rem;
+  }
+
+  .success-actions .btn-secondary {
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--text-secondary);
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 1rem;
+  }
+
+  .success-actions .btn-secondary:hover {
+    border-color: var(--neon-green);
+    color: var(--neon-green);
+  }
+
+  .success-note {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+  }
+
+  .success-note a {
+    color: var(--neon-green);
+  }
+
   /* Success Modal */
   .modal-overlay {
     position: fixed;
@@ -2266,6 +2390,7 @@ function GDCKaraokeApp() {
   const [rooms, setRooms] = useState(INITIAL_ROOMS);
   const [bookings, setBookings] = useState(MOCK_BOOKINGS);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [purchaseInfo, setPurchaseInfo] = useState(null);
   const [copied, setCopied] = useState(false);
   const [expandedGroups, setExpandedGroups] = useState({
     small: false,
@@ -2377,6 +2502,30 @@ function GDCKaraokeApp() {
     const params = new URLSearchParams(window.location.search);
     const roomParam = params.get('room');
     const viewParam = params.get('view');
+    const successParam = params.get('success');
+    const canceledParam = params.get('canceled');
+    const isTestPurchase = params.get('test') === 'true';
+
+    // Handle successful payment redirect
+    if (successParam === 'true') {
+      const purchasedRoom = roomParam && rooms[roomParam] ? rooms[roomParam] : null;
+      setPurchaseInfo({
+        roomName: purchasedRoom?.name || (isTestPurchase ? 'Test Purchase' : 'your tickets'),
+        roomId: roomParam,
+        isTest: isTestPurchase
+      });
+      setView('success');
+      // Clean up URL
+      window.history.replaceState({}, '', window.location.pathname);
+      return;
+    }
+
+    // Handle canceled payment
+    if (canceledParam === 'true') {
+      // Just go back to home, could show a message
+      window.history.replaceState({}, '', window.location.pathname);
+      return;
+    }
 
     // Handle direct links to privacy/terms pages
     if (viewParam === 'privacy' || viewParam === 'terms') {
@@ -3674,6 +3823,50 @@ function GDCKaraokeApp() {
                     </p>
                   </div>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* Success Page - After Stripe Payment */}
+          {view === 'success' && (
+            <div className="success-page">
+              <div className="success-content">
+                <div className="success-icon">✓</div>
+                <h1>Payment Successful!</h1>
+                <p className="success-subtitle">
+                  {purchaseInfo?.isTest
+                    ? 'Your test purchase was processed successfully.'
+                    : `Your reservation for ${purchaseInfo?.roomName || 'GDC Karaoke Night'} is confirmed!`
+                  }
+                </p>
+
+                <div className="success-details">
+                  <h3>What's Next?</h3>
+                  <ul>
+                    <li>You'll receive a confirmation email from Stripe shortly</li>
+                    <li>Save the date: <strong>{CONFIG.eventDate}</strong> at <strong>{CONFIG.eventTime}</strong></li>
+                    <li>Location: <strong>{CONFIG.venueName}</strong>, {CONFIG.venueAddress}</li>
+                    <li>Bring a valid government-issued ID (21+ event)</li>
+                  </ul>
+                </div>
+
+                <div className="success-actions">
+                  <button className="btn-primary" onClick={() => setView('home')}>
+                    Back to Home
+                  </button>
+                  <a
+                    href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=GDC+Karaoke+Night+2026&dates=20260311T210000/20260312T000000&ctz=America/Los_Angeles&details=Karaoke+party+at+Pandora+Karaoke+during+GDC+2026&location=Pandora+Karaoke,+50+Mason+St,+San+Francisco,+CA+94102"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="btn-secondary"
+                  >
+                    Add to Calendar
+                  </a>
+                </div>
+
+                <p className="success-note">
+                  Questions? Contact the hosts on our <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); }}>Hosts page</a>.
+                </p>
               </div>
             </div>
           )}
