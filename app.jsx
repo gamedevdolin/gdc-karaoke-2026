@@ -3871,7 +3871,7 @@ function GDCKaraokeApp() {
                   {purchaseInfo?.isTest
                     ? 'Your test purchase was processed successfully.'
                     : purchaseInfo?.isEntireRoom
-                      ? `You've reserved the entire ${purchaseInfo?.roomName} room!`
+                      ? `You've reserved the entire ${purchaseInfo?.roomName || 'private room'}!`
                       : `${purchaseInfo?.quantity || 1} ${(purchaseInfo?.quantity || 1) === 1 ? 'ticket' : 'tickets'} for ${purchaseInfo?.roomName || 'GDC Karaoke Night'}`
                   }
                 </p>
