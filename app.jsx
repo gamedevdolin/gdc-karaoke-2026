@@ -2543,6 +2543,35 @@ function GDCKaraokeApp() {
     }
   };
 
+  // Test purchase ($0.50) - admin only
+  const [testPurchaseLoading, setTestPurchaseLoading] = useState(false);
+  const createTestPurchase = async () => {
+    if (!confirm('This will create a real $0.50 charge to test the Stripe integration. Continue?')) {
+      return;
+    }
+
+    setTestPurchaseLoading(true);
+    try {
+      const response = await fetch('/api/create-test-checkout', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${adminPassword}` },
+      });
+
+      const data = await response.json();
+
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert('Failed to create test checkout: ' + (data.error || 'Unknown error'));
+      }
+    } catch (error) {
+      console.error('Test purchase error:', error);
+      alert('Failed to create test purchase');
+    } finally {
+      setTestPurchaseLoading(false);
+    }
+  };
+
   // Export attendees as CSV
   const exportAttendees = () => {
     const paidOrders = orders.filter(o => o.payment_status === 'paid');
@@ -3181,7 +3210,7 @@ function GDCKaraokeApp() {
                           Save ${(rooms[selectedRoom].price * rooms[selectedRoom].capacity) - rooms[selectedRoom].roomPrice} by booking the entire room!
                         </p>
                         <p className="attendee-notice">
-                          By booking a room, you agree to provide a full list of attendees prior to the event. As a GDC affiliated event, we are required to maintain a complete guest list for safety purposes.
+                          By booking an entire room, you agree to provide a full list of attendees prior to the event. As a GDC affiliated event, we are required to maintain a complete guest list for safety purposes.
                         </p>
                       </div>
                     ) : (
@@ -3316,22 +3345,41 @@ function GDCKaraokeApp() {
 
               {/* Paid Orders Section */}
               <div className="admin-section" style={{ marginTop: 20 }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15, flexWrap: 'wrap', gap: 10 }}>
                   <h3>Paid Orders ({orders.filter(o => o.payment_status === 'paid').length})</h3>
-                  <button
-                    onClick={resetOrders}
-                    style={{
-                      background: 'transparent',
-                      border: '1px solid var(--neon-pink)',
-                      color: 'var(--neon-pink)',
-                      padding: '8px 16px',
-                      borderRadius: 4,
-                      cursor: 'pointer',
-                      fontSize: '0.85rem'
-                    }}
-                  >
-                    Reset All Orders (Testing)
-                  </button>
+                  <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                    <button
+                      onClick={createTestPurchase}
+                      disabled={testPurchaseLoading}
+                      style={{
+                        background: 'var(--neon-green)',
+                        border: 'none',
+                        color: '#000',
+                        padding: '8px 16px',
+                        borderRadius: 4,
+                        cursor: testPurchaseLoading ? 'not-allowed' : 'pointer',
+                        fontSize: '0.85rem',
+                        fontWeight: 600,
+                        opacity: testPurchaseLoading ? 0.6 : 1
+                      }}
+                    >
+                      {testPurchaseLoading ? 'Loading...' : 'Test Purchase ($0.50)'}
+                    </button>
+                    <button
+                      onClick={resetOrders}
+                      style={{
+                        background: 'transparent',
+                        border: '1px solid var(--neon-pink)',
+                        color: 'var(--neon-pink)',
+                        padding: '8px 16px',
+                        borderRadius: 4,
+                        cursor: 'pointer',
+                        fontSize: '0.85rem'
+                      }}
+                    >
+                      Reset All Orders (Testing)
+                    </button>
+                  </div>
                 </div>
 
                 {ordersLoading ? (
@@ -3689,7 +3737,7 @@ function GDCKaraokeApp() {
               <h2>Room Reservations</h2>
               <ul>
                 <li>Private room reservations include access for up to the stated room capacity.</li>
-                <li>By reserving a room, you agree to provide a complete list of attendees prior to the event.</li>
+                <li>By reserving an entire room, you agree to provide a complete list of attendees prior to the event.</li>
                 <li>Room assignments are subject to change based on venue availability.</li>
               </ul>
 
