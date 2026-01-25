@@ -2821,45 +2821,47 @@ function GDCKaraokeApp() {
           )}
 
           {/* Hero Slides - Deck images */}
-          <div className="hero-slides">
-            {/* CSS Recreation of slide1 text */}
-            <div className="slide-text-boxes">
-              <div className="text-box text-box-green">
-                <div className="text-box-content">
-                  Forget all your troubles.<br/>Forget all your cares.<br/>Sing downtown at:
+          {view === 'home' && (
+            <div className="hero-slides">
+              {/* CSS Recreation of slide1 text */}
+              <div className="slide-text-boxes">
+                <div className="text-box text-box-green">
+                  <div className="text-box-content">
+                    Forget all your troubles.<br/>Forget all your cares.<br/>Sing downtown at:
+                  </div>
+                </div>
+              </div>
+
+              <video
+                className="hero-video"
+                autoPlay
+                loop
+                muted
+                playsInline
+                poster="/images/yunagroove_fallback.png"
+              >
+                <source src="/images/yunagroove.mp4" type="video/mp4" />
+              </video>
+
+              <div className="hero-slide pandora-slide">
+                <img src="/images/PANDORA.png" alt="Pandora Karaoke" />
+              </div>
+
+              {/* Two column text boxes */}
+              <div className="two-column-boxes">
+                <div className="text-box text-box-green">
+                  <div className="text-box-content no-break-desktop">
+                    Main stage upstairs.<br/>Private rooms downstairs.<br/>Full venue takeover.
+                  </div>
+                </div>
+                <div className="text-box text-box-white-black">
+                  <div className="text-box-content">
+                    The Game Developer <s>Conference</s> Chorus
+                  </div>
                 </div>
               </div>
             </div>
-
-            <video
-              className="hero-video"
-              autoPlay
-              loop
-              muted
-              playsInline
-              poster="/images/yunagroove_fallback.png"
-            >
-              <source src="/images/yunagroove.mp4" type="video/mp4" />
-            </video>
-
-            <div className="hero-slide pandora-slide">
-              <img src="/images/PANDORA.png" alt="Pandora Karaoke" />
-            </div>
-
-            {/* Two column text boxes */}
-            <div className="two-column-boxes">
-              <div className="text-box text-box-green">
-                <div className="text-box-content no-break-desktop">
-                  Main stage upstairs.<br/>Private rooms downstairs.<br/>Full venue takeover.
-                </div>
-              </div>
-              <div className="text-box text-box-white-black">
-                <div className="text-box-content">
-                  The Game Developer <s>Conference</s> Chorus
-                </div>
-              </div>
-            </div>
-          </div>
+          )}
 
           {/* Book Tickets Label */}
 
@@ -2881,7 +2883,9 @@ function GDCKaraokeApp() {
             </div>
           )}
 
-          <h2 className="section-label">RESERVE YOUR SPOT</h2>
+          {view === 'home' && (
+            <h2 className="section-label">RESERVE YOUR SPOT</h2>
+          )}
 
           {/* Tab Navigation - Main Room on left, Private Rooms on right (but Private is default) */}
           {view === 'home' && (
@@ -2966,7 +2970,7 @@ function GDCKaraokeApp() {
                     </span>
                   </div>
                   <p className="card-note">
-                    Due to the length of the average karaoke song and the laws of time, only a limited number of singers will be allowed to grace the main stage. Main Stage singers will receive more information in late February.
+                    Due to the length of the average karaoke song and the laws of time, only these 20 singers will be guaranteed a spot on the main stage. Main Stage singers will receive more information in late February.
                   </p>
                 </div>
               </div>
@@ -3729,7 +3733,7 @@ function GDCKaraokeApp() {
 
               <h2>Ticket Purchases</h2>
               <ul>
-                <li>All ticket sales are final. No refunds will be issued except in the case of event cancellation.</li>
+                <li>Refunds are available upon request until the day of the event. See our <a href="#" onClick={(e) => { e.preventDefault(); setView('refunds'); window.scrollTo(0, 0); }}>Refund Policy</a> for details.</li>
                 <li>Tickets are non-transferable without prior approval from the event organizers.</li>
                 <li>You must be 21 years or older to attend this event.</li>
               </ul>
@@ -3759,6 +3763,95 @@ function GDCKaraokeApp() {
             </div>
           )}
 
+          {/* Code of Conduct */}
+          {view === 'conduct' && (
+            <div className="legal-page">
+              <button className="back-btn" onClick={() => setView('home')}>← Back</button>
+              <h1>Code of Conduct</h1>
+              <p className="legal-updated">Last updated: January 2026</p>
+
+              <h2>Our Commitment</h2>
+              <p>GDC Karaoke Night is dedicated to providing a fun, inclusive, and harassment-free experience for everyone in the game development community, regardless of gender, gender identity and expression, age, sexual orientation, disability, physical appearance, body size, race, ethnicity, or religion.</p>
+
+              <h2>Expected Behavior</h2>
+              <ul>
+                <li>Be respectful and considerate of others</li>
+                <li>Celebrate and support fellow performers, regardless of singing ability</li>
+                <li>Drink responsibly - this is a professional networking event</li>
+                <li>Respect personal boundaries</li>
+                <li>Be mindful of the space you take up, both physically and conversationally</li>
+                <li>Look out for each other - if you see something concerning, say something</li>
+              </ul>
+
+              <h2>Unacceptable Behavior</h2>
+              <ul>
+                <li>Harassment, intimidation, or discrimination in any form</li>
+                <li>Unwelcome sexual attention or advances</li>
+                <li>Offensive verbal comments related to gender, sexual orientation, disability, physical appearance, race, or religion</li>
+                <li>Deliberate intimidation, stalking, or following</li>
+                <li>Photography or recording without consent</li>
+                <li>Sustained disruption of performances or conversations</li>
+                <li>Excessive intoxication or encouraging others to drink excessively</li>
+                <li>Any behavior that would not be acceptable in a festive, professional setting</li>
+              </ul>
+
+              <h2>Consequences</h2>
+              <p>Anyone asked to stop unacceptable behavior is expected to comply immediately. Event organizers may take any action they deem appropriate, including warning the offender, removing them from the event without refund, or contacting venue security or local law enforcement.</p>
+
+              <h2>Reporting</h2>
+              <p>If you experience or witness unacceptable behavior, please report it to an event organizer immediately. You can identify organizers by their badges or ask any venue staff to find one. All reports will be handled with discretion.</p>
+
+
+              <h2>Remember</h2>
+              <p>This is a celebration of our community. We're here to sing, laugh, and connect. Let's make it a night everyone can enjoy and remember fondly.</p>
+            </div>
+          )}
+
+          {/* Refund Policy */}
+          {view === 'refunds' && (
+            <div className="legal-page">
+              <button className="back-btn" onClick={() => setView('home')}>← Back</button>
+              <h1>Refund Policy</h1>
+              <p className="legal-updated">Last updated: January 2026</p>
+
+              <h2>Refund Eligibility</h2>
+              <p>We understand that plans change. Refunds are available for GDC Karaoke Night 2026 tickets under the following conditions:</p>
+
+              <h2>Full Refunds</h2>
+              <ul>
+                <li><strong>Before the event:</strong> Full refunds are available upon request any time up until 11:59 PM PT on March 10th, 2026 (the day before the event).</li>
+                <li><strong>Event cancellation:</strong> If the event is cancelled by the organizers, all ticket holders will receive a full refund.</li>
+              </ul>
+
+              <h2>No Refunds</h2>
+              <ul>
+                <li><strong>Day of the event:</strong> No refunds will be issued on March 11th, 2026 or after.</li>
+                <li><strong>No-shows:</strong> Failure to attend the event does not qualify for a refund.</li>
+                <li><strong>Removal from event:</strong> Attendees removed for violating the Code of Conduct are not eligible for refunds.</li>
+              </ul>
+
+              <h2>How to Request a Refund</h2>
+              <p>To request a refund, please email the event organizers with your:</p>
+              <ul>
+                <li>Full name (as entered during purchase)</li>
+                <li>Email address used for purchase</li>
+                <li>Room/ticket type purchased</li>
+              </ul>
+              <p>Refunds will be processed within 5-7 business days and will be returned to the original payment method.</p>
+
+              <h2>Partial Room Reservations</h2>
+              <p>If you reserved an entire room and wish to receive a refund:</p>
+              <ul>
+                <li>The full room reservation amount will be refunded</li>
+                <li>The room will become available for others to book</li>
+                <li>If you only want to reduce the number of guests, please contact us to discuss options</li>
+              </ul>
+
+              <h2>Contact</h2>
+              <p>For refund requests or questions about this policy, please contact the event hosts through the information provided on the <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); window.scrollTo(0, 0); }}>Hosts page</a>.</p>
+            </div>
+          )}
+
           {/* Footer */}
           <footer className="footer">
             <p>
@@ -3771,6 +3864,10 @@ function GDCKaraokeApp() {
               <a href="#" onClick={(e) => { e.preventDefault(); setView('privacy'); window.scrollTo(0, 0); }}>Privacy Policy</a>
               {' • '}
               <a href="#" onClick={(e) => { e.preventDefault(); setView('terms'); window.scrollTo(0, 0); }}>Terms of Service</a>
+              {' • '}
+              <a href="#" onClick={(e) => { e.preventDefault(); setView('conduct'); window.scrollTo(0, 0); }}>Code of Conduct</a>
+              {' • '}
+              <a href="#" onClick={(e) => { e.preventDefault(); setView('refunds'); window.scrollTo(0, 0); }}>Refund Policy</a>
             </p>
             <p style={{ marginTop: 15 }}>
               <span className="admin-link" onClick={() => setView('admin')}>•</span>
