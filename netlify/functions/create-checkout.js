@@ -93,7 +93,7 @@ export default async (req, context) => {
         },
       ],
       mode: 'payment',
-      success_url: `${origin}?success=true&session_id={CHECKOUT_SESSION_ID}&room=${roomId}`,
+      success_url: `${origin}?success=true&session_id={CHECKOUT_SESSION_ID}&room=${roomId}&qty=${isEntireRoom ? roomCapacity : quantity}&entire=${isEntireRoom ? '1' : '0'}`,
       cancel_url: `${origin}?canceled=true&room=${roomId}`,
       metadata: {
         roomId,

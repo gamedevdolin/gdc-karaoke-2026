@@ -2536,10 +2536,17 @@ function GDCKaraokeApp() {
       sessionStorage.removeItem('gdc_room_availability');
 
       const purchasedRoom = roomParam && rooms[roomParam] ? rooms[roomParam] : null;
+      const quantity = parseInt(params.get('qty')) || 1;
+      const isEntireRoom = params.get('entire') === '1';
+      const isMainStageSong = roomParam === 'mainStageSong';
+
       setPurchaseInfo({
-        roomName: purchasedRoom?.name || (isTestPurchase ? 'Test Purchase' : 'your tickets'),
+        roomName: purchasedRoom?.name || (isTestPurchase ? 'Test Purchase' : 'GDC Karaoke Night'),
         roomId: roomParam,
-        isTest: isTestPurchase
+        isTest: isTestPurchase,
+        quantity: quantity,
+        isEntireRoom: isEntireRoom,
+        isMainStageSong: isMainStageSong
       });
       setView('success');
       // Clean up URL
@@ -3863,7 +3870,9 @@ function GDCKaraokeApp() {
                 <p className="success-subtitle">
                   {purchaseInfo?.isTest
                     ? 'Your test purchase was processed successfully.'
-                    : `Your reservation for ${purchaseInfo?.roomName || 'GDC Karaoke Night'} is confirmed!`
+                    : purchaseInfo?.isEntireRoom
+                      ? `You've reserved the entire ${purchaseInfo?.roomName} room!`
+                      : `${purchaseInfo?.quantity || 1} ${(purchaseInfo?.quantity || 1) === 1 ? 'ticket' : 'tickets'} for ${purchaseInfo?.roomName || 'GDC Karaoke Night'}`
                   }
                 </p>
 
@@ -3871,6 +3880,11 @@ function GDCKaraokeApp() {
                   <h3>What's Next?</h3>
                   <ul>
                     <li>You'll receive a confirmation email from Stripe shortly</li>
+                    {purchaseInfo?.isMainStageSong && (
+                      <li style={{ color: 'var(--neon-green)' }}>
+                        <strong>Song Signup:</strong> Look out for an email in mid-February with instructions to sign up for your song and performance time slot!
+                      </li>
+                    )}
                     <li>Save the date: <strong>{CONFIG.eventDate}</strong> at <strong>{CONFIG.eventTime}</strong></li>
                     <li>Location: <strong>{CONFIG.venueName}</strong>, {CONFIG.venueAddress}</li>
                     <li>Bring a valid government-issued ID (21+ event)</li>
