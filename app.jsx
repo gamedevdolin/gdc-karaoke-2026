@@ -2166,6 +2166,17 @@ const styles = `
     }
   }
 
+  .footer-logo-img {
+    max-width: 150px;
+    height: auto;
+    opacity: 0.7;
+    transition: opacity 0.2s ease;
+  }
+
+  .footer-logo-img:hover {
+    opacity: 1;
+  }
+
   /* Legal Pages (Privacy & Terms) */
   .legal-page {
     max-width: 800px;
@@ -4142,15 +4153,13 @@ function GDCKaraokeApp() {
                 </p>
               </div>
               <div className="footer-logo">
-                {/* TODO: Add link back when website is ready
-                <a href="https://coldbrewsunset.com" target="_blank" rel="noopener noreferrer">
-                */}
-                <img
-                  src="/images/cbslogo.png"
-                  alt="Cold Brew Sunset"
-                  style={{ maxWidth: 150, height: 'auto', opacity: 0.7 }}
-                />
-                {/* </a> */}
+                <a href="https://gamedevdolin.com" target="_blank" rel="noopener noreferrer">
+                  <img
+                    src="/images/cbslogo.png"
+                    alt="Cold Brew Sunset"
+                    className="footer-logo-img"
+                  />
+                </a>
               </div>
             </div>
           </footer>
