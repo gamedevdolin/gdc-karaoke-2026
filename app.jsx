@@ -3917,7 +3917,7 @@ function GDCKaraokeApp() {
                         <strong>Song Signup:</strong> Look out for an email in mid-February with instructions to sign up for your song and performance time slot!
                       </li>
                     )}
-                    <li>Save the date: <strong>{CONFIG.eventDate}</strong> at <strong>{CONFIG.eventTime}</strong></li>
+                    <li>Save the date: <strong>{CONFIG.eventDate}</strong> at <strong><a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=GDC+Karaoke+Night+2026&dates=20260312T050000Z/20260312T080000Z&details=Karaoke+party+at+Pandora+Karaoke+during+GDC+2026!%0A%0APandora+Karaoke%0A50+Mason+St,+San+Francisco,+CA+94102&location=Pandora+Karaoke,+50+Mason+St,+San+Francisco,+CA+94102" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--neon-green)' }}>{CONFIG.eventTime}</a></strong></li>
                     <li>Location: <strong>{CONFIG.venueName}</strong>, {CONFIG.venueAddress}</li>
                     <li>Bring a valid government-issued ID (21+ event)</li>
                   </ul>
