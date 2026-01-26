@@ -34,8 +34,12 @@ export default async (req, context) => {
           price_data: {
             currency: 'usd',
             product_data: {
-              name: 'Test Purchase - Webhook Verification',
-              description: 'Admin test purchase to verify Stripe integration',
+              name: 'General Admission - 1 Ticket (TEST)',
+              description: 'GDC Karaoke Night 2026 - General Admission (TEST)',
+              metadata: {
+                roomId: 'test',
+                isEntireRoom: 'false'
+              }
             },
             unit_amount: 50, // $0.50 in cents (Stripe minimum)
           },
