@@ -3850,7 +3850,7 @@ function GDCKaraokeApp() {
                     <h3>Adam Dolin</h3>
                     <p className="host-bio">
                       {/* Add bio text here */}
-                      Adam Dolin is a WGA and BAFTA-winning narrative designer and writer whose work includes God of War, Horizon: Forbidden West, and God of War: Ragnarök. With over 16 years in the game industry, he's collaborated with teams at Sony PlayStation, 2K, Activision, SEGA, and Netflix. He now runs Cold Brew Sunset, a narrative and UX consultancy helping teams craft memorable, player-driven stories.                    
+                      Adam Dolin is a WGA and BAFTA-winning narrative designer and writer whose work includes God of War, Horizon: Forbidden West, and God of War: Ragnarök. With over 16 years in the game industry, he's collaborated with teams at Sony PlayStation, 2K, Activision, SEGA, and Netflix. He now runs GameDevDolin, a narrative and UX consultancy helping teams craft memorable, player-driven stories.                    
                       </p>
                     <div className="host-contact-row">
                       <a href="mailto:adam@gamedevdolin.com" className="host-contact-btn">
