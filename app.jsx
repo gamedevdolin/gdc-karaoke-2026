@@ -1013,8 +1013,8 @@ const styles = `
   }
 
   .room-card.booked {
-    pointer-events: none;
     position: relative;
+    cursor: pointer;
   }
 
   .room-card.booked .booked-overlay {
@@ -1041,11 +1041,160 @@ const styles = `
     border-radius: 6px;
     box-shadow: 0 4px 20px rgba(255, 107, 157, 0.5), 0 0 40px rgba(255, 107, 157, 0.3);
     text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .room-card.booked .booked-label .default-text {
+    display: inline;
+  }
+
+  .room-card.booked .booked-label .hover-text {
+    display: none;
+  }
+
+  .room-card.booked .booked-label:hover {
+    background: linear-gradient(135deg, var(--neon-green) 0%, #00cc77 100%);
+    box-shadow: 0 4px 20px rgba(0, 255, 148, 0.5), 0 0 40px rgba(0, 255, 148, 0.3);
+  }
+
+  .room-card.booked .booked-label:hover .default-text {
+    display: none;
+  }
+
+  .room-card.booked .booked-label:hover .hover-text {
+    display: inline;
   }
 
   .room-card.booked .room-name,
   .room-card.booked .room-description {
     opacity: 0.5;
+  }
+
+  /* Waitlist Modal */
+  .waitlist-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 20px;
+  }
+
+  .waitlist-modal {
+    background: var(--card-bg);
+    border-radius: 16px;
+    padding: 32px;
+    max-width: 450px;
+    width: 100%;
+    border: 1px solid #333;
+    position: relative;
+  }
+
+  .waitlist-modal h2 {
+    color: var(--neon-green);
+    margin-bottom: 8px;
+    font-size: 1.5rem;
+  }
+
+  .waitlist-modal .room-name-subtitle {
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+    font-size: 1rem;
+  }
+
+  .waitlist-modal .close-btn {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 4px 8px;
+    line-height: 1;
+  }
+
+  .waitlist-modal .close-btn:hover {
+    color: white;
+  }
+
+  .waitlist-modal form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .waitlist-modal label {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+  }
+
+  .waitlist-modal input {
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: #1a1a1a;
+    color: white;
+    font-size: 1rem;
+  }
+
+  .waitlist-modal input:focus {
+    outline: none;
+    border-color: var(--neon-green);
+  }
+
+  .waitlist-modal .quantity-input {
+    width: 80px;
+  }
+
+  .waitlist-modal button[type="submit"] {
+    background: linear-gradient(135deg, var(--neon-green) 0%, #00cc77 100%);
+    color: black;
+    font-weight: 700;
+    padding: 14px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 8px;
+    transition: all 0.2s ease;
+  }
+
+  .waitlist-modal button[type="submit"]:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(0, 255, 148, 0.4);
+  }
+
+  .waitlist-modal button[type="submit"]:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .waitlist-modal .success-message {
+    text-align: center;
+    padding: 20px;
+  }
+
+  .waitlist-modal .success-message h3 {
+    color: var(--neon-green);
+    margin-bottom: 12px;
+  }
+
+  .waitlist-modal .error-message {
+    color: var(--neon-pink);
+    font-size: 0.9rem;
+    text-align: center;
   }
 
   .room-tier {
@@ -2498,6 +2647,14 @@ function GDCKaraokeApp() {
   const [orderStats, setOrderStats] = useState({ paid_count: 0, pending_count: 0, total_revenue: 0, total_tickets: 0 });
   const [ordersLoading, setOrdersLoading] = useState(false);
 
+  // Waitlist state
+  const [showWaitlistModal, setShowWaitlistModal] = useState(false);
+  const [waitlistRoom, setWaitlistRoom] = useState(null);
+  const [waitlistForm, setWaitlistForm] = useState({ fullName: '', email: '', quantity: 1 });
+  const [waitlistLoading, setWaitlistLoading] = useState(false);
+  const [waitlistSuccess, setWaitlistSuccess] = useState(false);
+  const [waitlistError, setWaitlistError] = useState('');
+
   // Load room data and availability from database on mount (with caching)
   React.useEffect(() => {
     const CACHE_KEY = 'gdc_room_availability';
@@ -3029,6 +3186,60 @@ function GDCKaraokeApp() {
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
+
+  // Open waitlist modal for a booked room
+  const openWaitlistModal = (roomId) => {
+    setWaitlistRoom(roomId);
+    setWaitlistForm({ fullName: '', email: '', quantity: 1 });
+    setWaitlistSuccess(false);
+    setWaitlistError('');
+    setShowWaitlistModal(true);
+  };
+
+  // Close waitlist modal
+  const closeWaitlistModal = () => {
+    setShowWaitlistModal(false);
+    setWaitlistRoom(null);
+    setWaitlistForm({ fullName: '', email: '', quantity: 1 });
+    setWaitlistSuccess(false);
+    setWaitlistError('');
+  };
+
+  // Submit waitlist form
+  const submitWaitlist = async (e) => {
+    e.preventDefault();
+    if (!waitlistRoom || !waitlistForm.fullName || !waitlistForm.email) return;
+
+    setWaitlistLoading(true);
+    setWaitlistError('');
+
+    try {
+      const response = await fetch('/api/join-waitlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          roomId: waitlistRoom,
+          roomName: rooms[waitlistRoom]?.name || waitlistRoom,
+          email: waitlistForm.email,
+          fullName: waitlistForm.fullName,
+          quantity: waitlistForm.quantity
+        })
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        setWaitlistSuccess(true);
+      } else {
+        setWaitlistError(data.error || 'Failed to join waitlist');
+      }
+    } catch (error) {
+      console.error('Waitlist error:', error);
+      setWaitlistError('Failed to join waitlist. Please try again.');
+    } finally {
+      setWaitlistLoading(false);
+    }
+  };
   
   // Stats calculations
   const totalGuests = bookings.reduce((sum, b) => sum + b.quantity, 0);
@@ -3261,11 +3472,14 @@ function GDCKaraokeApp() {
                         key={id}
                         className={`room-card ${rooms[id].backgroundImage ? 'has-bg' : ''} ${rooms[id].booked ? 'booked' : ''}`}
                         style={rooms[id].backgroundImage ? { '--room-bg': `url(${rooms[id].backgroundImage})` } : {}}
-                        onClick={() => !rooms[id].booked && selectRoom(id)}
+                        onClick={() => rooms[id].booked ? openWaitlistModal(id) : selectRoom(id)}
                       >
                         {rooms[id].booked && (
                           <div className="booked-overlay">
-                            <span className="booked-label">Booked</span>
+                            <span className="booked-label">
+                              <span className="default-text">Booked</span>
+                              <span className="hover-text">Join Waitlist</span>
+                            </span>
                           </div>
                         )}
                         <h3 className="room-name">{rooms[id].name}</h3>
@@ -3307,11 +3521,14 @@ function GDCKaraokeApp() {
                         key={id}
                         className={`room-card ${rooms[id].backgroundImage ? 'has-bg' : ''} ${rooms[id].booked ? 'booked' : ''}`}
                         style={rooms[id].backgroundImage ? { '--room-bg': `url(${rooms[id].backgroundImage})` } : {}}
-                        onClick={() => !rooms[id].booked && selectRoom(id)}
+                        onClick={() => rooms[id].booked ? openWaitlistModal(id) : selectRoom(id)}
                       >
                         {rooms[id].booked && (
                           <div className="booked-overlay">
-                            <span className="booked-label">Booked</span>
+                            <span className="booked-label">
+                              <span className="default-text">Booked</span>
+                              <span className="hover-text">Join Waitlist</span>
+                            </span>
                           </div>
                         )}
                         <h3 className="room-name">{rooms[id].name}</h3>
@@ -3353,11 +3570,14 @@ function GDCKaraokeApp() {
                         key={id}
                         className={`room-card ${rooms[id].backgroundImage ? 'has-bg' : ''} ${rooms[id].booked ? 'booked' : ''}`}
                         style={rooms[id].backgroundImage ? { '--room-bg': `url(${rooms[id].backgroundImage})` } : {}}
-                        onClick={() => !rooms[id].booked && selectRoom(id)}
+                        onClick={() => rooms[id].booked ? openWaitlistModal(id) : selectRoom(id)}
                       >
                         {rooms[id].booked && (
                           <div className="booked-overlay">
-                            <span className="booked-label">Booked</span>
+                            <span className="booked-label">
+                              <span className="default-text">Booked</span>
+                              <span className="hover-text">Join Waitlist</span>
+                            </span>
                           </div>
                         )}
                         <h3 className="room-name">{rooms[id].name}</h3>
@@ -3399,11 +3619,14 @@ function GDCKaraokeApp() {
                         key={id}
                         className={`room-card vip ${rooms[id].backgroundImage ? 'has-bg' : ''} ${rooms[id].booked ? 'booked' : ''}`}
                         style={rooms[id].backgroundImage ? { '--room-bg': `url(${rooms[id].backgroundImage})` } : {}}
-                        onClick={() => !rooms[id].booked && selectRoom(id)}
+                        onClick={() => rooms[id].booked ? openWaitlistModal(id) : selectRoom(id)}
                       >
                         {rooms[id].booked && (
                           <div className="booked-overlay">
-                            <span className="booked-label">Booked</span>
+                            <span className="booked-label">
+                              <span className="default-text">Booked</span>
+                              <span className="hover-text">Join Waitlist</span>
+                            </span>
                           </div>
                         )}
                         <h3 className="room-name">{rooms[id].name}</h3>
@@ -4193,8 +4416,86 @@ function GDCKaraokeApp() {
             </div>
           </footer>
         </div>
-        
+
         {/* Success Modal - no longer used but keeping for future */}
+
+        {/* Waitlist Modal */}
+        {showWaitlistModal && waitlistRoom && (
+          <div className="waitlist-modal-overlay" onClick={closeWaitlistModal}>
+            <div className="waitlist-modal" onClick={(e) => e.stopPropagation()}>
+              <button className="close-btn" onClick={closeWaitlistModal}>×</button>
+
+              {waitlistSuccess ? (
+                <div className="success-message">
+                  <h3>You're on the waitlist!</h3>
+                  <p>We'll notify you at <strong>{waitlistForm.email}</strong> if a spot opens up for <strong>{rooms[waitlistRoom]?.name}</strong>.</p>
+                  <button
+                    onClick={closeWaitlistModal}
+                    style={{
+                      marginTop: '20px',
+                      background: 'linear-gradient(135deg, var(--neon-green) 0%, #00cc77 100%)',
+                      color: 'black',
+                      fontWeight: 700,
+                      padding: '12px 24px',
+                      border: 'none',
+                      borderRadius: '8px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    Close
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <h2>Join the Waitlist</h2>
+                  <p className="room-name-subtitle">{rooms[waitlistRoom]?.name}</p>
+
+                  <form onSubmit={submitWaitlist}>
+                    <label>
+                      Full Name *
+                      <input
+                        type="text"
+                        value={waitlistForm.fullName}
+                        onChange={(e) => setWaitlistForm({ ...waitlistForm, fullName: e.target.value })}
+                        placeholder="Your full name"
+                        required
+                      />
+                    </label>
+
+                    <label>
+                      Email *
+                      <input
+                        type="email"
+                        value={waitlistForm.email}
+                        onChange={(e) => setWaitlistForm({ ...waitlistForm, email: e.target.value })}
+                        placeholder="your@email.com"
+                        required
+                      />
+                    </label>
+
+                    <label>
+                      Number of spots needed
+                      <input
+                        type="number"
+                        className="quantity-input"
+                        min="1"
+                        max={rooms[waitlistRoom]?.capacity || 10}
+                        value={waitlistForm.quantity}
+                        onChange={(e) => setWaitlistForm({ ...waitlistForm, quantity: parseInt(e.target.value) || 1 })}
+                      />
+                    </label>
+
+                    {waitlistError && <p className="error-message">{waitlistError}</p>}
+
+                    <button type="submit" disabled={waitlistLoading}>
+                      {waitlistLoading ? 'Joining...' : 'Join Waitlist'}
+                    </button>
+                  </form>
+                </>
+              )}
+            </div>
+          </div>
+        )}
       </div>
     </>
   );
