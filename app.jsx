@@ -3105,7 +3105,7 @@ function GDCKaraokeApp() {
           {view === 'home' && (
             <div className="presale-banner">
               <span className="presale-badge"><span style={{ whiteSpace: 'nowrap' }}>PRE-SALE IS NOW</span><br/>LIVE!</span>
-              <span className="presale-text">Reserve your room now before the event opens to the general public on February 2nd.</span>
+              <span className="presale-text">Reserve your room now before the event opens to the general public on February 9th.</span>
             </div>
           )}
 
