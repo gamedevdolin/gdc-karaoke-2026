@@ -241,6 +241,35 @@ const styles = `
       -2px -2px 0 rgba(0, 0, 0, 0.5);
   }
 
+  /* Desktop: keep KARAOKE NIGHT on one line */
+  .karaoke-night-line {
+    white-space: nowrap;
+  }
+
+  .mobile-break {
+    display: none;
+  }
+
+  .mobile-space {
+    display: inline;
+  }
+
+  /* Mobile: allow wrapping, show line break, and reduce font size */
+  @media (max-width: 600px) {
+    .header h1 {
+      font-size: clamp(3rem, 16vw, 5rem) !important;
+    }
+    .karaoke-night-line {
+      white-space: normal;
+    }
+    .mobile-break {
+      display: block;
+    }
+    .mobile-space {
+      display: none;
+    }
+  }
+
   .header .date-row {
     display: flex;
     align-items: center;
@@ -3016,10 +3045,10 @@ function GDCKaraokeApp() {
           {/* Header */}
           <header className="header">
             <div className="header-content">
-              <h1 style={{ fontSize: 'clamp(4rem, 15vw, 10rem)', lineHeight: 0.95, textAlign: 'center' }}>
-                <span className="white" style={{ display: 'block' }}>KARAOKE</span>
-                <span className="white" style={{ display: 'block' }}>NIGHT</span>
-                <span className="green" style={{ display: 'block', marginLeft: '-0.32em' }}>@GDC 2026</span>
+              <h1 style={{ fontSize: 'clamp(4rem, 18vw, 10rem)', lineHeight: 0.95, textAlign: 'center' }}>
+                <span className="white" style={{ display: 'block' }}>GDC</span>
+                <span className="green glow karaoke-night-line" style={{ display: 'block' }}>KARAOKE<br className="mobile-break" /><span className="mobile-space"> </span>NIGHT</span>
+                <span className="white" style={{ display: 'block' }}>2026</span>
               </h1>
             </div>
 
