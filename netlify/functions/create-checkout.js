@@ -81,7 +81,7 @@ export default async (req, context) => {
             currency: 'usd',
             product_data: {
               name: productName,
-              description: `GDC Karaoke Night 2026 - ${roomName}`,
+              description: `Game Dev Karaoke 2026 - ${roomName}`,
               metadata: {
                 roomId,
                 isEntireRoom: isEntireRoom ? 'true' : 'false'

@@ -1,4 +1,4 @@
-# GDC Karaoke Night 2026 - Ticketing Site
+# Game Dev Karaoke 2026 - Ticketing Site
 
 ## Quick Start
 
@@ -12,7 +12,7 @@ All the text content is in `app.jsx`. Here's where to find things:
 
 ### Header (lines ~1300-1330)
 - "Sing your troubles away" - top tagline
-- "KARAOKE NIGHT @GDC 2026" - main title
+- "GAME DEV KARAOKE 2026" - main title
 - "WEDNESDAY, MARCH 11TH" - date
 - "Want to attend the largest karaoke party..." - subtitle
 

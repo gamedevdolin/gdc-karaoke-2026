@@ -1,7 +1,7 @@
 {
   "name": "gdc-karaoke-2026",
   "version": "1.0.0",
-  "description": "GDC Karaoke Night 2026 ticketing site",
+  "description": "Game Dev Karaoke 2026 ticketing site",
   "scripts": {
     "dev": "netlify dev"
   },

@@ -1,7 +1,7 @@
 const { useState, useEffect, useRef } = React;
 
 // ============================================
-// GDC KARAOKE NIGHT 2026 - TICKETING SITE
+// GAME DEV KARAOKE 2026 - TICKETING SITE
 // ============================================
 
 // Configuration - EDIT THESE VALUES BEFORE LAUNCH
@@ -259,6 +259,9 @@ const styles = `
     .header h1 {
       font-size: clamp(3rem, 16vw, 5rem) !important;
     }
+    .header h1 .header-date {
+      font-size: clamp(2rem, 12vw, 3.5rem) !important;
+    }
     .karaoke-night-line {
       white-space: normal;
     }
@@ -382,6 +385,14 @@ const styles = `
     font-weight: 600;
     margin-top: 5px;
     color: black;
+  }
+
+  .date-row-standalone .date-text.time-only {
+    padding: 12px 25px;
+  }
+
+  .date-row-standalone .date-text.time-only .date-time {
+    margin-top: 0;
   }
 
   @keyframes gentleRotate {
@@ -2770,7 +2781,7 @@ function GDCKaraokeApp() {
       const isMainStageSong = roomParam === 'mainStageSong';
 
       setPurchaseInfo({
-        roomName: purchasedRoom?.name || (isTestPurchase ? 'Test Purchase' : 'GDC Karaoke Night'),
+        roomName: purchasedRoom?.name || (isTestPurchase ? 'Test Purchase' : 'Game Dev Karaoke'),
         roomId: roomParam,
         isTest: isTestPurchase,
         quantity: quantity,
@@ -3257,9 +3268,8 @@ function GDCKaraokeApp() {
           <header className="header">
             <div className="header-content">
               <h1 style={{ fontSize: 'clamp(4rem, 18vw, 10rem)', lineHeight: 0.95, textAlign: 'center' }}>
-                <span className="white" style={{ display: 'block' }}>GDC</span>
-                <span className="green glow karaoke-night-line" style={{ display: 'block' }}>KARAOKE<br className="mobile-break" /><span className="mobile-space"> </span>NIGHT</span>
-                <span className="white" style={{ display: 'block' }}>2026</span>
+                <span className="green glow karaoke-night-line" style={{ display: 'block' }}>GAME DEV<br className="mobile-break" /><span className="mobile-space"> </span>KARAOKE</span>
+                <span className="white karaoke-night-line header-date" style={{ display: 'block', fontSize: 'clamp(2.5rem, 12vw, 6rem)', marginTop: '0.2em' }}>WEDNESDAY,<br className="mobile-break" /><span className="mobile-space"> </span>MARCH 11TH</span>
               </h1>
             </div>
 
@@ -3270,14 +3280,13 @@ function GDCKaraokeApp() {
           {view === 'home' && (
             <div className="date-row-standalone">
               <img src="/images/jigglypuff.png" alt="Jigglypuff" className="mascot-left mascot-rotate" />
-              <div className="date-text">
-                <div>WEDNESDAY, MARCH 11TH</div>
-                <div className="date-time">9:00 PM - 12:00 AM</div>
+              <div className="date-text time-only">
+                <div className="date-time" style={{ fontSize: 'clamp(1.2rem, 4vw, 1.8rem)', fontWeight: 700 }}>9:00 PM - 12:00 AM</div>
                 <a
-                  href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=GDC+Karaoke+Night+2026&dates=20260311T210000/20260312T000000&ctz=America/Los_Angeles&details=Karaoke+party+at+Pandora+Karaoke+during+GDC+2026&location=Pandora+Karaoke,+50+Mason+St,+San+Francisco,+CA+94102"
+                  href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Game+Dev+Karaoke+2026&dates=20260311T210000/20260312T000000&ctz=America/Los_Angeles&details=Game+Dev+Karaoke+party+at+Pandora+Karaoke+during+GDC+2026&location=Pandora+Karaoke,+50+Mason+St,+San+Francisco,+CA+94102"
                   target="_blank"
                   rel="noopener noreferrer"
-                  style={{ fontSize: '0.8rem', marginTop: '8px', color: '#000', textDecoration: 'none', display: 'inline-block' }}
+                  style={{ fontSize: '0.9rem', marginTop: '6px', color: '#000', textDecoration: 'none', display: 'inline-block' }}
                 >
                   + Add to Calendar
                 </a>
@@ -3334,7 +3343,7 @@ function GDCKaraokeApp() {
           {/* Description Box */}
           {view === 'home' && (
             <div className="description-box" style={{ textAlign: 'center', maxWidth: 900, margin: '0 auto 15px' }}>
-              <p style={{ marginBottom: 10, color: 'var(--neon-green)', fontWeight: 600, fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Welcome to GDC Karaoke Night!</p>
+              <p style={{ marginBottom: 10, color: 'var(--neon-green)', fontWeight: 600, fontSize: '1.2rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Welcome to the Karaoke Party Page!</p>
               <p className="description-line" style={{ whiteSpace: 'nowrap', marginBottom: 8 }}>Reserve a private room with your friends and colleagues.</p>
               <p className="description-line" style={{ whiteSpace: 'nowrap', marginBottom: 8 }}>Or grab a spot in the Main Room for general admission.</p>
               <p className="description-line" style={{ whiteSpace: 'nowrap' }}>Either way, it's gonna be a really good party.</p>
@@ -4167,7 +4176,7 @@ function GDCKaraokeApp() {
                     ? 'Your test purchase was processed successfully.'
                     : purchaseInfo?.isEntireRoom
                       ? `You've reserved the entire ${purchaseInfo?.roomName || 'private room'}!`
-                      : `${purchaseInfo?.quantity || 1} ${(purchaseInfo?.quantity || 1) === 1 ? 'ticket' : 'tickets'} for ${purchaseInfo?.roomName || 'GDC Karaoke Night'}`
+                      : `${purchaseInfo?.quantity || 1} ${(purchaseInfo?.quantity || 1) === 1 ? 'ticket' : 'tickets'} for ${purchaseInfo?.roomName || 'Game Dev Karaoke'}`
                   }
                 </p>
 
@@ -4180,7 +4189,7 @@ function GDCKaraokeApp() {
                         <strong>Song Signup:</strong> Look out for an email in mid-February with instructions to sign up for your song and performance time slot!
                       </li>
                     )}
-                    <li>Save the date: <strong>{CONFIG.eventDate}</strong> at <strong><a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=GDC+Karaoke+Night+2026&dates=20260312T050000Z/20260312T080000Z&details=Karaoke+party+at+Pandora+Karaoke+during+GDC+2026!%0A%0APandora+Karaoke%0A50+Mason+St,+San+Francisco,+CA+94102&location=Pandora+Karaoke,+50+Mason+St,+San+Francisco,+CA+94102" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--neon-green)' }}>{CONFIG.eventTime}</a></strong></li>
+                    <li>Save the date: <strong>{CONFIG.eventDate}</strong> at <strong><a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Game+Dev+Karaoke+2026&dates=20260312T050000Z/20260312T080000Z&details=Game+Dev+Karaoke+party+at+Pandora+Karaoke+during+GDC+2026!%0A%0APandora+Karaoke%0A50+Mason+St,+San+Francisco,+CA+94102&location=Pandora+Karaoke,+50+Mason+St,+San+Francisco,+CA+94102" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--neon-green)' }}>{CONFIG.eventTime}</a></strong></li>
                     <li>Location: <strong>{CONFIG.venueName}</strong>, {CONFIG.venueAddress}</li>
                     <li>Bring a valid government-issued ID (21+ event)</li>
                   </ul>
@@ -4191,7 +4200,7 @@ function GDCKaraokeApp() {
                     Back to Home
                   </button>
                   <a
-                    href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=GDC+Karaoke+Night+2026&dates=20260311T210000/20260312T000000&ctz=America/Los_Angeles&details=Karaoke+party+at+Pandora+Karaoke+during+GDC+2026&location=Pandora+Karaoke,+50+Mason+St,+San+Francisco,+CA+94102"
+                    href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Game+Dev+Karaoke+2026&dates=20260311T210000/20260312T000000&ctz=America/Los_Angeles&details=Game+Dev+Karaoke+party+at+Pandora+Karaoke+during+GDC+2026&location=Pandora+Karaoke,+50+Mason+St,+San+Francisco,+CA+94102"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="btn-secondary"
@@ -4215,7 +4224,7 @@ function GDCKaraokeApp() {
               <p className="legal-updated">Last updated: January 2026</p>
 
               <h2>Information We Collect</h2>
-              <p>When you purchase tickets for GDC Karaoke Night 2026, we collect:</p>
+              <p>When you purchase tickets for Game Dev Karaoke 2026, we collect:</p>
               <ul>
                 <li><strong>Contact Information:</strong> Your name, email address, and optionally your company/studio name</li>
                 <li><strong>Payment Information:</strong> Payment is processed securely through Stripe. We do not store your credit card details on our servers.</li>
@@ -4255,7 +4264,7 @@ function GDCKaraokeApp() {
               <p className="legal-updated">Last updated: January 2026</p>
 
               <h2>Event Details</h2>
-              <p><strong>GDC Karaoke Night 2026</strong><br/>
+              <p><strong>Game Dev Karaoke 2026</strong><br/>
               Date: {CONFIG.eventDate}<br/>
               Time: {CONFIG.eventTime}<br/>
               Venue: {CONFIG.venueName}, {CONFIG.venueAddress}</p>
@@ -4300,7 +4309,7 @@ function GDCKaraokeApp() {
               <p className="legal-updated">Last updated: January 2026</p>
 
               <h2>Our Commitment</h2>
-              <p>GDC Karaoke Night is dedicated to providing a fun, inclusive, and harassment-free experience for everyone in the game development community, regardless of gender, gender identity and expression, age, sexual orientation, disability, physical appearance, body size, race, ethnicity, or religion.</p>
+              <p>Game Dev Karaoke is dedicated to providing a fun, inclusive, and harassment-free experience for everyone in the game development community, regardless of gender, gender identity and expression, age, sexual orientation, disability, physical appearance, body size, race, ethnicity, or religion.</p>
 
               <h2>Expected Behavior</h2>
               <ul>
@@ -4344,7 +4353,7 @@ function GDCKaraokeApp() {
               <p className="legal-updated">Last updated: January 2026</p>
 
               <h2>Refund Eligibility</h2>
-              <p>We understand that plans change. Refunds are available for GDC Karaoke Night 2026 tickets under the following conditions:</p>
+              <p>We understand that plans change. Refunds are available for Game Dev Karaoke 2026 tickets under the following conditions:</p>
 
               <h2>Full Refunds</h2>
               <ul>
@@ -4386,7 +4395,7 @@ function GDCKaraokeApp() {
             <div className="footer-content">
               <div className="footer-main">
                 <p>
-                  <strong>GDC Karaoke Night 2026</strong><p></p>{CONFIG.eventDate}<p></p>{CONFIG.eventTime}
+                  <strong>Game Dev Karaoke 2026</strong><p></p>{CONFIG.eventDate}<p></p>{CONFIG.eventTime}
                 </p>
                 <p className="hosts">
                   Hosted by <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); setTimeout(() => document.getElementById('hosts-title')?.scrollIntoView({ behavior: 'smooth' }), 100); }}>Adam Dolin & Cristina Amaya</a>

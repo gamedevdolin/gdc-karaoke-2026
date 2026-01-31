@@ -35,7 +35,7 @@ export default async (req, context) => {
             currency: 'usd',
             product_data: {
               name: 'General Admission - 1 Ticket (TEST)',
-              description: 'GDC Karaoke Night 2026 - General Admission (TEST)',
+              description: 'Game Dev Karaoke 2026 - General Admission (TEST)',
               metadata: {
                 roomId: 'test',
                 isEntireRoom: 'false'
