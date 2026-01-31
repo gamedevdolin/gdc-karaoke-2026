@@ -3699,6 +3699,8 @@ function GDCKaraokeApp() {
                         </div>
                         <p className="savings-text">
                           Save ${(rooms[selectedRoom].price * rooms[selectedRoom].capacity) - rooms[selectedRoom].roomPrice} by booking the entire room!
+                          <br/>
+                          <span style={{ display: 'block', fontSize: '0.9em', opacity: 0.8, marginTop: '4px' }}>(you also get to change the name if you want)</span>
                         </p>
                         <p className="attendee-notice">
                           By booking an entire room, you agree to provide a full list of attendees prior to the event. As a GDC affiliated event, we are required to maintain a complete guest list for safety purposes.
