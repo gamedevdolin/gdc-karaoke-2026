@@ -83,7 +83,7 @@ mainStage: {
 ### Admin Password
 Find this line (~line 1226):
 ```javascript
-const ADMIN_PASSWORD = 'zombiespiderwebs';
+const ADMIN_PASSWORD = 'passwordhere';
 ```
 
 ### Event Details
