@@ -707,6 +707,31 @@ const styles = `
     color: var(--neon-green);
     margin: 15px 0;
   }
+
+  .reserve-spot-label {
+    animation: reservePulse 2s ease-in-out infinite;
+  }
+
+  @keyframes reservePulse {
+    0%, 100% {
+      text-shadow:
+        0 0 15px rgba(0, 255, 148, 1),
+        0 0 30px rgba(0, 255, 148, 0.8),
+        0 0 50px rgba(0, 255, 148, 0.6),
+        0 0 80px rgba(0, 255, 148, 0.4),
+        2px 2px 4px rgba(0, 0, 0, 0.9);
+      transform: scale(1);
+    }
+    50% {
+      text-shadow:
+        0 0 20px rgba(0, 255, 148, 1),
+        0 0 40px rgba(0, 255, 148, 0.9),
+        0 0 70px rgba(0, 255, 148, 0.7),
+        0 0 100px rgba(0, 255, 148, 0.5),
+        2px 2px 4px rgba(0, 0, 0, 0.9);
+      transform: scale(1.05);
+    }
+  }
   
   /* Tab Navigation */
   .tab-nav {
@@ -2617,7 +2642,7 @@ const MOCK_BOOKINGS = [];
 // Main App Component
 function GDCKaraokeApp() {
   const [view, setView] = useState('home'); // home, room, admin, privacy, terms
-  const [activeTab, setActiveTab] = useState('private'); // 'main' or 'private'
+  const [activeTab, setActiveTab] = useState('main'); // 'main' or 'private'
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [rooms, setRooms] = useState(INITIAL_ROOMS);
   const [bookings, setBookings] = useState(MOCK_BOOKINGS);
@@ -3352,14 +3377,7 @@ function GDCKaraokeApp() {
 
 
           {view === 'home' && (
-            <div className="presale-banner">
-              <span className="presale-badge"><span style={{ whiteSpace: 'nowrap' }}>PRE-SALE IS NOW</span><br/>LIVE!</span>
-              <span className="presale-text">Reserve your room now before the event opens to the general public on February 9th.</span>
-            </div>
-          )}
-
-          {view === 'home' && (
-            <h2 className="section-label">RESERVE YOUR SPOT</h2>
+            <h2 className="section-label reserve-spot-label">RESERVE YOUR SPOT</h2>
           )}
 
           {/* Tab Navigation - Main Room on left, Private Rooms on right (but Private is default) */}
