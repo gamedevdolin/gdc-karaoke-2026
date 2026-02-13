@@ -2693,7 +2693,7 @@ function GDCKaraokeApp() {
   const [waitlistError, setWaitlistError] = useState('');
 
   // Load room data and availability from database on mount (with caching)
-  React.useEffect(() => {
+  useEffect(() => {
     const CACHE_KEY = 'gdc_room_availability';
     const CACHE_DURATION = 60000; // 60 seconds
 
@@ -2788,7 +2788,7 @@ function GDCKaraokeApp() {
   };
 
   // Check URL parameters on load to open specific room or page
-  React.useEffect(() => {
+  useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const roomParam = params.get('room');
     const viewParam = params.get('view');
