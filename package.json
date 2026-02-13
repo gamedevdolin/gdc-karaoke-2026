@@ -3,10 +3,18 @@
   "version": "1.0.0",
   "description": "Game Dev Karaoke 2026 ticketing site",
   "scripts": {
-    "dev": "netlify dev"
+    "dev": "netlify dev",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@neondatabase/serverless": "^0.9.5",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
     "stripe": "^14.0.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^5.1.4",
+    "vite": "^7.3.1"
   }
 }

@@ -1,4 +1,5 @@
-const { useState, useEffect, useRef } = React;
+import { useState, useEffect, useRef } from 'react';
+import { createRoot } from 'react-dom/client';
 
 // ============================================
 // GAME DEV KARAOKE 2026 - TICKETING SITE
@@ -3751,6 +3752,7 @@ function GDCKaraokeApp() {
                       src={rooms[selectedRoom].backgroundImage}
                       alt={rooms[selectedRoom].name}
                       className="room-detail-image-mobile"
+                      loading="lazy"
                     />
                   )}
                 </div>
@@ -3761,6 +3763,7 @@ function GDCKaraokeApp() {
                     src={rooms[selectedRoom].backgroundImage}
                     alt={rooms[selectedRoom].name}
                     className="room-detail-image"
+                    loading="lazy"
                   />
                 )}
               </div>
@@ -4136,7 +4139,7 @@ function GDCKaraokeApp() {
                 {/* Adam's card */}
                 <div className="host-card">
                   <div className="host-image">
-                    <img src="/images/adamhost.png" alt="Adam Dolin" />
+                    <img src="/images/adamhost.png" alt="Adam Dolin" loading="lazy" />
                   </div>
                   <div className="host-info">
                     <h3>Adam Dolin</h3>
@@ -4161,7 +4164,7 @@ function GDCKaraokeApp() {
                 {/* Cristina's card */}
                 <div className="host-card">
                   <div className="host-image">
-                    <img src="/images/crishost.png" alt="Cristina Amaya" />
+                    <img src="/images/crishost.png" alt="Cristina Amaya" loading="lazy" />
                   </div>
                   <div className="host-info">
                     <h3>Cristina Amaya</h3>
@@ -4437,6 +4440,7 @@ function GDCKaraokeApp() {
                 <a href="https://gamedevdolin.com" target="_blank" rel="noopener noreferrer">
                   <img
                     src="/images/cbslogo.png"
+                    loading="lazy"
                     alt="Cold Brew Sunset"
                     className="footer-logo-img"
                   />
@@ -4529,3 +4533,5 @@ function GDCKaraokeApp() {
     </>
   );
 }
+
+createRoot(document.getElementById('root')).render(<GDCKaraokeApp />);
