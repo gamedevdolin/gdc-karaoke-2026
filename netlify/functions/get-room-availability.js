@@ -11,6 +11,9 @@ export default async (req, context) => {
   try {
     const sql = neon(process.env.NETLIFY_DATABASE_URL);
 
+    // Ensure capacity column exists
+    await sql`ALTER TABLE rooms ADD COLUMN IF NOT EXISTS capacity INTEGER`;
+
     // Get all paid orders grouped by room
     const orders = await sql`
       SELECT
@@ -24,7 +27,7 @@ export default async (req, context) => {
 
     // Get room booked status
     const rooms = await sql`
-      SELECT room_id, booked, name, price, room_price
+      SELECT room_id, booked, name, price, room_price, capacity
       FROM rooms
     `;
 
@@ -38,6 +41,7 @@ export default async (req, context) => {
         name: room.name,
         price: room.price,
         roomPrice: room.room_price,
+        capacity: room.capacity,
         bookedCount: 0,
         hasEntireRoomBooking: false
       };

@@ -9,7 +9,6 @@ export default async (req, context) => {
   }
 
   try {
-    // Check admin password
     const authHeader = req.headers.get('Authorization');
     const adminPassword = process.env.ADMIN_PASSWORD;
 
@@ -21,10 +20,10 @@ export default async (req, context) => {
     }
 
     const body = await req.json();
-    const { roomId, booked, name, price, roomPrice, capacity } = body;
+    const { orderId } = body;
 
-    if (!roomId) {
-      return new Response(JSON.stringify({ error: 'roomId is required' }), {
+    if (!orderId) {
+      return new Response(JSON.stringify({ error: 'orderId is required' }), {
         status: 400,
         headers: { 'Content-Type': 'application/json' }
       });
@@ -32,34 +31,30 @@ export default async (req, context) => {
 
     const sql = neon(process.env.NETLIFY_DATABASE_URL);
 
-    // Ensure capacity column exists
-    await sql`ALTER TABLE rooms ADD COLUMN IF NOT EXISTS capacity INTEGER`;
-
-    // Upsert room data (insert or update)
-    await sql`
-      INSERT INTO rooms (room_id, booked, name, price, room_price, capacity)
-      VALUES (${roomId}, ${booked ?? false}, ${name ?? null}, ${price ?? null}, ${roomPrice ?? null}, ${capacity ?? null})
-      ON CONFLICT (room_id)
-      DO UPDATE SET
-        booked = COALESCE(${booked}, rooms.booked),
-        name = COALESCE(${name}, rooms.name),
-        price = COALESCE(${price}, rooms.price),
-        room_price = COALESCE(${roomPrice}, rooms.room_price),
-        capacity = COALESCE(${capacity}, rooms.capacity),
-        updated_at = NOW()
+    const result = await sql`
+      DELETE FROM orders
+      WHERE id = ${orderId}
+      RETURNING id, room_id, buyer_name
     `;
+
+    if (result.length === 0) {
+      return new Response(JSON.stringify({ error: 'Order not found' }), {
+        status: 404,
+        headers: { 'Content-Type': 'application/json' }
+      });
+    }
 
     return new Response(JSON.stringify({
       success: true,
-      message: 'Room updated'
+      message: `Deleted order #${result[0].id} (${result[0].buyer_name || 'unknown'})`
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }
     });
 
   } catch (error) {
-    console.error('Update room error:', error);
-    return new Response(JSON.stringify({ error: 'Server error' }), {
+    console.error('Delete order error:', error);
+    return new Response(JSON.stringify({ error: 'Server error', details: error.message }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' }
     });
@@ -67,5 +62,5 @@ export default async (req, context) => {
 };
 
 export const config = {
-  path: "/api/update-room"
+  path: "/api/delete-order"
 };

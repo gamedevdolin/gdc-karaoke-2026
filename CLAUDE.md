@@ -39,9 +39,11 @@ npm run preview    # Preview production build
 - `stripe-webhook.js` — Handles Stripe payment webhooks
 - `get-room-availability.js` / `get-rooms.js` — Room data and booking counts
 - `signup.js` / `get-signups.js` — Email notification signups
-- `join-waitlist.js` — Waitlist for sold-out rooms
-- `get-orders.js` — Admin order listing
-- `update-room.js` — Admin room management
+- `join-waitlist.js` / `get-waitlist.js` — Waitlist for sold-out rooms
+- `get-orders.js` / `delete-order.js` — Admin order listing and deletion
+- `update-room.js` — Admin room management (name, price, capacity, booked status)
+- `reset-room-orders.js` — Reset orders for a specific room
+- `send-email.js` — Send emails via Resend API (admin only)
 
 ## Common Edits
 - **Change event details:** Edit `CONFIG` object at top of `src/main.jsx`
@@ -50,10 +52,20 @@ npm run preview    # Preview production build
 - **Change styles/colors:** Edit the `styles` template literal in `src/main.jsx` (starts around line 65). CSS variables are defined in `:root` (neon-green, neon-pink, neon-blue, etc.)
 - **Change fonts:** Currently uses Outfit + Space Mono from Google Fonts, imported in the styles block
 
+## Admin Panel Features
+- **Stats dashboard** — Revenue (high-water mark, preserved across deletes), tickets sold, paid orders, total capacity
+- **Paid Orders table** — Sortable columns, text filter, per-row delete and email buttons, bulk select + email
+- **Waitlist Signups table** — Lists all waitlist entries with email and bulk email support
+- **Room Configuration** — Editable name, price per guest, price per room, capacity, booked status, per-room order reset
+- **Email compose modal** — Send individual or bulk emails via Resend
+- Revenue total is intentionally preserved when deleting orders or resetting rooms. Use "Refresh Data" to sync with current DB state.
+
 ## Environment Variables (Netlify)
 The serverless functions expect these env vars (set in Netlify dashboard, not committed):
-- `DATABASE_URL` — Neon Postgres connection string
+- `NETLIFY_DATABASE_URL` — Neon Postgres connection string
 - `STRIPE_SECRET_KEY` — Stripe secret key
 - `STRIPE_WEBHOOK_SECRET` — Stripe webhook signing secret
 - `ADMIN_PASSWORD` — Password for the admin panel
+- `RESEND_API_KEY` — Resend API key for sending emails
+- `EMAIL_FROM` — Verified sender address in Resend (e.g. `info@gamedevkaraoke.com`)
 - Stripe public key is hardcoded in `CONFIG.stripePublicKey` in `main.jsx`

@@ -2692,6 +2692,24 @@ function GDCKaraokeApp() {
   const [waitlistSuccess, setWaitlistSuccess] = useState(false);
   const [waitlistError, setWaitlistError] = useState('');
 
+  // Order table sort/filter state
+  const [orderSort, setOrderSort] = useState({ field: 'created_at', direction: 'desc' });
+  const [orderFilter, setOrderFilter] = useState('');
+  const [selectedOrders, setSelectedOrders] = useState(new Set());
+
+  // Waitlist admin state
+  const [waitlistEntries, setWaitlistEntries] = useState([]);
+  const [selectedWaitlist, setSelectedWaitlist] = useState(new Set());
+
+  // Email compose modal state
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [emailTo, setEmailTo] = useState([]);
+  const [emailSubject, setEmailSubject] = useState('');
+  const [emailBody, setEmailBody] = useState('');
+  const [emailSending, setEmailSending] = useState(false);
+  const [emailSuccess, setEmailSuccess] = useState(false);
+  const [emailError, setEmailError] = useState('');
+
   const CACHE_KEY = 'gdc_room_availability';
 
   // Apply room data from API response
@@ -2707,7 +2725,8 @@ function GDCKaraokeApp() {
             booked: dbRoom.booked ?? updated[roomId].booked,
             name: dbRoom.name ?? updated[roomId].name,
             price: dbRoom.price ?? updated[roomId].price,
-            roomPrice: dbRoom.roomPrice ?? updated[roomId].roomPrice
+            roomPrice: dbRoom.roomPrice ?? updated[roomId].roomPrice,
+            capacity: dbRoom.capacity ?? updated[roomId].capacity
           };
           // Store order counts separately
           newOrderCounts[roomId] = {
@@ -2778,6 +2797,7 @@ function GDCKaraokeApp() {
       if (field === 'name') payload.name = value;
       if (field === 'price') payload.price = value;
       if (field === 'roomPrice') payload.roomPrice = value;
+      if (field === 'capacity') payload.capacity = value;
 
       await fetch('/api/update-room', {
         method: 'POST',
@@ -2974,41 +2994,58 @@ function GDCKaraokeApp() {
     }
   };
 
-  // Refresh all admin data (rooms, orders, signups)
+  // Fetch orders without updating revenue (preserves revenue total)
+  const fetchOrdersOnly = async () => {
+    try {
+      const response = await fetch('/api/orders', {
+        headers: { 'Authorization': `Bearer ${adminPassword}` },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setOrders(data.orders || []);
+        // Update counts but preserve revenue
+        setOrderStats(prev => ({
+          ...prev,
+          paid_count: data.stats?.paid_count ?? prev.paid_count,
+          pending_count: data.stats?.pending_count ?? prev.pending_count,
+          total_tickets: data.stats?.total_tickets ?? prev.total_tickets,
+          // revenue intentionally NOT updated
+        }));
+      }
+    } catch (error) {
+      console.error('Failed to fetch orders:', error);
+    }
+  };
+
+  // Fetch waitlist entries (admin only)
+  const fetchWaitlist = async () => {
+    try {
+      const response = await fetch('/api/waitlist', {
+        headers: { 'Authorization': `Bearer ${adminPassword}` },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setWaitlistEntries(data.waitlist || []);
+      }
+    } catch (error) {
+      console.error('Failed to fetch waitlist:', error);
+    }
+  };
+
+  // Refresh all admin data (rooms, orders, signups, waitlist)
   const [refreshing, setRefreshing] = useState(false);
   const refreshAdminData = async () => {
     setRefreshing(true);
     try {
-      await Promise.all([refreshRoomData(), fetchOrders(), fetchSignups()]);
+      await Promise.all([refreshRoomData(), fetchOrders(), fetchSignups(), fetchWaitlist()]);
     } finally {
       setRefreshing(false);
     }
   };
 
-  // Reset all orders (admin only - for testing)
-  const resetOrders = async () => {
-    if (!confirm('Are you sure you want to delete ALL orders and reset room bookings? This cannot be undone.')) {
-      return;
-    }
-
-    try {
-      const response = await fetch('/api/reset-orders', {
-        method: 'POST',
-        headers: { 'Authorization': `Bearer ${adminPassword}` },
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        alert(data.message);
-        await refreshAdminData();
-      } else {
-        alert('Failed to reset: ' + data.error);
-      }
-    } catch (error) {
-      console.error('Failed to reset orders:', error);
-      alert('Failed to reset orders');
-    }
+  // Refresh after delete/reset (preserves revenue)
+  const refreshAfterChange = async () => {
+    await Promise.all([refreshRoomData(), fetchOrdersOnly()]);
   };
 
   // Reset orders for a single room (admin only)
@@ -3033,13 +3070,99 @@ function GDCKaraokeApp() {
 
       if (response.ok) {
         alert(data.message);
-        await refreshAdminData();
+        await refreshAfterChange();
       } else {
         alert('Failed to reset room: ' + data.error);
       }
     } catch (error) {
       console.error('Failed to reset room orders:', error);
       alert('Failed to reset room orders');
+    }
+  };
+
+  // Delete a single order (admin only, preserves revenue)
+  const deleteOrder = async (orderId, buyerName) => {
+    if (!confirm(`Delete order for "${buyerName || 'unknown'}"? This cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/delete-order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${adminPassword}`
+        },
+        body: JSON.stringify({ orderId })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        await refreshAfterChange();
+      } else {
+        alert('Failed to delete order: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Failed to delete order:', error);
+      alert('Failed to delete order');
+    }
+  };
+
+  // Email functions
+  const openEmailModal = (recipients) => {
+    setEmailTo(Array.isArray(recipients) ? recipients : [recipients]);
+    setEmailSubject('');
+    setEmailBody('');
+    setEmailSuccess(false);
+    setEmailError('');
+    setShowEmailModal(true);
+  };
+
+  const closeEmailModal = () => {
+    setShowEmailModal(false);
+    setEmailTo([]);
+    setEmailSubject('');
+    setEmailBody('');
+    setEmailSuccess(false);
+    setEmailError('');
+  };
+
+  const sendEmail = async () => {
+    if (!emailSubject.trim() || !emailBody.trim()) {
+      setEmailError('Subject and body are required');
+      return;
+    }
+
+    setEmailSending(true);
+    setEmailError('');
+
+    try {
+      const response = await fetch('/api/send-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${adminPassword}`
+        },
+        body: JSON.stringify({
+          to: emailTo,
+          subject: emailSubject,
+          html: emailBody.replace(/\n/g, '<br>')
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        setEmailSuccess(true);
+      } else {
+        setEmailError(data.error || 'Failed to send email');
+      }
+    } catch (error) {
+      console.error('Send email error:', error);
+      setEmailError('Failed to send email');
+    } finally {
+      setEmailSending(false);
     }
   };
 
@@ -3119,8 +3242,9 @@ function GDCKaraokeApp() {
         }));
         setSignups(formattedSignups);
         setAdminUnlocked(true);
-        // Also fetch orders
+        // Also fetch orders and waitlist
         fetchOrders();
+        fetchWaitlist();
       } else {
         alert('Incorrect password. Please try again.');
       }
@@ -3921,6 +4045,26 @@ function GDCKaraokeApp() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15, flexWrap: 'wrap', gap: 10 }}>
                   <h3>Paid Orders ({orders.filter(o => o.payment_status === 'paid').length})</h3>
                   <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                    {selectedOrders.size > 0 && (
+                      <button
+                        onClick={() => {
+                          const emails = orders.filter(o => selectedOrders.has(o.id) && o.buyer_email).map(o => o.buyer_email);
+                          if (emails.length > 0) openEmailModal(emails);
+                        }}
+                        style={{
+                          background: 'var(--neon-blue)',
+                          border: 'none',
+                          color: '#000',
+                          padding: '8px 16px',
+                          borderRadius: 4,
+                          cursor: 'pointer',
+                          fontSize: '0.85rem',
+                          fontWeight: 600
+                        }}
+                      >
+                        Email Selected ({selectedOrders.size})
+                      </button>
+                    )}
                     <button
                       onClick={createTestPurchase}
                       disabled={testPurchaseLoading}
@@ -3938,121 +4082,265 @@ function GDCKaraokeApp() {
                     >
                       {testPurchaseLoading ? 'Loading...' : 'Test Purchase ($0.50)'}
                     </button>
-                    <button
-                      onClick={resetOrders}
-                      style={{
-                        background: 'transparent',
-                        border: '1px solid var(--neon-pink)',
-                        color: 'var(--neon-pink)',
-                        padding: '8px 16px',
-                        borderRadius: 4,
-                        cursor: 'pointer',
-                        fontSize: '0.85rem'
-                      }}
-                    >
-                      Reset All Orders (Testing)
-                    </button>
                   </div>
                 </div>
+
+                {/* Filter input */}
+                <input
+                  type="text"
+                  placeholder="Filter by name, email, company, or room..."
+                  value={orderFilter}
+                  onChange={(e) => setOrderFilter(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    marginBottom: 15,
+                    background: '#111',
+                    border: '1px solid #333',
+                    borderRadius: 4,
+                    color: 'var(--text-primary)',
+                    fontSize: '0.9rem'
+                  }}
+                />
 
                 {ordersLoading ? (
                   <p style={{ color: 'var(--text-secondary)' }}>Loading orders...</p>
-                ) : orders.filter(o => o.payment_status === 'paid').length > 0 ? (
-                  <div style={{ overflowX: 'auto' }}>
-                    <table className="guest-table">
-                      <thead>
-                        <tr>
-                          <th>Name</th>
-                          <th>Email</th>
-                          <th>Company</th>
-                          <th>Room</th>
-                          <th>Qty</th>
-                          <th>Total</th>
-                          <th>Entire Room</th>
-                          <th>Date</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {orders.filter(o => o.payment_status === 'paid').map(order => (
-                          <tr key={order.id}>
-                            <td>{order.buyer_name || '—'}</td>
-                            <td>{order.buyer_email || '—'}</td>
-                            <td>{order.buyer_company || '—'}</td>
-                            <td>{rooms[order.room_id]?.name || order.room_id}</td>
-                            <td>{order.quantity}</td>
-                            <td>${order.total_amount}</td>
-                            <td>{order.is_entire_room ? '✓ Yes' : '—'}</td>
-                            <td>{order.created_at?.split('T')[0] || ''}</td>
+                ) : (() => {
+                  const paidOrders = orders.filter(o => o.payment_status === 'paid');
+                  const filterLower = orderFilter.toLowerCase();
+                  const filtered = filterLower ? paidOrders.filter(o =>
+                    (o.buyer_name || '').toLowerCase().includes(filterLower) ||
+                    (o.buyer_email || '').toLowerCase().includes(filterLower) ||
+                    (o.buyer_company || '').toLowerCase().includes(filterLower) ||
+                    (rooms[o.room_id]?.name || o.room_id).toLowerCase().includes(filterLower)
+                  ) : paidOrders;
+                  const sorted = [...filtered].sort((a, b) => {
+                    let aVal = a[orderSort.field];
+                    let bVal = b[orderSort.field];
+                    if (orderSort.field === 'room_id') {
+                      aVal = rooms[a.room_id]?.name || a.room_id;
+                      bVal = rooms[b.room_id]?.name || b.room_id;
+                    }
+                    if (typeof aVal === 'string') aVal = aVal.toLowerCase();
+                    if (typeof bVal === 'string') bVal = bVal.toLowerCase();
+                    if (aVal < bVal) return orderSort.direction === 'asc' ? -1 : 1;
+                    if (aVal > bVal) return orderSort.direction === 'asc' ? 1 : -1;
+                    return 0;
+                  });
+                  const allSelected = sorted.length > 0 && sorted.every(o => selectedOrders.has(o.id));
+
+                  const SortHeader = ({ field, children }) => (
+                    <th
+                      onClick={() => setOrderSort(prev => ({
+                        field,
+                        direction: prev.field === field && prev.direction === 'asc' ? 'desc' : 'asc'
+                      }))}
+                      style={{ cursor: 'pointer', userSelect: 'none' }}
+                    >
+                      {children} {orderSort.field === field ? (orderSort.direction === 'asc' ? '▲' : '▼') : ''}
+                    </th>
+                  );
+
+                  return sorted.length > 0 ? (
+                    <div style={{ overflowX: 'auto' }}>
+                      <table className="guest-table">
+                        <thead>
+                          <tr>
+                            <th style={{ width: 30 }}>
+                              <input
+                                type="checkbox"
+                                checked={allSelected}
+                                onChange={(e) => {
+                                  if (e.target.checked) {
+                                    setSelectedOrders(new Set(sorted.map(o => o.id)));
+                                  } else {
+                                    setSelectedOrders(new Set());
+                                  }
+                                }}
+                              />
+                            </th>
+                            <SortHeader field="buyer_name">Name</SortHeader>
+                            <SortHeader field="buyer_email">Email</SortHeader>
+                            <SortHeader field="buyer_company">Company</SortHeader>
+                            <SortHeader field="room_id">Room</SortHeader>
+                            <SortHeader field="quantity">Qty</SortHeader>
+                            <SortHeader field="total_amount">Total</SortHeader>
+                            <th>Entire Room</th>
+                            <SortHeader field="created_at">Date</SortHeader>
+                            <th>Actions</th>
                           </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                ) : (
-                  <p style={{ color: 'var(--text-secondary)' }}>No paid orders yet.</p>
-                )}
+                        </thead>
+                        <tbody>
+                          {sorted.map(order => (
+                            <tr key={order.id}>
+                              <td>
+                                <input
+                                  type="checkbox"
+                                  checked={selectedOrders.has(order.id)}
+                                  onChange={(e) => {
+                                    setSelectedOrders(prev => {
+                                      const next = new Set(prev);
+                                      if (e.target.checked) next.add(order.id);
+                                      else next.delete(order.id);
+                                      return next;
+                                    });
+                                  }}
+                                />
+                              </td>
+                              <td>{order.buyer_name || '—'}</td>
+                              <td>{order.buyer_email || '—'}</td>
+                              <td>{order.buyer_company || '—'}</td>
+                              <td>{rooms[order.room_id]?.name || order.room_id}</td>
+                              <td>{order.quantity}</td>
+                              <td>${order.total_amount}</td>
+                              <td>{order.is_entire_room ? '✓ Yes' : '—'}</td>
+                              <td>{order.created_at?.split('T')[0] || ''}</td>
+                              <td style={{ display: 'flex', gap: 5 }}>
+                                {order.buyer_email && (
+                                  <button
+                                    onClick={() => openEmailModal(order.buyer_email)}
+                                    title="Email"
+                                    style={{
+                                      background: 'transparent',
+                                      border: '1px solid var(--neon-blue)',
+                                      color: 'var(--neon-blue)',
+                                      padding: '2px 6px',
+                                      borderRadius: 4,
+                                      cursor: 'pointer',
+                                      fontSize: '0.75rem'
+                                    }}
+                                  >
+                                    Email
+                                  </button>
+                                )}
+                                <button
+                                  onClick={() => deleteOrder(order.id, order.buyer_name)}
+                                  title="Delete order"
+                                  style={{
+                                    background: 'transparent',
+                                    border: '1px solid var(--neon-pink)',
+                                    color: 'var(--neon-pink)',
+                                    padding: '2px 6px',
+                                    borderRadius: 4,
+                                    cursor: 'pointer',
+                                    fontSize: '0.75rem'
+                                  }}
+                                >
+                                  Delete
+                                </button>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    <p style={{ color: 'var(--text-secondary)' }}>
+                      {paidOrders.length > 0 ? 'No orders match your filter.' : 'No paid orders yet.'}
+                    </p>
+                  );
+                })()}
               </div>
 
-              {/* Room Signup Breakdown */}
+              {/* Waitlist Signups */}
               <div className="admin-section" style={{ marginTop: 20 }}>
-                <h3>Signups by Room</h3>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))', gap: 15, marginTop: 15 }}>
-                  {Object.entries(rooms).map(([id, room]) => {
-                    const roomSignups = signups.filter(s => s.room === id);
-                    const entireRoomCount = roomSignups.filter(s => s.reserveEntireRoom).length;
-                    return (
-                      <div key={id} style={{
-                        background: '#111',
-                        padding: 15,
-                        borderRadius: 8,
-                        borderLeft: `3px solid ${room.tier === 'platinum' ? '#e5e4e2' : room.tier === 'gold' ? '#ffd700' : room.tier === 'silver' ? '#c0c0c0' : 'var(--neon-green)'}`
-                      }}>
-                        <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)', marginBottom: 5 }}>{room.tier.toUpperCase()}</div>
-                        <div style={{ fontWeight: 600, marginBottom: 10 }}>{room.name}</div>
-                        <div style={{ fontSize: '1.5rem', fontWeight: 700, color: 'var(--neon-green)' }}>{roomSignups.length}</div>
-                        <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                          {entireRoomCount > 0 && <span style={{ color: 'var(--neon-pink)' }}>{entireRoomCount} want entire room</span>}
-                          {entireRoomCount === 0 && 'signups'}
-                        </div>
-                      </div>
-                    );
-                  })}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15, flexWrap: 'wrap', gap: 10 }}>
+                  <h3>Waitlist Signups ({waitlistEntries.length})</h3>
+                  {selectedWaitlist.size > 0 && (
+                    <button
+                      onClick={() => {
+                        const emails = waitlistEntries.filter(w => selectedWaitlist.has(w.id) && w.email).map(w => w.email);
+                        if (emails.length > 0) openEmailModal(emails);
+                      }}
+                      style={{
+                        background: 'var(--neon-blue)',
+                        border: 'none',
+                        color: '#000',
+                        padding: '8px 16px',
+                        borderRadius: 4,
+                        cursor: 'pointer',
+                        fontSize: '0.85rem',
+                        fontWeight: 600
+                      }}
+                    >
+                      Email Selected ({selectedWaitlist.size})
+                    </button>
+                  )}
                 </div>
-              </div>
 
-              {/* Email Signups List */}
-              <div className="admin-section">
-                <h3>Email Signups ({signups.length})</h3>
-                
-                {signups.length > 0 ? (
+                {waitlistEntries.length > 0 ? (
                   <div style={{ overflowX: 'auto' }}>
                     <table className="guest-table">
                       <thead>
                         <tr>
+                          <th style={{ width: 30 }}>
+                            <input
+                              type="checkbox"
+                              checked={waitlistEntries.length > 0 && waitlistEntries.every(w => selectedWaitlist.has(w.id))}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setSelectedWaitlist(new Set(waitlistEntries.map(w => w.id)));
+                                } else {
+                                  setSelectedWaitlist(new Set());
+                                }
+                              }}
+                            />
+                          </th>
                           <th>Name</th>
                           <th>Email</th>
-                          <th>Company</th>
-                          <th>Interested In</th>
-                          <th>Entire Room</th>
-                          <th>Date</th>
+                          <th>Room</th>
+                          <th>Spots</th>
+                          <th>Joined</th>
+                          <th>Notified</th>
+                          <th>Actions</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {signups.map(signup => (
-                          <tr key={signup.id}>
-                            <td>{signup.name}</td>
-                            <td>{signup.email}</td>
-                            <td>{signup.company || '—'}</td>
-                            <td>{signup.roomName}</td>
-                            <td>{signup.reserveEntireRoom ? '✓ Yes' : '—'}</td>
-                            <td>{signup.date}</td>
+                        {waitlistEntries.map(entry => (
+                          <tr key={entry.id}>
+                            <td>
+                              <input
+                                type="checkbox"
+                                checked={selectedWaitlist.has(entry.id)}
+                                onChange={(e) => {
+                                  setSelectedWaitlist(prev => {
+                                    const next = new Set(prev);
+                                    if (e.target.checked) next.add(entry.id);
+                                    else next.delete(entry.id);
+                                    return next;
+                                  });
+                                }}
+                              />
+                            </td>
+                            <td>{entry.full_name}</td>
+                            <td>{entry.email}</td>
+                            <td>{entry.room_name}</td>
+                            <td>{entry.quantity}</td>
+                            <td>{entry.created_at?.split('T')[0] || ''}</td>
+                            <td>{entry.notified ? '✓ Yes' : '—'}</td>
+                            <td>
+                              <button
+                                onClick={() => openEmailModal(entry.email)}
+                                style={{
+                                  background: 'transparent',
+                                  border: '1px solid var(--neon-blue)',
+                                  color: 'var(--neon-blue)',
+                                  padding: '2px 6px',
+                                  borderRadius: 4,
+                                  cursor: 'pointer',
+                                  fontSize: '0.75rem'
+                                }}
+                              >
+                                Email
+                              </button>
+                            </td>
                           </tr>
                         ))}
                       </tbody>
                     </table>
                   </div>
                 ) : (
-                  <p style={{ color: 'var(--text-secondary)' }}>No signups yet.</p>
+                  <p style={{ color: 'var(--text-secondary)' }}>No waitlist signups yet.</p>
                 )}
               </div>
               
@@ -4132,8 +4420,18 @@ function GDCKaraokeApp() {
                                   />
                                 </div>
                               )}
+                              <div className="admin-input-row">
+                                <label>Capacity:</label>
+                                <input
+                                  type="number"
+                                  value={room.capacity}
+                                  onChange={(e) => updateRoom(id, 'capacity', e.target.value)}
+                                  onBlur={(e) => saveRoomToDatabase(id, 'capacity', parseInt(e.target.value) || 0)}
+                                  min="1"
+                                />
+                              </div>
                               <div style={{ marginTop: 10, fontSize: '0.8rem', color: 'var(--text-secondary)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <span>Capacity: {room.capacity} | Booked: {orderCounts[id]?.bookedCount || 0}</span>
+                                <span>Booked: {orderCounts[id]?.bookedCount || 0} / {room.capacity}</span>
                                 {room.tier !== 'main' && (orderCounts[id]?.bookedCount || 0) > 0 && (
                                   <button
                                     onClick={() => resetRoomOrders(id)}
@@ -4526,6 +4824,103 @@ function GDCKaraokeApp() {
         </div>
 
         {/* Success Modal - no longer used but keeping for future */}
+
+        {/* Email Compose Modal */}
+        {showEmailModal && (
+          <div className="waitlist-modal-overlay" onClick={closeEmailModal}>
+            <div className="waitlist-modal" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 600 }}>
+              <button className="close-btn" onClick={closeEmailModal}>×</button>
+
+              {emailSuccess ? (
+                <div className="success-message">
+                  <h3>Email Sent!</h3>
+                  <p>Successfully sent to {emailTo.length} recipient(s).</p>
+                  <button onClick={closeEmailModal} style={{
+                    background: 'var(--neon-green)',
+                    border: 'none',
+                    color: '#000',
+                    padding: '10px 20px',
+                    borderRadius: 8,
+                    cursor: 'pointer',
+                    fontWeight: 600,
+                    marginTop: 15
+                  }}>
+                    Done
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <h3>Compose Email</h3>
+                  <div style={{ marginBottom: 10, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
+                    To: {emailTo.length <= 3 ? emailTo.join(', ') : `${emailTo.slice(0, 3).join(', ')} +${emailTo.length - 3} more`}
+                  </div>
+                  <form onSubmit={(e) => { e.preventDefault(); sendEmail(); }}>
+                    <label>
+                      Subject
+                      <input
+                        type="text"
+                        value={emailSubject}
+                        onChange={(e) => setEmailSubject(e.target.value)}
+                        placeholder="Email subject"
+                        required
+                        style={{
+                          width: '100%',
+                          padding: '8px 12px',
+                          background: '#111',
+                          border: '1px solid #333',
+                          borderRadius: 4,
+                          color: 'var(--text-primary)',
+                          fontSize: '0.9rem',
+                          marginTop: 5
+                        }}
+                      />
+                    </label>
+
+                    <label style={{ marginTop: 15, display: 'block' }}>
+                      Message
+                      <textarea
+                        value={emailBody}
+                        onChange={(e) => setEmailBody(e.target.value)}
+                        placeholder="Type your message here..."
+                        required
+                        rows={8}
+                        style={{
+                          width: '100%',
+                          padding: '8px 12px',
+                          background: '#111',
+                          border: '1px solid #333',
+                          borderRadius: 4,
+                          color: 'var(--text-primary)',
+                          fontSize: '0.9rem',
+                          marginTop: 5,
+                          resize: 'vertical',
+                          fontFamily: 'inherit'
+                        }}
+                      />
+                    </label>
+
+                    {emailError && <p className="error-message">{emailError}</p>}
+
+                    <button type="submit" disabled={emailSending} style={{
+                      background: emailSending ? '#333' : 'var(--neon-green)',
+                      border: 'none',
+                      color: '#000',
+                      padding: '10px 20px',
+                      borderRadius: 8,
+                      cursor: emailSending ? 'not-allowed' : 'pointer',
+                      fontWeight: 600,
+                      marginTop: 15,
+                      width: '100%',
+                      fontSize: '1rem'
+                    }}>
+                      {emailSending ? 'Sending...' : `Send to ${emailTo.length} recipient(s)`}
+                    </button>
+                  </form>
+                </>
+              )}
+            </div>
+          </div>
+        )}
 
         {/* Waitlist Modal */}
         {showWaitlistModal && waitlistRoom && (
