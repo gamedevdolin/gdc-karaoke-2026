@@ -1,4 +1,5 @@
 import { neon } from '@neondatabase/serverless';
+import { Resend } from 'resend';
 
 export default async (req, context) => {
   // Only allow GET
@@ -15,6 +16,24 @@ export default async (req, context) => {
     const adminPassword = process.env.ADMIN_PASSWORD;
 
     if (!authHeader || authHeader !== `Bearer ${adminPassword}`) {
+      // Send failed login alert (fire and forget)
+      const resendKey = process.env.RESEND_API_KEY;
+      const notifyEmail = process.env.ADMIN_NOTIFY_EMAIL || process.env.EMAIL_FROM;
+      const fromEmail = process.env.EMAIL_FROM;
+
+      if (resendKey && notifyEmail && fromEmail) {
+        const resend = new Resend(resendKey);
+        const ip = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+        const timestamp = new Date().toISOString();
+
+        resend.emails.send({
+          from: fromEmail,
+          to: notifyEmail,
+          subject: 'Failed Admin Login Attempt - GDC Karaoke',
+          html: `<p>Someone attempted to access the admin panel with an incorrect password.</p><p><strong>Time:</strong> ${timestamp}<br><strong>IP:</strong> ${ip}</p>`,
+        }).catch(err => console.error('Failed to send login alert:', err));
+      }
+
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' }
