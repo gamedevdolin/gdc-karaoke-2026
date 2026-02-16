@@ -2692,9 +2692,57 @@ function GDCKaraokeApp() {
   const [waitlistSuccess, setWaitlistSuccess] = useState(false);
   const [waitlistError, setWaitlistError] = useState('');
 
+  const CACHE_KEY = 'gdc_room_availability';
+
+  // Apply room data from API response
+  const applyRoomData = (data) => {
+    const newOrderCounts = {};
+    setRooms(prev => {
+      const updated = { ...prev };
+      Object.keys(data.rooms).forEach(roomId => {
+        if (updated[roomId]) {
+          const dbRoom = data.rooms[roomId];
+          updated[roomId] = {
+            ...updated[roomId],
+            booked: dbRoom.booked ?? updated[roomId].booked,
+            name: dbRoom.name ?? updated[roomId].name,
+            price: dbRoom.price ?? updated[roomId].price,
+            roomPrice: dbRoom.roomPrice ?? updated[roomId].roomPrice
+          };
+          // Store order counts separately
+          newOrderCounts[roomId] = {
+            bookedCount: dbRoom.bookedCount || 0,
+            hasEntireRoomBooking: dbRoom.hasEntireRoomBooking || false
+          };
+        }
+      });
+      return updated;
+    });
+    setOrderCounts(newOrderCounts);
+  };
+
+  // Fetch fresh room availability data (clears cache)
+  const refreshRoomData = async () => {
+    try {
+      sessionStorage.removeItem(CACHE_KEY);
+      const response = await fetch('/api/room-availability');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.rooms) {
+          sessionStorage.setItem(CACHE_KEY, JSON.stringify({
+            data: data,
+            timestamp: Date.now()
+          }));
+          applyRoomData(data);
+        }
+      }
+    } catch (error) {
+      console.error('Failed to load room data:', error);
+    }
+  };
+
   // Load room data and availability from database on mount (with caching)
   useEffect(() => {
-    const CACHE_KEY = 'gdc_room_availability';
     const CACHE_DURATION = 60000; // 60 seconds
 
     const loadRoomData = async () => {
@@ -2711,47 +2759,10 @@ function GDCKaraokeApp() {
         }
 
         // Fetch fresh data
-        const response = await fetch('/api/room-availability');
-        if (response.ok) {
-          const data = await response.json();
-          if (data.rooms) {
-            // Cache the response
-            sessionStorage.setItem(CACHE_KEY, JSON.stringify({
-              data: data,
-              timestamp: Date.now()
-            }));
-            applyRoomData(data);
-          }
-        }
+        await refreshRoomData();
       } catch (error) {
         console.error('Failed to load room data:', error);
       }
-    };
-
-    const applyRoomData = (data) => {
-      const newOrderCounts = {};
-      setRooms(prev => {
-        const updated = { ...prev };
-        Object.keys(data.rooms).forEach(roomId => {
-          if (updated[roomId]) {
-            const dbRoom = data.rooms[roomId];
-            updated[roomId] = {
-              ...updated[roomId],
-              booked: dbRoom.booked ?? updated[roomId].booked,
-              name: dbRoom.name ?? updated[roomId].name,
-              price: dbRoom.price ?? updated[roomId].price,
-              roomPrice: dbRoom.roomPrice ?? updated[roomId].roomPrice
-            };
-            // Store order counts separately
-            newOrderCounts[roomId] = {
-              bookedCount: dbRoom.bookedCount || 0,
-              hasEntireRoomBooking: dbRoom.hasEntireRoomBooking || false
-            };
-          }
-        });
-        return updated;
-      });
-      setOrderCounts(newOrderCounts);
     };
 
     loadRoomData();
@@ -2963,6 +2974,17 @@ function GDCKaraokeApp() {
     }
   };
 
+  // Refresh all admin data (rooms, orders, signups)
+  const [refreshing, setRefreshing] = useState(false);
+  const refreshAdminData = async () => {
+    setRefreshing(true);
+    try {
+      await Promise.all([refreshRoomData(), fetchOrders(), fetchSignups()]);
+    } finally {
+      setRefreshing(false);
+    }
+  };
+
   // Reset all orders (admin only - for testing)
   const resetOrders = async () => {
     if (!confirm('Are you sure you want to delete ALL orders and reset room bookings? This cannot be undone.')) {
@@ -2979,16 +3001,45 @@ function GDCKaraokeApp() {
 
       if (response.ok) {
         alert(data.message);
-        // Refresh orders and room data
-        fetchOrders();
-        // Reload room availability
-        window.location.reload();
+        await refreshAdminData();
       } else {
         alert('Failed to reset: ' + data.error);
       }
     } catch (error) {
       console.error('Failed to reset orders:', error);
       alert('Failed to reset orders');
+    }
+  };
+
+  // Reset orders for a single room (admin only)
+  const resetRoomOrders = async (roomId) => {
+    const roomName = rooms[roomId]?.name || roomId;
+    const count = orderCounts[roomId]?.bookedCount || 0;
+    if (!confirm(`Reset all orders for "${roomName}"? This will delete ${count} ticket(s) and cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/reset-room-orders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${adminPassword}`
+        },
+        body: JSON.stringify({ roomId })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert(data.message);
+        await refreshAdminData();
+      } else {
+        alert('Failed to reset room: ' + data.error);
+      }
+    } catch (error) {
+      console.error('Failed to reset room orders:', error);
+      alert('Failed to reset room orders');
     }
   };
 
@@ -3825,6 +3876,14 @@ function GDCKaraokeApp() {
               <div className="admin-header">
                 <h2>Admin Panel</h2>
                 <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                  <button
+                    className="export-btn"
+                    onClick={refreshAdminData}
+                    disabled={refreshing}
+                    style={{ opacity: refreshing ? 0.6 : 1 }}
+                  >
+                    {refreshing ? 'Refreshing...' : 'Refresh Data'}
+                  </button>
                   <button className="export-btn" onClick={exportAttendees}>
                     Export Attendees (CSV)
                   </button>
@@ -4073,8 +4132,24 @@ function GDCKaraokeApp() {
                                   />
                                 </div>
                               )}
-                              <div style={{ marginTop: 10, fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                                Capacity: {room.capacity}
+                              <div style={{ marginTop: 10, fontSize: '0.8rem', color: 'var(--text-secondary)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <span>Capacity: {room.capacity} | Booked: {orderCounts[id]?.bookedCount || 0}</span>
+                                {room.tier !== 'main' && (orderCounts[id]?.bookedCount || 0) > 0 && (
+                                  <button
+                                    onClick={() => resetRoomOrders(id)}
+                                    style={{
+                                      background: 'transparent',
+                                      border: '1px solid var(--neon-pink)',
+                                      color: 'var(--neon-pink)',
+                                      padding: '2px 8px',
+                                      borderRadius: 4,
+                                      cursor: 'pointer',
+                                      fontSize: '0.75rem'
+                                    }}
+                                  >
+                                    Reset
+                                  </button>
+                                )}
                               </div>
                             </div>
                           );
