@@ -22,6 +22,9 @@ export default async (req, context) => {
 
     const body = await req.json();
     const { roomId, booked, name, price, roomPrice, capacity } = body;
+    // bookedOverride can be explicitly null (clear override), so check if the key exists
+    const hasBookedOverride = 'bookedOverride' in body;
+    const bookedOverride = body.bookedOverride;
 
     if (!roomId) {
       return new Response(JSON.stringify({ error: 'roomId is required' }), {
@@ -32,13 +35,14 @@ export default async (req, context) => {
 
     const sql = neon(process.env.NETLIFY_DATABASE_URL);
 
-    // Ensure capacity column exists
+    // Ensure new columns exist
     await sql`ALTER TABLE rooms ADD COLUMN IF NOT EXISTS capacity INTEGER`;
+    await sql`ALTER TABLE rooms ADD COLUMN IF NOT EXISTS booked_override INTEGER`;
 
     // Upsert room data (insert or update)
     await sql`
-      INSERT INTO rooms (room_id, booked, name, price, room_price, capacity)
-      VALUES (${roomId}, ${booked ?? false}, ${name ?? null}, ${price ?? null}, ${roomPrice ?? null}, ${capacity ?? null})
+      INSERT INTO rooms (room_id, booked, name, price, room_price, capacity, booked_override)
+      VALUES (${roomId}, ${booked ?? false}, ${name ?? null}, ${price ?? null}, ${roomPrice ?? null}, ${capacity ?? null}, ${bookedOverride ?? null})
       ON CONFLICT (room_id)
       DO UPDATE SET
         booked = COALESCE(${booked}, rooms.booked),
@@ -46,6 +50,7 @@ export default async (req, context) => {
         price = COALESCE(${price}, rooms.price),
         room_price = COALESCE(${roomPrice}, rooms.room_price),
         capacity = COALESCE(${capacity}, rooms.capacity),
+        booked_override = CASE WHEN ${hasBookedOverride}::BOOLEAN THEN ${bookedOverride}::INTEGER ELSE rooms.booked_override END,
         updated_at = NOW()
     `;
 

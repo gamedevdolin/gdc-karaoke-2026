@@ -22,7 +22,7 @@ export default async (req, context) => {
 
     const sql = neon(process.env.NETLIFY_DATABASE_URL);
 
-    // Get all orders
+    // Get all orders (including archived)
     const orders = await sql`
       SELECT
         id,
@@ -41,6 +41,9 @@ export default async (req, context) => {
       ORDER BY created_at DESC
     `;
 
+    // Get archived orders separately for admin display
+    const archivedOrders = orders.filter(o => o.payment_status === 'archived');
+
     // Get summary stats
     const stats = await sql`
       SELECT
@@ -54,6 +57,7 @@ export default async (req, context) => {
     return new Response(JSON.stringify({
       success: true,
       orders: orders,
+      archivedOrders: archivedOrders,
       stats: stats[0]
     }), {
       status: 200,

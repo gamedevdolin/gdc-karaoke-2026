@@ -32,22 +32,23 @@ export default async (req, context) => {
 
     const sql = neon(process.env.NETLIFY_DATABASE_URL);
 
-    // Delete all orders for this specific room
+    // Archive all orders for this specific room (soft-delete, preserves buyer info)
     const result = await sql`
-      DELETE FROM orders
-      WHERE room_id = ${roomId}
+      UPDATE orders
+      SET payment_status = 'archived'
+      WHERE room_id = ${roomId} AND payment_status = 'paid'
       RETURNING id
     `;
 
-    // Reset booked status for this room
+    // Reset booked status and clear override for this room
     await sql`
-      UPDATE rooms SET booked = false, updated_at = NOW()
+      UPDATE rooms SET booked = false, booked_override = NULL, updated_at = NOW()
       WHERE room_id = ${roomId}
     `;
 
     return new Response(JSON.stringify({
       success: true,
-      message: `Deleted ${result.length} order(s) and reset booking for room ${roomId}`
+      message: `Archived ${result.length} order(s) and reset booking for room ${roomId}`
     }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' }

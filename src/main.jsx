@@ -2681,8 +2681,10 @@ function GDCKaraokeApp() {
 
   // Orders state for admin panel
   const [orders, setOrders] = useState([]);
+  const [archivedOrders, setArchivedOrders] = useState([]);
   const [orderStats, setOrderStats] = useState({ paid_count: 0, pending_count: 0, total_revenue: 0, total_tickets: 0 });
   const [ordersLoading, setOrdersLoading] = useState(false);
+  const [stripeBalance, setStripeBalance] = useState(null);
 
   // Waitlist state
   const [showWaitlistModal, setShowWaitlistModal] = useState(false);
@@ -2728,10 +2730,11 @@ function GDCKaraokeApp() {
             roomPrice: dbRoom.roomPrice ?? updated[roomId].roomPrice,
             capacity: dbRoom.capacity ?? updated[roomId].capacity
           };
-          // Store order counts separately
+          // Store order counts separately (includes override)
           newOrderCounts[roomId] = {
             bookedCount: dbRoom.bookedCount || 0,
-            hasEntireRoomBooking: dbRoom.hasEntireRoomBooking || false
+            hasEntireRoomBooking: dbRoom.hasEntireRoomBooking || false,
+            bookedOverride: dbRoom.bookedOverride ?? null
           };
         }
       });
@@ -2798,6 +2801,7 @@ function GDCKaraokeApp() {
       if (field === 'price') payload.price = value;
       if (field === 'roomPrice') payload.roomPrice = value;
       if (field === 'capacity') payload.capacity = value;
+      if (field === 'bookedOverride') payload.bookedOverride = value;
 
       await fetch('/api/update-room', {
         method: 'POST',
@@ -2985,6 +2989,7 @@ function GDCKaraokeApp() {
 
       if (response.ok) {
         setOrders(data.orders || []);
+        setArchivedOrders(data.archivedOrders || []);
         setOrderStats(data.stats || { paid_count: 0, pending_count: 0, total_revenue: 0, total_tickets: 0 });
       }
     } catch (error) {
@@ -3003,6 +3008,7 @@ function GDCKaraokeApp() {
       const data = await response.json();
       if (response.ok) {
         setOrders(data.orders || []);
+        setArchivedOrders(data.archivedOrders || []);
         // Update counts but preserve revenue
         setOrderStats(prev => ({
           ...prev,
@@ -3032,12 +3038,27 @@ function GDCKaraokeApp() {
     }
   };
 
-  // Refresh all admin data (rooms, orders, signups, waitlist)
+  // Fetch Stripe balance (admin only)
+  const fetchStripeBalance = async () => {
+    try {
+      const response = await fetch('/api/stripe-balance', {
+        headers: { 'Authorization': `Bearer ${adminPassword}` },
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setStripeBalance(data.balance);
+      }
+    } catch (error) {
+      console.error('Failed to fetch Stripe balance:', error);
+    }
+  };
+
+  // Refresh all admin data (rooms, orders, signups, waitlist, stripe balance)
   const [refreshing, setRefreshing] = useState(false);
   const refreshAdminData = async () => {
     setRefreshing(true);
     try {
-      await Promise.all([refreshRoomData(), fetchOrders(), fetchSignups(), fetchWaitlist()]);
+      await Promise.all([refreshRoomData(), fetchOrders(), fetchSignups(), fetchWaitlist(), fetchStripeBalance()]);
     } finally {
       setRefreshing(false);
     }
@@ -3052,7 +3073,7 @@ function GDCKaraokeApp() {
   const resetRoomOrders = async (roomId) => {
     const roomName = rooms[roomId]?.name || roomId;
     const count = orderCounts[roomId]?.bookedCount || 0;
-    if (!confirm(`Reset all orders for "${roomName}"? This will delete ${count} ticket(s) and cannot be undone.`)) {
+    if (!confirm(`Reset all orders for "${roomName}"? This will archive ${count} ticket(s). Buyer info will be preserved in the Archived Orders section.`)) {
       return;
     }
 
@@ -3242,9 +3263,10 @@ function GDCKaraokeApp() {
         }));
         setSignups(formattedSignups);
         setAdminUnlocked(true);
-        // Also fetch orders and waitlist
+        // Also fetch orders, waitlist, and stripe balance
         fetchOrders();
         fetchWaitlist();
+        fetchStripeBalance();
       } else {
         alert('Incorrect password. Please try again.');
       }
@@ -3263,8 +3285,12 @@ function GDCKaraokeApp() {
     quantity: 1,
   });
   
-  // Calculate bookings per room (uses real order data from database)
+  // Calculate bookings per room (uses override if set, otherwise real order data)
   const getBookedCount = (roomId) => {
+    const override = orderCounts[roomId]?.bookedOverride;
+    if (override !== null && override !== undefined) {
+      return override;
+    }
     return orderCounts[roomId]?.bookedCount || 0;
   };
 
@@ -4023,8 +4049,17 @@ function GDCKaraokeApp() {
               {/* Stats */}
               <div className="stats-grid">
                 <div className="stat-card">
-                  <div className="stat-value" style={{ color: 'var(--neon-green)' }}>${orderStats.total_revenue}</div>
-                  <div className="stat-label">Revenue</div>
+                  <div className="stat-value" style={{ color: 'var(--neon-green)' }}>
+                    ${stripeBalance ? stripeBalance.totalCharged.toFixed(2) : orderStats.total_revenue}
+                  </div>
+                  <div className="stat-label">
+                    {stripeBalance ? 'Stripe Revenue' : 'Revenue'}
+                  </div>
+                  {stripeBalance && (
+                    <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginTop: 4 }}>
+                      Available: ${stripeBalance.available.toFixed(2)} | Pending: ${stripeBalance.pending.toFixed(2)}
+                    </div>
+                  )}
                 </div>
                 <div className="stat-card">
                   <div className="stat-value">{orderStats.total_tickets}</div>
@@ -4242,6 +4277,66 @@ function GDCKaraokeApp() {
                 })()}
               </div>
 
+              {/* Archived Orders */}
+              {archivedOrders.length > 0 && (
+                <div className="admin-section" style={{ marginTop: 20 }}>
+                  <h3 style={{ marginBottom: 15 }}>Archived Orders ({archivedOrders.length})</h3>
+                  <p style={{ color: 'var(--text-secondary)', marginBottom: 10, fontSize: '0.85rem' }}>
+                    Orders archived from room resets. Buyer info preserved for reference.
+                  </p>
+                  <div style={{ overflowX: 'auto' }}>
+                    <table className="guest-table">
+                      <thead>
+                        <tr>
+                          <th>Name</th>
+                          <th>Email</th>
+                          <th>Company</th>
+                          <th>Room</th>
+                          <th>Qty</th>
+                          <th>Total</th>
+                          <th>Entire Room</th>
+                          <th>Original Date</th>
+                          <th>Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {archivedOrders.map(order => (
+                          <tr key={order.id} style={{ opacity: 0.7 }}>
+                            <td>{order.buyer_name || '—'}</td>
+                            <td>{order.buyer_email || '—'}</td>
+                            <td>{order.buyer_company || '—'}</td>
+                            <td>{rooms[order.room_id]?.name || order.room_id}</td>
+                            <td>{order.quantity}</td>
+                            <td>${order.total_amount}</td>
+                            <td>{order.is_entire_room ? '✓ Yes' : '—'}</td>
+                            <td>{order.created_at?.split('T')[0] || ''}</td>
+                            <td>
+                              {order.buyer_email && (
+                                <button
+                                  onClick={() => openEmailModal(order.buyer_email)}
+                                  title="Email"
+                                  style={{
+                                    background: 'transparent',
+                                    border: '1px solid var(--neon-blue)',
+                                    color: 'var(--neon-blue)',
+                                    padding: '2px 6px',
+                                    borderRadius: 4,
+                                    cursor: 'pointer',
+                                    fontSize: '0.75rem'
+                                  }}
+                                >
+                                  Email
+                                </button>
+                              )}
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              )}
+
               {/* Waitlist Signups */}
               <div className="admin-section" style={{ marginTop: 20 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 15, flexWrap: 'wrap', gap: 10 }}>
@@ -4430,8 +4525,64 @@ function GDCKaraokeApp() {
                                   min="1"
                                 />
                               </div>
+                              {room.tier !== 'main' && (
+                                <div className="admin-input-row">
+                                  <label>Override:</label>
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: 5, flex: 1 }}>
+                                    <input
+                                      type="number"
+                                      value={orderCounts[id]?.bookedOverride ?? ''}
+                                      placeholder={`${orderCounts[id]?.bookedCount || 0} (actual)`}
+                                      onChange={(e) => {
+                                        const val = e.target.value === '' ? null : parseInt(e.target.value);
+                                        setOrderCounts(prev => ({
+                                          ...prev,
+                                          [id]: { ...prev[id], bookedOverride: val }
+                                        }));
+                                      }}
+                                      onBlur={(e) => {
+                                        const val = e.target.value === '' ? null : parseInt(e.target.value);
+                                        saveRoomToDatabase(id, 'bookedOverride', val);
+                                      }}
+                                      min="0"
+                                      style={{ width: 70 }}
+                                    />
+                                    {orderCounts[id]?.bookedOverride != null && (
+                                      <button
+                                        onClick={() => {
+                                          setOrderCounts(prev => ({
+                                            ...prev,
+                                            [id]: { ...prev[id], bookedOverride: null }
+                                          }));
+                                          saveRoomToDatabase(id, 'bookedOverride', null);
+                                        }}
+                                        title="Clear override"
+                                        style={{
+                                          background: 'transparent',
+                                          border: '1px solid #555',
+                                          color: 'var(--text-secondary)',
+                                          padding: '1px 5px',
+                                          borderRadius: 3,
+                                          cursor: 'pointer',
+                                          fontSize: '0.7rem'
+                                        }}
+                                      >
+                                        Clear
+                                      </button>
+                                    )}
+                                  </div>
+                                </div>
+                              )}
                               <div style={{ marginTop: 10, fontSize: '0.8rem', color: 'var(--text-secondary)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <span>Booked: {orderCounts[id]?.bookedCount || 0} / {room.capacity}</span>
+                                <span>
+                                  Booked: {getBookedCount(id)} / {room.capacity}
+                                  {orderCounts[id]?.bookedOverride != null && (
+                                    <span style={{ color: 'var(--neon-blue)', marginLeft: 5 }}>(override)</span>
+                                  )}
+                                  {orderCounts[id]?.bookedOverride == null && (
+                                    <span style={{ marginLeft: 5 }}>({orderCounts[id]?.bookedCount || 0} orders)</span>
+                                  )}
+                                </span>
                                 {room.tier !== 'main' && (orderCounts[id]?.bookedCount || 0) > 0 && (
                                   <button
                                     onClick={() => resetRoomOrders(id)}
