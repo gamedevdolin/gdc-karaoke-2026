@@ -769,6 +769,27 @@ const styles = `
     color: black;
     border-color: var(--neon-green);
   }
+
+  .tab-btn.active-pink {
+    background: linear-gradient(135deg, var(--neon-pink) 0%, #ff4477 100%);
+    color: white;
+    border-color: var(--neon-pink);
+  }
+
+  .tab-btn.active-pink:hover {
+    background: linear-gradient(135deg, var(--neon-pink) 0%, #ff4477 100%);
+  }
+
+  .tab-btn.inactive-pink {
+    color: var(--neon-pink);
+    border-color: var(--neon-pink);
+    opacity: 0.6;
+  }
+
+  .tab-btn.inactive-pink:hover {
+    opacity: 1;
+    background: rgba(255, 107, 157, 0.1);
+  }
   
   /* Early Bird Banner */
   .early-bird-banner {
@@ -2862,8 +2883,8 @@ function GDCKaraokeApp() {
       return;
     }
 
-    // Handle direct links to privacy/terms pages
-    if (viewParam === 'privacy' || viewParam === 'terms') {
+    // Handle direct links to sub-pages
+    if (viewParam === 'privacy' || viewParam === 'terms' || viewParam === 'faq') {
       setView(viewParam);
       window.scrollTo(0, 0);
       return;
@@ -3591,8 +3612,8 @@ function GDCKaraokeApp() {
               >
                 Main Room
               </button>
-              <button 
-                className={`tab-btn ${activeTab === 'private' ? 'active' : ''}`}
+              <button
+                className={`tab-btn ${activeTab === 'private' ? 'active-pink' : 'inactive-pink'}`}
                 onClick={() => setActiveTab('private')}
               >
                 Private Rooms
@@ -4892,6 +4913,65 @@ function GDCKaraokeApp() {
             </div>
           )}
 
+          {/* FAQ */}
+          {view === 'faq' && (
+            <div className="legal-page">
+              <button className="back-btn" onClick={() => setView('home')}>← Back</button>
+              <h1>Frequently Asked Questions</h1>
+
+              <h2>When and where is the event?</h2>
+              <p>{CONFIG.eventDate}, from {CONFIG.eventTime} at <strong>{CONFIG.venueName}</strong>, {CONFIG.venueAddress} — just 0.5 miles from Moscone Center.</p>
+
+              <h2>Do I need a GDC badge to attend?</h2>
+              <p>No! Game Dev Karaoke is an independently organized event and is not affiliated with GDC. Anyone in the game development community is welcome.</p>
+
+              <h2>What's included with my ticket?</h2>
+              <p>General Admission ($35) includes entry and 2 drink tickets. Private room tickets ($45–$75) include entry and 3 drink tickets per guest. "A Song on the Main Stage" ($60) includes entry, 3 drink tickets, and a guaranteed song on the big stage.</p>
+
+              <h2>What's the difference between General Admission and a private room?</h2>
+              <p>General Admission gets you into the main stage area upstairs. Private rooms are downstairs and give you and your group your own karaoke room for the night.</p>
+
+              <h2>Can I book an entire private room for my group?</h2>
+              <p>Yes! Each private room has a "Reserve Entire Room" option. Small rooms (8 guests) are $300, medium rooms (15 guests) are $650, large rooms (25 guests) are $1,200, and the largest room (30 guests) is $2,000.</p>
+
+              <h2>What if the room I want is sold out?</h2>
+              <p>You can join the waitlist for that room. If spots open up, we'll notify you by email.</p>
+
+              <h2>Can I get a refund?</h2>
+              <p>Full refunds are available any time up until 11:59 PM PT on March 10th, 2026 (the day before the event). No refunds on the day of the event or after. See our <a href="#" onClick={(e) => { e.preventDefault(); setView('refunds'); window.scrollTo(0, 0); }}>Refund Policy</a> for full details, or email the hosts to request a refund.</p>
+
+              <h2>Is there a dress code?</h2>
+              <p>No dress code — come as you are. Some people dress up, some don't. It's a karaoke party!</p>
+
+              <h2>Is there an age requirement?</h2>
+              <p>Yes, you must be 21+ to attend as the event is held at a bar venue. Valid government-issued ID is required for entry.</p>
+
+              <h2>Do I have to sing?</h2>
+              <p>Absolutely not. Plenty of people come to hang out, cheer on friends, and enjoy the vibes. But if you want to sing, we'd love to hear you.</p>
+
+              <h2>Will there be food?</h2>
+              <p>Pandora Karaoke is primarily a bar/karaoke venue. Drink tickets are included with your ticket, but we recommend eating beforehand. There are plenty of restaurants nearby.</p>
+
+              <h2>Can I buy drinks beyond my included drink tickets?</h2>
+              <p>Yes, the venue has a full bar. Your drink tickets cover your first few, and additional drinks are available for purchase.</p>
+
+              <h2>How do I get my guaranteed song on the main stage?</h2>
+              <p>If you purchased "A Song on the Main Stage," you'll receive more information in late February about how to pick your song and get on the setlist.</p>
+
+              <h2>What safety measures are in place?</h2>
+              <p>Sober hosts, drink covers provided, hearing protection available, and narcan on-site. We have a zero-tolerance policy for harassment, abuse, or unsettling behavior. See our <a href="#" onClick={(e) => { e.preventDefault(); setView('conduct'); window.scrollTo(0, 0); }}>Code of Conduct</a> for details.</p>
+
+              <h2>Can I transfer my ticket to someone else?</h2>
+              <p>Contact the hosts and we'll help you transfer your ticket.</p>
+
+              <h2>What happens if the event is cancelled?</h2>
+              <p>All ticket holders will receive a full refund.</p>
+
+              <h2>How do I contact the organizers?</h2>
+              <p>Visit our <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); window.scrollTo(0, 0); }}>Hosts page</a> to find contact information for Adam Dolin and Cristina Amaya.</p>
+            </div>
+          )}
+
           {/* Refund Policy */}
           {view === 'refunds' && (
             <div className="legal-page">
@@ -4948,6 +5028,8 @@ function GDCKaraokeApp() {
                   Hosted by <a href="#" onClick={(e) => { e.preventDefault(); setView('hosts'); setTimeout(() => document.getElementById('hosts-title')?.scrollIntoView({ behavior: 'smooth' }), 100); }}>Adam Dolin & Cristina Amaya</a>
                 </p>
                 <p className="legal-links">
+                  <a href="#" onClick={(e) => { e.preventDefault(); setView('faq'); window.scrollTo(0, 0); }}>FAQ</a>
+                  {' • '}
                   <a href="#" onClick={(e) => { e.preventDefault(); setView('privacy'); window.scrollTo(0, 0); }}>Privacy Policy</a>
                   {' • '}
                   <a href="#" onClick={(e) => { e.preventDefault(); setView('terms'); window.scrollTo(0, 0); }}>Terms of Service</a>

@@ -11,7 +11,13 @@
   "workspace": {
     "packageJson": {
       "dependencies": [
-        "npm:@neondatabase/serverless@0.9"
+        "npm:@neondatabase/serverless@~0.9.5",
+        "npm:@vitejs/plugin-react@^5.1.4",
+        "npm:react-dom@^19.2.4",
+        "npm:react@^19.2.4",
+        "npm:resend@^6.9.2",
+        "npm:stripe@14",
+        "npm:vite@^7.3.1"
       ]
     }
   }
