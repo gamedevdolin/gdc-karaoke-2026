@@ -401,6 +401,11 @@ const styles = `
     50% { transform: rotate(5deg); }
   }
 
+  @keyframes gentleRotateFlipped {
+    0%, 100% { transform: scaleX(-1) rotate(-5deg); }
+    50% { transform: scaleX(-1) rotate(5deg); }
+  }
+
   /* Mascot Row */
   .mascot-row {
     display: flex;
@@ -3527,7 +3532,7 @@ function GDCKaraokeApp() {
           {/* Date Box with Mascots */}
           {view === 'home' && (
             <div className="date-row-standalone">
-              <img src="/images/jigglypuff.png" alt="Jigglypuff" className="mascot-left mascot-rotate" />
+              <img src="/images/caitsith.png" alt="Cait Sith" className="mascot-left" style={{ animation: 'gentleRotateFlipped 2s ease-in-out infinite' }} />
               <div className="date-text time-only">
                 <div className="date-time" style={{ fontSize: 'clamp(1.2rem, 4vw, 1.8rem)', fontWeight: 700 }}>9:00 PM - 12:00 AM</div>
                 <a
