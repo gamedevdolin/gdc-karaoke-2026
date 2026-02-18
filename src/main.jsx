@@ -3629,10 +3629,10 @@ function GDCKaraokeApp() {
                 <div
                   className={`room-card featured ${checkoutLoading ? 'loading' : ''}`}
                   onClick={() => {
-                    if (checkoutLoading || getAvailableSpots('mainStage') === 0) return;
+                    if (checkoutLoading) return;
                     handleCheckout(false, 'mainStage');
                   }}
-                  style={{ cursor: checkoutLoading || getAvailableSpots('mainStage') === 0 ? 'not-allowed' : 'pointer', opacity: getAvailableSpots('mainStage') === 0 ? 0.6 : 1 }}
+                  style={{ cursor: checkoutLoading ? 'not-allowed' : 'pointer' }}
                 >
 
                   <h3 className="room-name">{rooms.mainStage.name}</h3>
@@ -3643,11 +3643,6 @@ function GDCKaraokeApp() {
                     ))}
                   </div>
                   <div className="room-meta">
-                    <span className="room-capacity">
-                      <span className={getAvailableSpots('mainStage') > 0 ? 'available' : 'sold-out'}>
-                        {getAvailableSpots('mainStage')} spots left
-                      </span> / {rooms.mainStage.capacity}
-                    </span>
                     <span className="room-price">
                       ${rooms.mainStage.price} <span>/person</span>
                     </span>
@@ -4546,7 +4541,7 @@ function GDCKaraokeApp() {
                                   min="1"
                                 />
                               </div>
-                              {room.tier !== 'main' && (
+                              {(room.tier !== 'main' || id === 'mainStageSong') && (
                                 <div className="admin-input-row">
                                   <label>Override:</label>
                                   <div style={{ display: 'flex', alignItems: 'center', gap: 5, flex: 1 }}>
@@ -4604,7 +4599,7 @@ function GDCKaraokeApp() {
                                     <span style={{ marginLeft: 5 }}>({orderCounts[id]?.bookedCount || 0} orders)</span>
                                   )}
                                 </span>
-                                {room.tier !== 'main' && (orderCounts[id]?.bookedCount || 0) > 0 && (
+                                {(room.tier !== 'main' || id === 'mainStageSong') && (orderCounts[id]?.bookedCount || 0) > 0 && (
                                   <button
                                     onClick={() => resetRoomOrders(id)}
                                     style={{

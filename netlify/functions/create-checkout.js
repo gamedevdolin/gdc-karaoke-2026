@@ -103,6 +103,8 @@ export default async (req, context) => {
         isEntireRoom: isEntireRoom ? 'true' : 'false',
         roomCapacity: roomCapacity.toString()
       },
+      // Allow Stripe promotion codes
+      allow_promotion_codes: true,
       // Collect customer info
       customer_creation: 'always',
       billing_address_collection: 'auto',
