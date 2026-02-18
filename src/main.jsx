@@ -3627,13 +3627,25 @@ function GDCKaraokeApp() {
               <div className="room-grid">
                 {/* Main Stage */}
                 <div
-                  className={`room-card featured ${checkoutLoading ? 'loading' : ''}`}
+                  className={`room-card featured ${getAvailableSpots('mainStage') === 0 ? 'booked' : ''} ${checkoutLoading ? 'loading' : ''}`}
                   onClick={() => {
                     if (checkoutLoading) return;
+                    if (getAvailableSpots('mainStage') === 0) {
+                      openWaitlistModal('mainStage');
+                      return;
+                    }
                     handleCheckout(false, 'mainStage');
                   }}
                   style={{ cursor: checkoutLoading ? 'not-allowed' : 'pointer' }}
                 >
+                  {getAvailableSpots('mainStage') === 0 && (
+                    <div className="booked-overlay">
+                      <span className="booked-label">
+                        <span className="default-text">Sold Out</span>
+                        <span className="hover-text">Join Waitlist</span>
+                      </span>
+                    </div>
+                  )}
 
                   <h3 className="room-name">{rooms.mainStage.name}</h3>
                   <p className="room-description">{rooms.mainStage.description}</p>
