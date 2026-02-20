@@ -31,26 +31,31 @@ export default async (req, context) => {
     const resend = new Resend(process.env.RESEND_API_KEY);
     const fromAddress = process.env.EMAIL_FROM || 'noreply@example.com';
 
-    // Normalize to array and send individually
+    // Normalize to array and send all in parallel
     const recipients = Array.isArray(to) ? to : [to];
+
+    const settled = await Promise.allSettled(
+      recipients.map(recipient =>
+        resend.emails.send({
+          from: fromAddress,
+          to: [recipient],
+          subject: subject,
+          html: html,
+        })
+      )
+    );
+
     const results = [];
     const errors = [];
-
-    for (const recipient of recipients) {
-      const { data, error } = await resend.emails.send({
-        from: fromAddress,
-        to: [recipient],
-        subject: subject,
-        html: html,
-      });
-
-      if (error) {
-        console.error(`Resend error for ${recipient}:`, error);
-        errors.push({ recipient, error: error.message });
+    settled.forEach((result, i) => {
+      if (result.status === 'fulfilled' && !result.value.error) {
+        results.push({ recipient: recipients[i], emailId: result.value.data?.id });
       } else {
-        results.push({ recipient, emailId: data?.id });
+        const errMsg = result.status === 'rejected' ? result.reason?.message : result.value.error?.message;
+        console.error(`Resend error for ${recipients[i]}:`, errMsg);
+        errors.push({ recipient: recipients[i], error: errMsg });
       }
-    }
+    });
 
     if (results.length === 0) {
       return new Response(JSON.stringify({ error: 'Failed to send all emails', details: errors }), {
