@@ -5,6 +5,9 @@ import { createRoot } from 'react-dom/client';
 // GAME DEV KARAOKE 2026 - TICKETING SITE
 // ============================================
 
+// Event has been cancelled - purchases permanently disabled
+const EVENT_CANCELLED = true;
+
 // Configuration - EDIT THESE VALUES BEFORE LAUNCH
 const CONFIG = {
   eventDate: "Wednesday, March 11th, 2026",
@@ -97,6 +100,64 @@ const styles = `
       var(--dark-bg);
   }
   
+  /* Cancellation Page */
+  .cancellation-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 80vh;
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  .cancellation-page .cancel-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(2.5rem, 10vw, 5rem);
+    font-weight: 900;
+    color: var(--neon-green);
+    text-shadow: 0 0 30px rgba(0, 255, 148, 0.3);
+    margin-bottom: 10px;
+    line-height: 0.95;
+  }
+
+  .cancellation-page .cancel-date {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin-bottom: 40px;
+    font-style: italic;
+  }
+
+  .cancellation-page .cancel-message {
+    max-width: 600px;
+    font-size: 1.05rem;
+    line-height: 1.8;
+    color: var(--text-primary);
+    text-align: left;
+  }
+
+  .cancellation-page .cancel-message p {
+    margin-bottom: 20px;
+  }
+
+  .cancellation-page .view-site-btn {
+    margin-top: 40px;
+    padding: 12px 30px;
+    background: transparent;
+    border: 1px solid var(--text-secondary);
+    color: var(--text-secondary);
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 0.5px;
+  }
+
+  .cancellation-page .view-site-btn:hover {
+    border-color: var(--neon-green);
+    color: var(--neon-green);
+  }
+
   /* Starfield effect */
   .starfield {
     position: fixed;
@@ -2669,6 +2730,7 @@ const MOCK_BOOKINGS = [];
 // Main App Component
 function GDCKaraokeApp() {
   const [view, setView] = useState('home'); // home, room, admin, privacy, terms
+  const [cancelled, setCancelled] = useState(true);
   const [activeTab, setActiveTab] = useState('main'); // 'main' or 'private'
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [rooms, setRooms] = useState(INITIAL_ROOMS);
@@ -2886,6 +2948,11 @@ function GDCKaraokeApp() {
       // Just go back to home, could show a message
       window.history.replaceState({}, '', window.location.pathname);
       return;
+    }
+
+    // Handle portfolio mode
+    if (params.get('portfolio') === 'true') {
+      setCancelled(false);
     }
 
     // Handle direct links to sub-pages
@@ -3330,6 +3397,7 @@ function GDCKaraokeApp() {
 
   // Handle Stripe checkout
   const handleCheckout = async (isEntireRoom = false, roomId = null) => {
+    if (EVENT_CANCELLED) return;
     const targetRoom = roomId || selectedRoom;
     if (!targetRoom) return;
 
@@ -3371,6 +3439,7 @@ function GDCKaraokeApp() {
   
   // Handle room selection
   const selectRoom = (roomId) => {
+    if (EVENT_CANCELLED) return;
     setSelectedRoom(roomId);
     setFormData({ ...formData, quantity: 1 });
     setView('room');
@@ -3517,6 +3586,24 @@ function GDCKaraokeApp() {
         <div className="starfield" />
         
         <div className="container">
+          {/* Cancellation Page */}
+          {cancelled && (
+            <div className="cancellation-page">
+              <h1 className="cancel-title">GAME DEV KARAOKE</h1>
+              <p className="cancel-date">February 19, 2026</p>
+              <div className="cancel-message">
+                <p>With great sadness, and due to circumstances beyond our control, we've decided to cancel Game Dev Karaoke.</p>
+                <p>To everyone who already purchased tickets: Thank you for your support. Refunds are being processed now. You don't need to do anything — they'll hit your account within the next few days.</p>
+                <p>To the teams and companies who reached out about sponsoring or booking rooms: Thank you for believing in what we were trying to build. I hope we get another chance.</p>
+                <p>This industry needs more spaces to hang out, sing badly, and imbibe safely. I hope we can find one next year.</p>
+                <p>Thanks for understanding. Please reach out directly to <a href="#" onClick={(e) => { e.preventDefault(); setCancelled(false); setView('hosts'); window.scrollTo(0, 0); }} style={{ color: 'var(--neon-green)' }}>me or Cristina</a> if you have further questions.</p>
+              </div>
+              <button className="view-site-btn" onClick={() => setCancelled(false)} style={{ marginTop: 80, fontSize: '0.75rem', padding: '8px 18px', opacity: 0.5 }}>View the site anyways</button>
+            </div>
+          )}
+
+          {/* Main Site (hidden when cancelled) */}
+          {!cancelled && (<>
           {/* Header */}
           <header className="header">
             <div className="header-content">
@@ -5066,6 +5153,7 @@ function GDCKaraokeApp() {
               </div>
             </div>
           </footer>
+          </>)}
         </div>
 
         {/* Success Modal - no longer used but keeping for future */}
